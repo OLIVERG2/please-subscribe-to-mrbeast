@@ -60,8 +60,12 @@
         }
         .search-results {
             margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
         .result-item {
+            width: 48%;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 8px;
@@ -98,14 +102,30 @@
             color: #fff;
             border-color: #4caf50;
         }
+        .search-suggestions {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .suggestion {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .suggestion:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Enhanced Search Engine</h1>
-        <form action="/search" method="GET">
+        <form id="searchForm" action="https://www.google.com/search" method="GET" target="_blank">
             <label for="searchInput">What are you looking for?</label><br>
-            <input type="text" id="searchInput" name="q" placeholder="Enter your search query" required><br>
+            <input type="text" id="searchInput" name="q" placeholder="Enter your search query" required autocomplete="off"><br>
             <input type="submit" value="Search">
         </form>
         <div class="filters">
@@ -114,27 +134,63 @@
             <input type="checkbox" class="filter-checkbox" id="filter-videos" name="filter-videos">
             <label for="filter-videos">Videos</label>
         </div>
+        <div class="search-suggestions" id="searchSuggestions">
+            <!-- Search suggestions will be dynamically populated here -->
+        </div>
         <div class="search-results">
-            <div class="result-item">
-                <h2>Result Title 1</h2>
-                <p>This is a brief preview of the search result content. It provides some information about what the result is about.</p>
-            </div>
-            <div class="result-item">
-                <h2>Result Title 2</h2>
-                <p>This is another brief preview of the search result content. It provides some information about what the result is about.</p>
-            </div>
-            <!-- More search results can be added dynamically -->
+            <!-- Search results will be dynamically populated here -->
         </div>
         <div class="pagination">
-            <a href="#" class="page-link">&laquo; Prev</a>
-            <a href="#" class="page-link active">1</a>
-            <a href="#" class="page-link">2</a>
-            <a href="#" class="page-link">3</a>
-            <a href="#" class="page-link">4</a>
-            <a href="#" class="page-link">5</a>
-            <a href="#" class="page-link">Next &raquo;</a>
+            <!-- Pagination links will be dynamically populated here -->
         </div>
     </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchSuggestions = document.getElementById('searchSuggestions');
+        const searchForm = document.getElementById('searchForm');
+
+        // Mock data for search suggestions
+        const suggestions = ['Web Development', 'Machine Learning', 'Data Science', 'Artificial Intelligence', 'Python Programming', 'JavaScript Frameworks', 'User Experience Design'];
+
+        // Function to update search suggestions
+        function updateSuggestions() {
+            searchSuggestions.innerHTML = '';
+            suggestions.forEach(suggestion => {
+                const suggestionElement = document.createElement('div');
+                suggestionElement.classList.add('suggestion');
+                suggestionElement.textContent = suggestion;
+                suggestionElement.addEventListener('click', () => {
+                    searchInput.value = suggestion;
+                    searchForm.submit();
+                });
+                searchSuggestions.appendChild(suggestionElement);
+            });
+        }
+
+        // Event listener for search input changes
+        searchInput.addEventListener('input', () => {
+            const inputValue = searchInput.value.trim().toLowerCase();
+            if (inputValue.length === 0) {
+                updateSuggestions();
+            } else {
+                const filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().includes(inputValue));
+                searchSuggestions.innerHTML = '';
+                filteredSuggestions.forEach(suggestion => {
+                    const suggestionElement = document.createElement('div');
+                    suggestionElement.classList.add('suggestion');
+                    suggestionElement.textContent = suggestion;
+                    suggestionElement.addEventListener('click', () => {
+                        searchInput.value = suggestion;
+                        searchForm.submit();
+                    });
+                    searchSuggestions.appendChild(suggestionElement);
+                });
+            }
+        });
+
+        // Initialize search suggestions
+        updateSuggestions();
+    </script>
 </body>
 </html>
-
