@@ -3,194 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>uwu.bodypillows</title>
+    <title>Simple YouTube</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f3f3f3;
             margin: 0;
             padding: 0;
         }
-        .container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        form {
-            text-align: center;
-            margin-top: 20px;
-        }
-        label {
-            font-size: 18px;
-        }
-        input[type="text"] {
-            width: 70%;
-            padding: 10px;
-            margin: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        input[type="submit"] {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #4caf50;
+        header {
+            background-color: #ff0000;
             color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-        .filters {
-            margin-top: 20px;
+            padding: 20px;
             text-align: center;
         }
-        .filter-checkbox {
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
             margin: 0 10px;
         }
-        .search-results {
-            margin-top: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .result-item {
-            width: 48%;
+        section {
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .result-item h2 {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        .result-item p {
-            margin-top: 0;
-        }
-        .pagination {
             text-align: center;
-            margin-top: 30px;
         }
-        .page-link {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: #333;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin: 0 5px;
-            transition: background-color 0.3s;
-        }
-        .page-link:hover {
-            background-color: #eee;
-        }
-        .active {
-            background-color: #4caf50;
+        footer {
+            background-color: #333;
             color: #fff;
-            border-color: #4caf50;
-        }
-        .search-suggestions {
+            padding: 10px;
             text-align: center;
-            margin-top: 20px;
-        }
-        .suggestion {
-            display: inline-block;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .suggestion:hover {
-            background-color: #f0f0f0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Enhanced Search Engine</h1>
-        <form id="searchForm" action="https://www.google.com/search" method="GET" target="_blank">
-            <label for="searchInput">What are you looking for?</label><br>
-            <input type="text" id="searchInput" name="q" placeholder="Enter your search query" required autocomplete="off"><br>
-            <input type="submit" value="Search">
-        </form>
-        <div class="filters">
-            <input type="checkbox" class="filter-checkbox" id="filter-images" name="filter-images">
-            <label for="filter-images">Images</label>
-            <input type="checkbox" class="filter-checkbox" id="filter-videos" name="filter-videos">
-            <label for="filter-videos">Videos</label>
-        </div>
-        <div class="search-suggestions" id="searchSuggestions">
-            <!-- Search suggestions will be dynamically populated here -->
-        </div>
-        <div class="search-results">
-            <!-- Search results will be dynamically populated here -->
-        </div>
-        <div class="pagination">
-            <!-- Pagination links will be dynamically populated here -->
-        </div>
-    </div>
 
-    <script>
-        const searchInput = document.getElementById('searchInput');
-        const searchSuggestions = document.getElementById('searchSuggestions');
-        const searchForm = document.getElementById('searchForm');
+<header>
+    <h1>Simple YouTube</h1>
+</header>
 
-        // Mock data for search suggestions
-        const suggestions = ['Web Development', 'Machine Learning', 'Data Science', 'Artificial Intelligence', 'Python Programming', 'JavaScript Frameworks', 'User Experience Design'];
+<nav>
+    <a href="#">Home</a>
+    <a href="#">Trending</a>
+    <a href="#">Subscriptions</a>
+    <a href="#">History</a>
+</nav>
 
-        // Function to update search suggestions
-        function updateSuggestions() {
-            searchSuggestions.innerHTML = '';
-            suggestions.forEach(suggestion => {
-                const suggestionElement = document.createElement('div');
-                suggestionElement.classList.add('suggestion');
-                suggestionElement.textContent = suggestion;
-                suggestionElement.addEventListener('click', () => {
-                    searchInput.value = suggestion;
-                    searchForm.submit();
-                });
-                searchSuggestions.appendChild(suggestionElement);
-            });
-        }
+<section>
+    <h2>Featured Videos</h2>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+    <p>Description of the video</p>
+</section>
 
-        // Event listener for search input changes
-        searchInput.addEventListener('input', () => {
-            const inputValue = searchInput.value.trim().toLowerCase();
-            if (inputValue.length === 0) {
-                updateSuggestions();
-            } else {
-                const filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().includes(inputValue));
-                searchSuggestions.innerHTML = '';
-                filteredSuggestions.forEach(suggestion => {
-                    const suggestionElement = document.createElement('div');
-                    suggestionElement.classList.add('suggestion');
-                    suggestionElement.textContent = suggestion;
-                    suggestionElement.addEventListener('click', () => {
-                        searchInput.value = suggestion;
-                        searchForm.submit();
-                    });
-                    searchSuggestions.appendChild(suggestionElement);
-                });
-            }
-        });
+<footer>
+    <p>&copy; 2024 Simple YouTube. All rights reserved.</p>
+</footer>
 
-        // Initialize search suggestions
-        updateSuggestions();
-    </script>
 </body>
 </html>
+
