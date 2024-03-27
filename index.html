@@ -3,14 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Search Engine</title>
+    <title>Enhanced Search Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        label {
+            font-size: 18px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .filters {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .filter-checkbox {
+            margin: 0 10px;
+        }
+        .search-results {
+            margin-top: 30px;
+        }
+        .result-item {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .result-item h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .result-item p {
+            margin-top: 0;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .page-link {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 0 5px;
+            transition: background-color 0.3s;
+        }
+        .page-link:hover {
+            background-color: #eee;
+        }
+        .active {
+            background-color: #4caf50;
+            color: #fff;
+            border-color: #4caf50;
+        }
+    </style>
 </head>
 <body>
-    <h1>Simple Search Engine</h1>
-    <form action="/search" method="GET">
-        <label for="searchInput">Search:</label>
-        <input type="text" id="searchInput" name="q" placeholder="Enter your search query">
-        <button type="submit">Search</button>
-    </form>
+    <div class="container">
+        <h1>Enhanced Search Engine</h1>
+        <form action="/search" method="GET">
+            <label for="searchInput">What are you looking for?</label><br>
+            <input type="text" id="searchInput" name="q" placeholder="Enter your search query" required><br>
+            <input type="submit" value="Search">
+        </form>
+        <div class="filters">
+            <input type="checkbox" class="filter-checkbox" id="filter-images" name="filter-images">
+            <label for="filter-images">Images</label>
+            <input type="checkbox" class="filter-checkbox" id="filter-videos" name="filter-videos">
+            <label for="filter-videos">Videos</label>
+        </div>
+        <div class="search-results">
+            <div class="result-item">
+                <h2>Result Title 1</h2>
+                <p>This is a brief preview of the search result content. It provides some information about what the result is about.</p>
+            </div>
+            <div class="result-item">
+                <h2>Result Title 2</h2>
+                <p>This is another brief preview of the search result content. It provides some information about what the result is about.</p>
+            </div>
+            <!-- More search results can be added dynamically -->
+        </div>
+        <div class="pagination">
+            <a href="#" class="page-link">&laquo; Prev</a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">4</a>
+            <a href="#" class="page-link">5</a>
+            <a href="#" class="page-link">Next &raquo;</a>
+        </div>
+    </div>
 </body>
 </html>
+
