@@ -1,1 +1,43 @@
-<input tpye="text" id="textinput" placeholder="do something already..." alt= heigt="100" width="4000">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>doument</title>
+    <style>
+        /* Add custom styles here */
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: dodgerblue;
+            box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Input Field Section -->
+    <section>
+        <h2>User Input</h2>
+        <p>Please provide your input in the field below:</p>
+        <label for="textinput">Enter something:</label>
+        <input type="text" id="textinput" placeholder="Type something here...">
+    </section>
+
+    <!-- JavaScript Section (if needed) -->
+    <script>
+        // Add JavaScript functionality here if needed
+    </script>
+</body>
+</html>
