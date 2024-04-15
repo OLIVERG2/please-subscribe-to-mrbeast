@@ -4,22 +4,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Character Movement Game with Terrain Generator (Extra Large)</title>
+<title>Character Movement Game with Terrain Generator (Normal Size)</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         overflow: hidden;
     }
     #container {
-        width: 800px;
-        height: 800px;
+        width: 800px; /* Updated container width */
+        height: 800px; /* Updated container height */
         margin: 0 auto;
         position: relative;
         border: 2px solid black;
     }
     .cell {
-        width: 20px;
-        height: 20px;
+        width: 40px; /* Adjusted cell width */
+        height: 40px; /* Adjusted cell height */
         position: absolute;
         background-color: clear; /* Default color for water */
     }
@@ -56,10 +56,10 @@
     const container = document.getElementById("container");
     const player = document.getElementById("player");
     const castle = document.getElementById("castle");
-    let playerX = 460; // Initial position
-    let playerY = 460; // Initial position
+    let playerX = 400; // Initial position (updated)
+    let playerY = 400; // Initial position (updated)
 
-    // Generate terrain
+    // Generate terrain (updated)
     const gridSize = 20;
     const solidBlocks = new Set();
 
@@ -67,11 +67,11 @@
         for (let j = 0; j < gridSize; j++) {
             const cell = document.createElement("div");
             cell.classList.add("cell");
-            cell.style.top = i * 50 + "px";
-            cell.style.left = j * 50 + "px";
+            cell.style.top = i * 40 + "px"; // Adjusted cell size
+            cell.style.left = j * 40 + "px"; // Adjusted cell size
             if (Math.random() < 0.3) {
                 cell.classList.add("land");
-                solidBlocks.add(`${i * 50}px-${j * 50}px`); // Add solid block coordinates
+                solidBlocks.add(`${i * 40}px-${j * 40}px`); // Adjusted block size
             }
             container.appendChild(cell);
         }
@@ -86,7 +86,7 @@
                 }
                 break;
             case "ArrowDown":
-                if (playerY + speed <= 950 && !isCollision(playerX, playerY + speed)) {
+                if (playerY + speed <= 760 && !isCollision(playerX, playerY + speed)) {
                     playerY += speed;
                 }
                 break;
@@ -96,7 +96,7 @@
                 }
                 break;
             case "ArrowRight":
-                if (playerX + speed <= 950 && !isCollision(playerX + speed, playerY)) {
+                if (playerX + speed <= 760 && !isCollision(playerX + speed, playerY)) {
                     playerX += speed;
                 }
                 break;
@@ -106,61 +106,11 @@
     });
 
     function isCollision(x, y) {
-        const blockX = Math.floor(x / 50) * 50 + "px";
-        const blockY = Math.floor(y / 50) * 50 + "px";
+        const blockX = Math.floor(x / 40) * 40 + "px"; // Adjusted block size
+        const blockY = Math.floor(y / 40) * 40 + "px"; // Adjusted block size
         return solidBlocks.has(`${blockY}-${blockX}`);
     }
 </script>
 </body>
 </html>
 
-<h1> Fox Blog</h1>
-                    
-    <!-- Modal Popup -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p id="modalContent"></p>
-        </div>
-    </div>
-    <p>the game above is an open world game where a fox charecter moves around the world and has lots of fun. use arrow keys to move.</p>
-
-    <script>
-        // JavaScript for form submission handling and input validation
-        document.getElementById("inputForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent form submission
-
-            // Validate input
-            var input = document.getElementById("textinput").value.trim();
-            if (input === "") {
-                document.getElementById("errorText").textContent = "Please enter something.";
-                return;
-            }
-
-            // Clear error message
-            document.getElementById("errorText").textContent = "";
-
-            // Show modal with submitted input
-            var modal = document.getElementById("myModal");
-            var modalContent = document.getElementById("modalContent");
-            modalContent.textContent = "You entered: " + input;
-            modal.style.display = "block";
-
-            // Close modal when close button is clicked
-            var closeButton = document.getElementsByClassName("close")[0];
-            closeButton.onclick = function() {
-                modal.style.display = "none";
-            };
-
-            // Close modal when clicking outside of it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                    
-
-                }
-            };
-        });
-    </script>
-</body>
-</html>
