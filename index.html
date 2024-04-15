@@ -1,77 +1,92 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Character Movement Game with Terrain Generator (Normal Size)</title>
+<title>Ultimate Character Movement Game</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         overflow: hidden;
     }
     #container {
-        width: 800px; /* Updated container width */
-        height: 800px; /* Updated container height */
+        width: 800px;
+        height: 800px;
         margin: 0 auto;
         position: relative;
         border: 2px solid black;
     }
     .cell {
-        width: 40px; /* Adjusted cell width */
-        height: 40px; /* Adjusted cell height */
+        width: 40px;
+        height: 40px;
         position: absolute;
-        background-color: clear; /* Default color for water */
+        background-color: clear;
     }
     .land {
-        background-color: grey; /* Color for land */
+        background-color: grey;
+    }
+    .tree {
+        background-image: url('https://image.flaticon.com/icons/png/512/733/733547.png');
+        background-size: contain;
+    }
+    .npc {
+        background-image: url('https://image.flaticon.com/icons/png/512/1452/1452608.png');
+        background-size: contain;
+    }
+    .boss {
+        background-image: url('https://image.flaticon.com/icons/png/512/146/146003.png');
+        background-size: contain;
     }
     #player {
-        width: 45px;
-        height: 45px;
-        background-image: url('https://art.pixilart.com/5e1cf722cad78b0.gif'); /* Image of the fox */
+        width: 35px;
+        height: 35px;
+        background-image: url('https://art.pixilart.com/5e1cf722cad78b0.gif');
         background-size: cover;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
-    #castle {
-        width: 200px;
-        height: 200px;
-        background-image: url(''); /* Image of the castle */
-        background-size: cover;
-        position: absolute;
-        top: calc(50% - 100px);
-        left: calc(50% - 100px);
-    }
 </style>
 </head>
 <body>
 <div id="container">
     <div id="player"></div>
-    <div id="castle"></div> <!-- New castle element -->
 </div>
 <script>
     const container = document.getElementById("container");
     const player = document.getElementById("player");
-    const castle = document.getElementById("castle");
-    let playerX = 400; // Initial position (updated)
-    let playerY = 400; // Initial position (updated)
-
-    // Generate terrain (updated)
+    let playerX = 400;
+    let playerY = 400;
     const gridSize = 20;
     const solidBlocks = new Set();
+    const trees = new Set();
+    const npcs = new Set();
+    let hasQuest = false;
+    let bossSpawned = false;
 
+    // Generate terrain with trees, NPCs, and boss spawn location
     for (let i = 0; i < gridSize; i++) {
         for (let j = 0; j < gridSize; j++) {
             const cell = document.createElement("div");
             cell.classList.add("cell");
-            cell.style.top = i * 40 + "px"; // Adjusted cell size
-            cell.style.left = j * 40 + "px"; // Adjusted cell size
+            cell.style.top = i * 40 + "px";
+            cell.style.left = j * 40 + "px";
             if (Math.random() < 0.3) {
                 cell.classList.add("land");
-                solidBlocks.add(`${i * 40}px-${j * 40}px`); // Adjusted block size
+                solidBlocks.add(`${i * 40}px-${j * 40}px`);
+            }
+            if (Math.random() < 0.1) {
+                cell.classList.add("tree");
+                trees.add(`${i * 40}px-${j * 40}px`);
+            }
+            if (Math.random() < 0.05) {
+                cell.classList.add("npc");
+                npcs.add(`${i * 40}px-${j * 40}px`);
+            }
+            if (Math.random() < 0.02) {
+                cell.classList.add("boss");
+                bossSpawned = true;
             }
             container.appendChild(cell);
         }
@@ -103,14 +118,25 @@
         }
         player.style.top = playerY + "px";
         player.style.left = playerX + "px";
+        checkInteractions();
     });
 
     function isCollision(x, y) {
-        const blockX = Math.floor(x / 40) * 40 + "px"; // Adjusted block size
-        const blockY = Math.floor(y / 40) * 40 + "px"; // Adjusted block size
-        return solidBlocks.has(`${blockY}-${blockX}`);
+        const blockX = Math.floor(x / 40) * 40 + "px";
+        const blockY = Math.floor(y / 40) * 40 + "px";
+        return solidBlocks.has(`${blockY}-${blockX}`) || trees.has(`${blockY}-${blockX}`) || npcs.has(`${blockY}-${blockX}`);
+    }
+
+    function checkInteractions() {
+        if (npcs.has(`${playerY}px-${playerX}px`) && !hasQuest) {
+            hasQuest = true;
+            alert("You received a quest from an NPC!");
+        }
+        if (bossSpawned && playerY === 400 && playerX === 400) {
+            alert("You encountered the boss! Prepare for battle!");
+            // Code for boss battle
+        }
     }
 </script>
 </body>
 </html>
-
