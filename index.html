@@ -129,45 +129,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Number Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Movement Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+    }
+    #container {
+        width: 400px;
+        height: 400px;
+        margin: 0 auto;
+        position: relative;
+        border: 2px solid black;
+    }
+    #player {
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
 </head>
 <body>
-    <h1>Guess the Number Game</h1>
-    <p>I'm thinking of a number between 1 and 100. Can you guess it?</p>
-    <input type="text" id="guessInput">
-    <button onclick="checkGuess()">Guess</button>
-    <p id="message"></p>
+<div id="container">
+    <div id="player"></div>
+</div>
+<script>
+    const player = document.getElementById("player");
+    let playerX = 175; // Initial position
+    let playerY = 175; // Initial position
 
-    <script>
-        // Generate a random number between 1 and 100
-        const randomNumber = Math.floor(Math.random() * 100) + 1;
-
-        // Function to check the user's guess
-        function checkGuess() {
-            const guess = parseInt(document.getElementById('guessInput').value);
-            const message = document.getElementById('message');
-
-            if (isNaN(guess) || guess < 1 || guess > 100) {
-                message.textContent = 'Please enter a valid number between 1 and 100.';
-            } else if (guess === randomNumber) {
-                message.textContent = 'Congratulations! You guessed the correct number!';
-            } else if (guess < randomNumber) {
-                message.textContent = 'Too low. Try again!';
-            } else {
-                message.textContent = 'Too high. Try again!';
-            }
+    document.addEventListener("keydown", function(event) {
+        const speed = 5;
+        switch(event.key) {
+            case "ArrowUp":
+                if (playerY - speed >= 0) {
+                    playerY -= speed;
+                }
+                break;
+            case "ArrowDown":
+                if (playerY + speed <= 350) {
+                    playerY += speed;
+                }
+                break;
+            case "ArrowLeft":
+                if (playerX - speed >= 0) {
+                    playerX -= speed;
+                }
+                break;
+            case "ArrowRight":
+                if (playerX + speed <= 350) {
+                    playerX += speed;
+                }
+                break;
         }
-    </script>
+        player.style.top = playerY + "px";
+        player.style.left = playerX + "px";
+    });
+</script>
 </body>
 </html>
+
                     
     <!-- Modal Popup -->
     <div id="myModal" class="modal">
