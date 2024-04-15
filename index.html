@@ -131,23 +131,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Character Movement Game</title>
+<title>Character Movement Game with Terrain Generator (Extra Large)</title>
 <style>
     body {
         font-family: Arial, sans-serif;
         overflow: hidden;
     }
     #container {
-        width: 400px;
-        height: 400px;
+        width: 1000px;
+        height: 1000px;
         margin: 0 auto;
         position: relative;
         border: 2px solid black;
     }
-    #player {
+    .cell {
         width: 50px;
         height: 50px;
-        background-color: red;
+        position: absolute;
+        background-color: lightblue; /* Default color for water */
+    }
+    .land {
+        background-color: green; /* Color for land */
+    }
+    #player {
+        width: 80px;
+        height: 80px;
+        background-image: url('https://art.pixilart.com/5e1cf722cad78b0.gif'); /* Image of the fox */
+        background-size: cover;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -160,12 +170,28 @@
     <div id="player"></div>
 </div>
 <script>
+    const container = document.getElementById("container");
     const player = document.getElementById("player");
-    let playerX = 175; // Initial position
-    let playerY = 175; // Initial position
+    let playerX = 460; // Initial position
+    let playerY = 460; // Initial position
+
+    // Generate terrain
+    const gridSize = 20;
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.style.top = i * 50 + "px";
+            cell.style.left = j * 50 + "px";
+            if (Math.random() < 0.3) {
+                cell.classList.add("land");
+            }
+            container.appendChild(cell);
+        }
+    }
 
     document.addEventListener("keydown", function(event) {
-        const speed = 5;
+        const speed = 50;
         switch(event.key) {
             case "ArrowUp":
                 if (playerY - speed >= 0) {
@@ -173,7 +199,7 @@
                 }
                 break;
             case "ArrowDown":
-                if (playerY + speed <= 350) {
+                if (playerY + speed <= 950) {
                     playerY += speed;
                 }
                 break;
@@ -183,7 +209,7 @@
                 }
                 break;
             case "ArrowRight":
-                if (playerX + speed <= 350) {
+                if (playerX + speed <= 950) {
                     playerX += speed;
                 }
                 break;
