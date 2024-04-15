@@ -163,20 +163,33 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
+    #castle {
+        width: 200px;
+        height: 200px;
+        background-image: url('https://art.pixilart.com/45a3b8e84b4a5d7.gif'); /* Image of the castle */
+        background-size: cover;
+        position: absolute;
+        top: calc(50% - 100px);
+        left: calc(50% - 100px);
+    }
 </style>
 </head>
 <body>
 <div id="container">
     <div id="player"></div>
+    <div id="castle"></div> <!-- New castle element -->
 </div>
 <script>
     const container = document.getElementById("container");
     const player = document.getElementById("player");
+    const castle = document.getElementById("castle");
     let playerX = 460; // Initial position
     let playerY = 460; // Initial position
 
     // Generate terrain
     const gridSize = 20;
+    const solidBlocks = new Set();
+
     for (let i = 0; i < gridSize; i++) {
         for (let j = 0; j < gridSize; j++) {
             const cell = document.createElement("div");
@@ -185,6 +198,7 @@
             cell.style.left = j * 50 + "px";
             if (Math.random() < 0.3) {
                 cell.classList.add("land");
+                solidBlocks.add(`${i * 50}px-${j * 50}px`); // Add solid block coordinates
             }
             container.appendChild(cell);
         }
@@ -194,22 +208,22 @@
         const speed = 50;
         switch(event.key) {
             case "ArrowUp":
-                if (playerY - speed >= 0) {
+                if (playerY - speed >= 0 && !isCollision(playerX, playerY - speed)) {
                     playerY -= speed;
                 }
                 break;
             case "ArrowDown":
-                if (playerY + speed <= 950) {
+                if (playerY + speed <= 950 && !isCollision(playerX, playerY + speed)) {
                     playerY += speed;
                 }
                 break;
             case "ArrowLeft":
-                if (playerX - speed >= 0) {
+                if (playerX - speed >= 0 && !isCollision(playerX - speed, playerY)) {
                     playerX -= speed;
                 }
                 break;
             case "ArrowRight":
-                if (playerX + speed <= 950) {
+                if (playerX + speed <= 950 && !isCollision(playerX + speed, playerY)) {
                     playerX += speed;
                 }
                 break;
@@ -217,9 +231,16 @@
         player.style.top = playerY + "px";
         player.style.left = playerX + "px";
     });
+
+    function isCollision(x, y) {
+        const blockX = Math.floor(x / 50) * 50 + "px";
+        const blockY = Math.floor(y / 50) * 50 + "px";
+        return solidBlocks.has(`${blockY}-${blockX}`);
+    }
 </script>
 </body>
 </html>
+
 
                     
     <!-- Modal Popup -->
