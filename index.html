@@ -78,7 +78,7 @@
     }
 
     document.addEventListener("keydown", function(event) {
-        const speed = 50000000000000000000000000;
+        const speed = 20;
         switch(event.key) {
             case "ArrowUp":
                 if (playerY - speed >= 0 && !isCollision(playerX, playerY - speed)) {
