@@ -10,22 +10,23 @@
     text-align: center;
     margin: 0;
     overflow: hidden;
+    background-color: #f0f0f0; /* Light Gray */
   }
   #game-container {
     position: relative;
-    width: 800px;
+    width: 600px;
     height: 600px;
-    margin: 0 auto;
+    margin: 50px auto;
     border: 2px solid black;
-    background-color: #4CAF50; /* Green */
+    background-color: rgba(255, 255, 255, 0); /* Clear */
   }
   #character {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background-image: url('https://placeimg.com/50/50/any');
     background-size: cover;
     border-radius: 50%;
@@ -42,7 +43,7 @@
   const gameContainer = document.getElementById('game-container');
   const gameWidth = gameContainer.offsetWidth;
   const gameHeight = gameContainer.offsetHeight;
-  const characterSize = 50;
+  const characterSize = 40;
   let characterX = gameWidth / 2;
   let characterY = gameHeight / 2;
 
@@ -78,4 +79,3 @@
 </script>
 </body>
 </html>
-
