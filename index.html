@@ -3,140 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate Character Movement Game</title>
+<title>Text Adventure Game</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-    }
-    #container {
-        width: 800px;
-        height: 800px;
-        margin: 0 auto;
-        position: relative;
-        border: 2px solid black;
-    }
-    .cell {
-        width: 40px;
-        height: 40px;
-        position: absolute;
-        background-color: clear;
-    }
-    .land {
-        background-color: grey;
-    }
-    .tree {
-        background-image: url('https://image.flaticon.com/icons/png/512/733/733547.png');
-        background-size: contain;
-    }
-    .npc {
-        background-image: url('https://image.flaticon.com/icons/png/512/1452/1452608.png');
-        background-size: contain;
-    }
-    .boss {
-        background-image: url('https://image.flaticon.com/icons/png/512/146/146003.png');
-        background-size: contain;
-    }
-    #player {
-        width: 35px;
-        height: 35px;
-        background-image: url('https://art.pixilart.com/5e1cf722cad78b0.gif');
-        background-size: cover;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
-<div id="container">
-    <div id="player"></div>
-</div>
+<h1>Text Adventure Game</h1>
+<p id="story">Welcome to the adventure! Click Start to begin.</p>
+<button onclick="startGame()">Start</button>
+
 <script>
-    const container = document.getElementById("container");
-    const player = document.getElementById("player");
-    let playerX = 400;
-    let playerY = 400;
-    const gridSize = 20;
-    const solidBlocks = new Set();
-    const trees = new Set();
-    const npcs = new Set();
-    let hasQuest = false;
-    let bossSpawned = false;
+  let currentScene = 0;
 
-    // Generate terrain with trees, NPCs, and boss spawn location
-    for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-            const cell = document.createElement("div");
-            cell.classList.add("cell");
-            cell.style.top = i * 40 + "px";
-            cell.style.left = j * 40 + "px";
-            if (Math.random() < 0.3) {
-                cell.classList.add("land");
-                solidBlocks.add(`${i * 40}px-${j * 40}px`);
-            }
-            if (Math.random() < 0.1) {
-                cell.classList.add("tree");
-                trees.add(`${i * 40}px-${j * 40}px`);
-            }
-            if (Math.random() < 0.05) {
-                cell.classList.add("npc");
-                npcs.add(`${i * 40}px-${j * 40}px`);
-            }
-            if (Math.random() < 0.02) {
-                cell.classList.add("boss");
-                bossSpawned = true;
-            }
-            container.appendChild(cell);
-        }
+  const scenes = [
+    {
+      description: "You are in a forest. You see a path to the north and a cave to the east.",
+      options: [
+        { text: "Go north", nextScene: 1 },
+        { text: "Go east", nextScene: 2 }
+      ]
+    },
+    {
+      description: "You reach a clearing with a small stream. There's a bridge to the west.",
+      options: [
+        { text: "Go south", nextScene: 0 },
+        { text: "Cross the bridge", nextScene: 3 }
+      ]
+    },
+    {
+      description: "You enter the dark cave. It's too dark to see anything.",
+      options: [
+        { text: "Go back", nextScene: 0 }
+      ]
+    },
+    {
+      description: "You cross the bridge and find a treasure chest!",
+      options: [
+        { text: "Open the chest", nextScene: 4 }
+      ]
+    },
+    {
+      description: "Congratulations! You found a treasure!",
+      options: [
+        { text: "Play again", nextScene: 0 }
+      ]
     }
+  ];
 
-    document.addEventListener("keydown", function(event) {
-        const speed = 20;
-        switch(event.key) {
-            case "ArrowUp":
-                if (playerY - speed >= 0 && !isCollision(playerX, playerY - speed)) {
-                    playerY -= speed;
-                }
-                break;
-            case "ArrowDown":
-                if (playerY + speed <= 760 && !isCollision(playerX, playerY + speed)) {
-                    playerY += speed;
-                }
-                break;
-            case "ArrowLeft":
-                if (playerX - speed >= 0 && !isCollision(playerX - speed, playerY)) {
-                    playerX -= speed;
-                }
-                break;
-            case "ArrowRight":
-                if (playerX + speed <= 760 && !isCollision(playerX + speed, playerY)) {
-                    playerX += speed;
-                }
-                break;
-        }
-        player.style.top = playerY + "px";
-        player.style.left = playerX + "px";
-        checkInteractions();
-    });
+  function startGame() {
+    currentScene = 0;
+    showScene();
+  }
 
-    function isCollision(x, y) {
-        const blockX = Math.floor(x / 40) * 40 + "px";
-        const blockY = Math.floor(y / 40) * 40 + "px";
-        return solidBlocks.has(`${blockY}-${blockX}`) || trees.has(`${blockY}-${blockX}`) || npcs.has(`${blockY}-${blockX}`);
+  function showScene() {
+    const scene = scenes[currentScene];
+    const storyElement = document.getElementById("story");
+    storyElement.textContent = scene.description;
+
+    const options = scene.options;
+    if (options && options.length > 0) {
+      const optionsHtml = options.map(option =>
+        `<button onclick="goToScene(${option.nextScene})">${option.text}</button>`
+      ).join('');
+      storyElement.innerHTML += `<div>${optionsHtml}</div>`;
     }
+  }
 
-    function checkInteractions() {
-        if (npcs.has(`${playerY}px-${playerX}px`) && !hasQuest) {
-            hasQuest = true;
-            alert("You received a quest from an NPC!");
-        }
-        if (bossSpawned && playerY === 400 && playerX === 400) {
-            alert("You encountered the boss! Prepare for battle!");
-            // Code for boss battle
-        }
-    }
+  function goToScene(sceneIndex) {
+    currentScene = sceneIndex;
+    showScene();
+  }
 </script>
 </body>
 </html>
+
