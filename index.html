@@ -3,80 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text Adventure Game</title>
+<title>Character Adventure Game</title>
 <style>
   body {
     font-family: Arial, sans-serif;
     text-align: center;
+    margin: 0;
+    overflow: hidden;
+  }
+  #game-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    margin: 0 auto;
+    border: 2px solid black;
+    background-color: #4CAF50; /* Green */
+  }
+  #character {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background-image: url('https://placeimg.com/50/50/any');
+    background-size: cover;
+    border-radius: 50%;
   }
 </style>
 </head>
 <body>
-<h1>Text Adventure Game</h1>
-<p id="story">Welcome to the adventure! Click Start to begin.</p>
-<button onclick="startGame()">Start</button>
-
+<h1>Character Adventure Game</h1>
+<div id="game-container">
+  <div id="character"></div>
+</div>
 <script>
-  let currentScene = 0;
+  const character = document.getElementById('character');
+  const gameContainer = document.getElementById('game-container');
+  const gameWidth = gameContainer.offsetWidth;
+  const gameHeight = gameContainer.offsetHeight;
+  const characterSize = 50;
+  let characterX = gameWidth / 2;
+  let characterY = gameHeight / 2;
 
-  const scenes = [
-    {
-      description: "You are in a forest. You see a path to the north and a cave to the east.",
-      options: [
-        { text: "Go north", nextScene: 1 },
-        { text: "Go east", nextScene: 2 }
-      ]
-    },
-    {
-      description: "You reach a clearing with a small stream. There's a bridge to the west.",
-      options: [
-        { text: "Go south", nextScene: 0 },
-        { text: "Cross the bridge", nextScene: 3 }
-      ]
-    },
-    {
-      description: "You enter the dark cave. It's too dark to see anything.",
-      options: [
-        { text: "Go back", nextScene: 0 }
-      ]
-    },
-    {
-      description: "You cross the bridge and find a treasure chest!",
-      options: [
-        { text: "Open the chest", nextScene: 4 }
-      ]
-    },
-    {
-      description: "Congratulations! You found a treasure!",
-      options: [
-        { text: "Play again", nextScene: 0 }
-      ]
-    }
-  ];
+  function moveCharacter(dx, dy) {
+    const newX = characterX + dx;
+    const newY = characterY + dy;
 
-  function startGame() {
-    currentScene = 0;
-    showScene();
-  }
-
-  function showScene() {
-    const scene = scenes[currentScene];
-    const storyElement = document.getElementById("story");
-    storyElement.textContent = scene.description;
-
-    const options = scene.options;
-    if (options && options.length > 0) {
-      const optionsHtml = options.map(option =>
-        `<button onclick="goToScene(${option.nextScene})">${option.text}</button>`
-      ).join('');
-      storyElement.innerHTML += `<div>${optionsHtml}</div>`;
+    if (newX >= 0 && newX <= gameWidth - characterSize && newY >= 0 && newY <= gameHeight - characterSize) {
+      characterX = newX;
+      characterY = newY;
+      character.style.left = characterX + 'px';
+      character.style.top = characterY + 'px';
     }
   }
 
-  function goToScene(sceneIndex) {
-    currentScene = sceneIndex;
-    showScene();
-  }
+  document.addEventListener('keydown', function(event) {
+    const speed = 10;
+    switch(event.key) {
+      case 'ArrowUp':
+        moveCharacter(0, -speed);
+        break;
+      case 'ArrowDown':
+        moveCharacter(0, speed);
+        break;
+      case 'ArrowLeft':
+        moveCharacter(-speed, 0);
+        break;
+      case 'ArrowRight':
+        moveCharacter(speed, 0);
+        break;
+    }
+  });
 </script>
 </body>
 </html>
