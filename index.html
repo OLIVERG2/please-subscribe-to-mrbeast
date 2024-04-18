@@ -1,88 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>uhhhhg.com</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    overflow: hidden;
-    background-color: #f0f0f0; /* Light Gray */
-  }
-  #game-container {
-    position: relative;
-    width: 600px;
-    height: 600px;
-    margin: 50px auto;
-    border: 20px solid black;
-    background-color: rgba(255, 255, 255, 0); /* Clear */
-  }
-  #character {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background-image: url('https://placeimg.com/50/50/any');
-    background-size: cover;
-    border-radius: 50%;
-  }
-</style>
-</head>
-<body>
-<h1>Character Adventure Game</h1>
-<div id="game-container">
-  <div id="character"></div>
-</div>
-<script>
-  const character = document.getElementById('character');
-  const gameContainer = document.getElementById('game-container');
-  const gameWidth = gameContainer.offsetWidth;
-  const gameHeight = gameContainer.offsetHeight;
-  const characterSize = 40;
-  let characterX = gameWidth / 2;
-  let characterY = gameHeight / 2;
-
-  function moveCharacter(dx, dy) {
-    const newX = characterX + dx;
-    const newY = characterY + dy;
-
-    if (newX >= 0 && newX <= gameWidth - characterSize && newY >= 0 && newY <= gameHeight - characterSize) {
-      characterX = newX;
-      characterY = newY;
-      character.style.left = characterX + 'px';
-      character.style.top = characterY + 'px';
-    }
-  }
-
-  document.addEventListener('keydown', function(event) {
-    const speed = 10;
-    switch(event.key) {
-      case 'ArrowUp':
-        moveCharacter(0, -speed);
-        break;
-      case 'ArrowDown':
-        moveCharacter(0, speed);
-        break;
-      case 'ArrowLeft':
-        moveCharacter(-speed, 0);
-        break;
-      case 'ArrowRight':
-        moveCharacter(speed, 0);
-        break;
-    }
-  });
-</script>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Us</title>
+<title>Ask a question about foxes.</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -129,7 +51,7 @@
 
 <div class="container">
     <h2>Contact Us</h2>
-    <form action="mailto:your.email@example.com" method="post" enctype="text/plain">
+    <form action="mailto:2181584@jeffcoschools.us" method="post" enctype="text/plain">
         <input type="text" class="textbox" name="name" placeholder="Your Name" required>
         <input type="email" class="textbox" name="email" placeholder="Your Email" required>
         <textarea class="textbox" name="message" rows="4" placeholder="Your Message" required></textarea>
