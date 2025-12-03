@@ -6,70 +6,148 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Send an email to Jack Herrera.</title>
-    <!DOCTYPE html>
-<html>
-	<title>(ง ͡ʘ ͜ʖ ͡ʘ)ง</title>
-	<head>
-		<link rel="stylesheet" href="style.css">
-		<meta name="viewport" content="width=device-width">
-		
-		<script>
-		function play() {
-    		var audio = document.getElementById("audio");
-        	audio.play();
-		};
+<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a fun, retro feel */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light background */
+        }
+        .toast-container {
+            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+            max-width: 550px;
+        }
+        .toast-image {
+            height: 350px;
+            object-fit: cover;
+        }
+        .oracle-text {
+            min-height: 80px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-		function pic() {
-			document.getElementById("theimg").style.display = "block";
-			document.getElementById("main").style.display = "none";
-			document.body.style.background = "black";
-		};
+    <!-- Main Content Container -->
+    <div class="toast-container bg-white p-6 md:p-10 rounded-xl shadow-2xl border-4 border-gray-100 w-full">
+        
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center text-gray-800 mb-6 tracking-tight">
+            Is My Toast Done?
+        </h1>
+        <p class="text-center text-lg text-gray-500 mb-8">
+            The question that defines our existence. (Refreshes every 30 seconds.)
+        </p>
 
-		function refresh() {
-			document.getElementById("refresh").style.display = "block";
-		};
+        <!-- Toast Image Display -->
+        <div class="relative w-full mb-8 rounded-lg overflow-hidden shadow-xl border-8 border-yellow-200">
+            <img 
+                id="toastImage" 
+                class="w-full toast-image" 
+                src="https://placehold.co/500x350/e8ad4a/4a4a4a?text=PERFECTLY+GOLDEN" 
+                alt="A slice of toast"
+            >
+            <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-yellow-900/90 text-white text-center py-2 text-xl font-bold tracking-wider">
+                STATUS: PERFECTLY GOLDEN
+            </div>
+        </div>
 
-		function fullscreen() {
-			var fs = document.documentElement;
-			if (fs.requestFullscreen) {
-				fs.requestFullscreen();
-			} else if (fs.mozRequestFullScreen) {
-				fs.mozRequestFullScreen();
-			} else if (fs.webkitRequestFullscreen) {
-				fs.webkitRequestFullscreen();
-			}	
-		};
-		</script>
-	</head>
+        <!-- Toast Oracle Button -->
+        <div class="flex flex-col items-center space-y-4">
+            <button 
+                id="oracleButton"
+                class="w-full md:w-auto px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-full shadow-lg transition duration-200 transform hover:scale-105 active:scale-95"
+            >
+                Consult the Toast Oracle
+            </button>
 
-	<div id="theimg" style="display: none;">
-		<img src="scare.jpg">
-	</div>
+            <!-- Oracle Advice Display -->
+            <div id="oracleAdvice" class="oracle-text text-center text-xl font-medium text-gray-700 p-4 bg-yellow-50 rounded-lg border border-yellow-300 w-full transition-all duration-300 italic">
+                The oracle awaits your click.
+            </div>
+        </div>
+    </div>
 
-	<div id="main">
-		<br><br><br><br><br><br>
-		<h1 style="text-align:center;">Hello!<br>Welcome to Ree's website!</h1>
-		<p style="text-align:center;"><u>What is this all about?</u><br>This is just basically a playground for me to
-		practice writing HTML-based scripts.<br><br>Don't expect much for now! Below is my first script which uses the three<br>
-		basic programming languages <i>(HTML, CSS, JavaScript).</i></p>
+    <!-- JavaScript Logic -->
+    <script>
+        const toastImage = document.getElementById('toastImage');
+        const toastStatus = document.getElementById('toastStatus');
+        const oracleAdvice = document.getElementById('oracleAdvice');
+        const oracleButton = document.getElementById('oracleButton');
 
-		<div id="click">
-			<input type="button" value="click to browse" onclick="play(); setTimeout(pic, 360); setTimeout(fullscreen, 360); setTimeout(refresh, 3000);">
-		</div>
+        // Define the three states of toast with descriptive placeholders
+        const toastStates = [
+            {
+                status: "BARELY DONE",
+                src: "https://placehold.co/500x350/ffe6b2/4a4a4a?text=BARELY+DONE",
+                color: "bg-yellow-800/90"
+            },
+            {
+                status: "PERFECTLY GOLDEN",
+                src: "https://placehold.co/500x350/e8ad4a/4a4a4a?text=PERFECTLY+GOLDEN",
+                color: "bg-orange-700/90"
+            },
+            {
+                status: "CARBONIZED",
+                src: "https://placehold.co/500x350/3d3d3d/f0f0f0?text=CARBONIZED",
+                color: "bg-gray-900/90"
+            }
+        ];
 
-		<audio id="audio" src="scream2.mp3"></audio>
-		<!--https://cdn.hipwallpaper.com/i/25/8/LH1ZXE.jpg-->
-		
-		<div class="bot">
-			<p>© Reeman</p>
-		</div>
-	</div>
+        // The cryptic, non-toast-related advice
+        const oracleWisdom = [
+            "The socks you seek are not in this drawer, but in a parallel dimension of laundry.",
+            "Always use the long spoon. The short one knows too much.",
+            "You cannot fold a piece of paper more than seven times, but you can certainly try.",
+            "The universe is currently sponsored by a very confused pigeon.",
+            "Ask the cat. It has seen the schedule.",
+            "Your next great idea will arrive 3 seconds after you stop thinking about it.",
+            "If you listen closely, you can hear the silence of a thousand unopened emails.",
+            "The answer is 42, but the question is a comfortable pair of slippers.",
+            "Do not trust the moon. It is practicing its evil laugh tonight.",
+            "Wait for the third Tuesday of next month, then buy cheese."
+        ];
 
-	<div class="bot" id="refresh" style="display: none;">
-		<p><b>༼ ͡° ͜ʖ ͡° ༽<br>Refresh the page to restart</b></p>
-	</div>
+        /**
+         * Randomly selects and applies a new toast state.
+         */
+        function updateToastState() {
+            const index = Math.floor(Math.random() * toastStates.length);
+            const newState = toastStates[index];
 
-</html>
+            // Update image source
+            toastImage.src = newState.src;
+            
+            // Update status text and background color
+            toastStatus.textContent = `STATUS: ${newState.status}`;
+            toastStatus.className = `absolute bottom-0 left-0 right-0 text-white text-center py-2 text-xl font-bold tracking-wider transition-colors duration-500 ${newState.color}`;
+            
+            console.log(`Toast state updated to: ${newState.status}`);
+        }
+
+        /**
+         * Consults the oracle and displays a cryptic quote.
+         */
+        function consultOracle() {
+            const index = Math.floor(Math.random() * oracleWisdom.length);
+            const advice = oracleWisdom[index];
+            
+            oracleAdvice.textContent = advice;
+        }
+
+        // --- Initialization ---
+
+        // 1. Initial state setting
+        updateToastState();
+
+        // 2. Set the recurring update interval (30,000 milliseconds = 30 seconds)
+        const intervalInMilliseconds = 30000;
+        setInterval(updateToastState, intervalInMilliseconds);
+        console.log(`Toast update interval set to ${intervalInMilliseconds / 1000} seconds.`);
+
+        // 3. Attach event listener to the button
+        oracleButton.addEventListener('click', consultOracle);
+
+    </script>
 
 <a href="	
 https://grabify.link/486O4X"> Terms of service.
