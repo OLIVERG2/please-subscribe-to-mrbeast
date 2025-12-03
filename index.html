@@ -6,6 +6,70 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Send an email to Jack Herrera.</title>
+    <!DOCTYPE html>
+<html>
+	<title>(ง ͡ʘ ͜ʖ ͡ʘ)ง</title>
+	<head>
+		<link rel="stylesheet" href="style.css">
+		<meta name="viewport" content="width=device-width">
+		
+		<script>
+		function play() {
+    		var audio = document.getElementById("audio");
+        	audio.play();
+		};
+
+		function pic() {
+			document.getElementById("theimg").style.display = "block";
+			document.getElementById("main").style.display = "none";
+			document.body.style.background = "black";
+		};
+
+		function refresh() {
+			document.getElementById("refresh").style.display = "block";
+		};
+
+		function fullscreen() {
+			var fs = document.documentElement;
+			if (fs.requestFullscreen) {
+				fs.requestFullscreen();
+			} else if (fs.mozRequestFullScreen) {
+				fs.mozRequestFullScreen();
+			} else if (fs.webkitRequestFullscreen) {
+				fs.webkitRequestFullscreen();
+			}	
+		};
+		</script>
+	</head>
+
+	<div id="theimg" style="display: none;">
+		<img src="scare.jpg">
+	</div>
+
+	<div id="main">
+		<br><br><br><br><br><br>
+		<h1 style="text-align:center;">Hello!<br>Welcome to Ree's website!</h1>
+		<p style="text-align:center;"><u>What is this all about?</u><br>This is just basically a playground for me to
+		practice writing HTML-based scripts.<br><br>Don't expect much for now! Below is my first script which uses the three<br>
+		basic programming languages <i>(HTML, CSS, JavaScript).</i></p>
+
+		<div id="click">
+			<input type="button" value="click to browse" onclick="play(); setTimeout(pic, 360); setTimeout(fullscreen, 360); setTimeout(refresh, 3000);">
+		</div>
+
+		<audio id="audio" src="scream2.mp3"></audio>
+		<!--https://cdn.hipwallpaper.com/i/25/8/LH1ZXE.jpg-->
+		
+		<div class="bot">
+			<p>© Reeman</p>
+		</div>
+	</div>
+
+	<div class="bot" id="refresh" style="display: none;">
+		<p><b>༼ ͡° ͜ʖ ͡° ༽<br>Refresh the page to restart</b></p>
+	</div>
+
+</html>
 <style>
     body {
         font-family: Arial, sans-serif;
