@@ -140,4 +140,241 @@
                 The question that defines our existence. (Refreshes every 30 seconds.)
             </p>
 
-            <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl
+            <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl border-8 border-neon-red">
+                <img 
+                    id="toastImage" 
+                    class="w-full toast-image" 
+                    src="https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN" 
+                    alt="A slice of toast"
+                >
+                <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-neon-red text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500">
+                    STATUS: PERFECTLY GOLDEN
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center space-y-8">
+                <button 
+                    id="oracleButton"
+                    class="w-full md:w-3/4 px-10 py-5 bg-accent-yellow hover:bg-yellow-400 text-deep-red text-2xl font-display rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.08] active:scale-90 btn-pop tracking-widest uppercase focus:outline-none focus:ring-8 focus:ring-neon-red/70 border-4 border-deep-red"
+                >
+                    ⚡ ASK THE TOAST ORACLE ⚡
+                </button>
+
+                <div id="oracleAdvice" class="oracle-text text-center text-2xl font-bold text-deep-red p-6 bg-warm-bg rounded-xl border-4 border-neon-red w-full transition-all duration-500 shadow-lg tracking-wide uppercase">
+                    The oracle awaits your click.
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container mt-16 bg-warm-bg p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
+            <h2 class="font-display text-4xl font-extrabold text-center text-deep-red mb-6 border-b-4 border-neon-red pb-3 uppercase">
+                CONTACT THE AUTHORITIES
+            </h2>
+            <p class="text-center text-deep-red/80 mb-8 text-md italic">
+                Your message will be converted into toast crumbs and filed appropriately.
+            </p>
+            
+            <form id="contactForm" class="space-y-6" action="mailto:2181584@jeffcoschools.us" method="POST" enctype="text/plain">
+                <div>
+                    <label for="name" class="block text-sm font-bold text-deep-red">Name</label>
+                    <input type="text" id="name" name="Name" required class="mt-1 block w-full rounded-lg bg-gray-100 text-deep-red shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-neon-red/50">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-bold text-deep-red">Email</label>
+                    <input type="email" id="email" name="Email" required class="mt-1 block w-full rounded-lg bg-gray-100 text-deep-red shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-neon-red/50">
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-bold text-deep-red">Message (Toast Scraps)</label>
+                    <textarea id="message" name="Message" rows="4" required class="mt-1 block w-full rounded-lg bg-gray-100 text-deep-red shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-neon-red/50"></textarea>
+                </div>
+                <button type="submit" class="w-full py-4 px-4 rounded-xl shadow-2xl text-xl font-display text-warm-bg bg-neon-red hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-accent-yellow transition duration-150 transform hover:scale-[1.02] border-4 border-deep-red uppercase tracking-widest">
+                    SEND MESSAGES VIA TOASTER SLOT ➡️
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // --- Core Elements ---
+        const toastImage = document.getElementById('toastImage');
+        const toastStatus = document.getElementById('toastStatus');
+        const oracleAdvice = document.getElementById('oracleAdvice');
+        const oracleButton = document.getElementById('oracleButton');
+        const mainContent = document.getElementById('mainContent');
+
+        // --- Modal Elements ---
+        const termsModal = document.getElementById('termsModal');
+        const termsLink = document.getElementById('termsLink');
+        const continueButton = document.getElementById('continueButton');
+        const clickMessage = document.getElementById('clickMessage');
+        const adminCodeInput = document.getElementById('adminCode'); 
+        const adminStatus = document.getElementById('adminStatus');   
+        let hasClickedTerms = false;
+        
+        // --- ADMIN CODE CONFIGURATION ---
+        // !!! WARNING: This is INSECURE for any real admin purpose. The code is visible to anyone viewing the source.
+        // The password has been updated to the requested, highly complex string.
+        const ADMIN_SECRET_CODE = "Xrw963T6a!RZ2Q}ZwUq\"B`vt4vg=M_@};SI)7[i9\"v@q8£l3L="; 
+
+        // Initial setup to hide main content until modal is resolved
+        document.addEventListener('DOMContentLoaded', () => {
+             // Delay showing the modal slightly to ensure DOM is ready and styling is applied
+             setTimeout(() => {
+                 termsModal.classList.remove('hidden');
+                 document.body.style.overflow = 'hidden'; // Lock scrolling
+                 mainContent.style.opacity = 0; // Hide the content behind the modal
+             }, 50);
+        });
+
+        // FUNCTION: Handle the Admin Code login
+        function bypassLogin() {
+            const code = adminCodeInput.value.trim();
+            
+            if (code === ADMIN_SECRET_CODE) {
+                // SUCCESS: Admin Override
+                termsModal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+                mainContent.style.opacity = 1; // Show the content
+                console.log("Admin Override Successful.");
+            } else {
+                // FAILURE: Show error message
+                adminStatus.textContent = "ACCESS DENIED. The Toastmaster does not recognize that code.";
+                adminStatus.classList.remove('hidden');
+                setTimeout(() => {
+                    adminStatus.classList.add('hidden');
+                }, 3000); // Hide message after 3 seconds
+            }
+        }
+        window.bypassLogin = bypassLogin; // Make the function globally accessible for the onclick attribute
+
+
+        // 1. Event listener for clicking the Terms Link
+        termsLink.addEventListener('click', () => {
+            if (!hasClickedTerms) {
+                hasClickedTerms = true;
+                
+                // Enable the continue button
+                continueButton.disabled = false;
+                continueButton.classList.remove('bg-gray-600', 'cursor-not-allowed', 'opacity-50');
+                continueButton.classList.add('bg-accent-yellow', 'text-deep-red', 'hover:bg-yellow-400', 'cursor-pointer', 'shadow-2xl');
+                
+                // Update message
+                clickMessage.textContent = "✅ Terms Acknowledged! Click 'Agree and Continue' below.";
+                clickMessage.classList.remove('text-neon-red');
+                clickMessage.classList.add('text-deep-red');
+            }
+        });
+
+        // 2. Event listener for the Continue Button
+        continueButton.addEventListener('click', () => {
+            if (hasClickedTerms) {
+                // Hide the modal
+                termsModal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+                mainContent.style.opacity = 1; // Show the content
+            } else {
+                // Use a visual indicator instead of alert
+                adminStatus.textContent = "Please click the Terms link before continuing.";
+                adminStatus.classList.remove('hidden', 'text-deep-red');
+                adminStatus.classList.add('text-neon-red');
+                setTimeout(() => {
+                    adminStatus.classList.add('hidden');
+                }, 3000);
+            }
+        });
+
+
+        // --- Toast & Oracle Logic (Unchanged) ---
+
+        // Define the three states of toast with descriptive placeholders
+        const toastStates = [
+            {
+                status: "BARELY DONE (STILL BREAD)",
+                src: "https://placehold.co/650x450/ffe600/881111?text=BARELY+DONE",
+                color: "bg-yellow-700",
+            },
+            {
+                status: "PERFECTLY GOLDEN (MISSION ACCOMPLISHED)",
+                src: "https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN",
+                color: "bg-neon-red",
+            },
+            {
+                status: "CARBONIZED (ABORT! ABORT!)",
+                src: "https://placehold.co/650x450/666666/fff3d6?text=CARBONIZED",
+                color: "bg-gray-700",
+            }
+        ];
+
+        // The cryptic, non-toast-related advice - 5 new items added!
+        const oracleWisdom = [
+            "THE SOCKS YOU SEEK ARE NOT IN THIS DRAWER, BUT IN A PARALLEL DIMENSION OF LAUNDRY.",
+            "ALWAYS USE THE LONG SPOON. THE SHORT ONE KNOWS TOO MUCH.",
+            "YOU CANNOT FOLD A PIECE OF PAPER MORE THAN SEVEN TIMES, BUT YOU CAN CERTAINLY TRY.",
+            "THE UNIVERSE IS CURRENTLY SPONSORED BY A VERY CONFUSED PIGEON.",
+            "ASK THE CAT. IT HAS SEEN THE SCHEDULE.",
+            "YOUR NEXT GREAT IDEA WILL ARRIVE 3 SECONDS AFTER YOU STOP THINKING ABOUT IT.",
+            "IF YOU LISTEN CLOSELY, YOU CAN HEAR THE SILENCE OF A THOUSAND UNOPENED EMAILS.",
+            "THE ANSWER IS 42, BUT THE QUESTION IS A COMFORTABLE PAIR OF SLIPPERS.",
+            "DO NOT TRUST THE MOON. IT IS PRACTICING ITS EVIL LAUGH TONIGHT.",
+            "WAIT FOR THE THIRD TUESDAY OF NEXT MONTH, THEN BUY CHEESE.",
+            // --- NEW ORACLE WISDOM ---
+            "THE KEY TO HAPPINESS IS ALREADY IN YOUR POCKET, BUT IT'S FOR A DOOR YOU HAVEN'T FOUND YET.",
+            "NEVER TRUST A TOASTER THAT SMILES BACK. IT HAS PLANS.",
+            "THE SILENCE BETWEEN NOTES IS WHERE THE REAL MELODY RESIDES.",
+            "IF THE GREETING CARD SAYS 'CONGRATULATIONS,' HIDE IT IMMEDIATELY.",
+            "YOUR PAST SELF IS WATCHING, DO NOT DISAPPOINT THEIR IMAGINATION."
+        ];
+
+        /**
+         * Randomly selects and applies a new toast state.
+         */
+        function updateToastState() {
+            const index = Math.floor(Math.random() * toastStates.length);
+            const newState = toastStates[index];
+
+            // Update image source
+            toastImage.src = newState.src;
+            
+            // Update status text and background color (including the border style)
+            toastStatus.className = `absolute bottom-0 left-0 right-0 text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500 ${newState.color}`;
+            toastStatus.textContent = `STATUS: ${newState.status}`;
+            
+            console.log(`Toast state updated to: ${newState.status}`);
+        }
+
+        /**
+         * Consults the oracle and displays a cryptic quote.
+         */
+        function consultOracle() {
+            // Apply a quick visual "shake" to the button on click
+            oracleButton.classList.add('animate-pulse');
+            setTimeout(() => {
+                oracleButton.classList.remove('animate-pulse');
+            }, 500);
+
+            const index = Math.floor(Math.random() * oracleWisdom.length);
+            const advice = oracleWisdom[index];
+            
+            // Subtle transition for the advice text
+            oracleAdvice.style.opacity = 0;
+            setTimeout(() => {
+                oracleAdvice.textContent = advice;
+                oracleAdvice.style.opacity = 1;
+            }, 300);
+        }
+
+        // --- Initialization ---
+
+        // 1. Initial state setting
+        updateToastState();
+
+        // 2. Set the recurring update interval (30,000 milliseconds = 30 seconds)
+        const intervalInMilliseconds = 30000;
+        setInterval(updateToastState, intervalInMilliseconds);
+        console.log(`Toast update interval set to ${intervalInMilliseconds / 1000} seconds.`);
+
+        // 3. Attach event listener to the button
+        oracleButton.addEventListener('click', consultOracle);
+    </script>
+</body>
+</html>
