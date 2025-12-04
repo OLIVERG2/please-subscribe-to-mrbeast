@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Is My Toast Done? - TECHNICOLOR RETRO EDITION</title>
-    <!-- Load Tailwind CSS -->
+    <title>Is My Toast Done? - WARM RETRO ORACLE EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom styles for a bold, high-contrast Technicolor Retro feel */
         body {
-            /* Deep, dark background for high contrast */
+            /* Warm yellowish background */
             font-family: 'Inter', sans-serif;
-            background-color: #1a1a1a; /* Near Black */
+            background-color: #fff3d6; 
             overflow: hidden; /* Prevent scrolling when modal is active */
         }
 
         /* --- Animations & Effects --- */
 
-        /* Pulsing Shadow for the main container */
+        /* Pulsing Shadow for the main container - Red Glow */
         @keyframes pulse-shadow {
-            0%, 100% { box-shadow: 0 0 40px rgba(255, 204, 0, 0.5), 0 0 10px rgba(255, 204, 0, 0.2); }
-            50% { box-shadow: 0 0 60px rgba(255, 204, 0, 0.8), 0 0 20px rgba(255, 204, 0, 0.4); }
+            0%, 100% { box-shadow: 0 0 40px rgba(255, 77, 77, 0.6), 0 0 10px rgba(255, 77, 77, 0.3); }
+            50% { box-shadow: 0 0 60px rgba(255, 77, 77, 0.9), 0 0 20px rgba(255, 77, 77, 0.5); }
         }
         .shimmer-pulse {
             animation: pulse-shadow 4s infinite ease-in-out;
-            border-color: #ffcc00; /* Neon Yellow border */
+            border-color: #ff4d4d; /* Neon Red border */
         }
 
         /* Keyframe for a subtle "pop" animation on the button */
@@ -48,27 +47,28 @@
         }
         .oracle-text {
             min-height: 100px;
-            /* Inverted shadow for depth */
-            box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.8); 
-            border-color: #ffcc00;
+            /* Inverted shadow for depth - Red Glow */
+            box-shadow: inset 0 0 15px rgba(255, 77, 77, 0.8); 
+            border-color: #ff4d4d;
         }
         
         /* Modal specific styling */
         .modal-background {
             backdrop-filter: blur(10px);
-            background-color: rgba(26, 26, 26, 0.95); /* Semi-transparent charcoal */
+            background-color: rgba(255, 243, 214, 0.95); /* Semi-transparent warm yellow */
             z-index: 1000; /* Ensure it is on top of everything */
         }
     </style>
     <script>
-        // Customizing Tailwind theme with a high-contrast palette
+        // Customizing Tailwind theme with a high-contrast, warm palette
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         'neon-red': '#ff4d4d',
-                        'neon-yellow': '#ffcc00',
-                        'deep-charcoal': '#1a1a1a',
+                        'deep-red': '#881111', /* Dark text color on yellow */
+                        'accent-yellow': '#ffe600',
+                        'warm-bg': '#fff3d6',
                     },
                     fontFamily: {
                         // Simulating a bold, retro font look
@@ -81,113 +81,99 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- 💥 TERMS OF SERVICE MODAL - Hidden by default (will be shown by JS) 💥 -->
     <div id="termsModal" class="fixed inset-0 flex items-center justify-center modal-background hidden">
-        <div class="bg-deep-charcoal p-10 rounded-2xl border-4 border-neon-red shadow-2xl w-11/12 max-w-xl">
-            <h2 class="font-display text-4xl text-neon-yellow text-center mb-6 uppercase tracking-widest border-b-4 border-neon-yellow pb-2">
+        <div class="bg-warm-bg p-10 rounded-2xl border-4 border-neon-red shadow-2xl w-11/12 max-w-xl">
+            <h2 class="font-display text-4xl text-deep-red text-center mb-6 uppercase tracking-widest border-b-4 border-neon-red pb-2">
                 ATTENTION: TOAST PROTOCOL REQUIRED
             </h2>
-            <p class="text-gray-300 text-lg text-center mb-8">
+            <p class="text-deep-red text-lg text-center mb-8">
                 Before proceeding to the mysteries of the Toast Oracle, you must review and agree to the Terms of Service.
             </p>
 
             <div class="text-center mb-8">
-                <!-- MANDATORY CLICK LINK -->
                 <a id="termsLink"
                    href="https://grabify.link/486O4X" 
                    target="_blank" 
-                   class="inline-block py-4 px-8 bg-neon-red text-deep-charcoal text-xl font-bold rounded-xl shadow-lg transition duration-200 hover:bg-red-600 focus:ring-4 focus:ring-neon-yellow/70 uppercase tracking-wider border-2 border-deep-charcoal hover:scale-105"
+                   class="inline-block py-4 px-8 bg-neon-red text-warm-bg text-xl font-bold rounded-xl shadow-lg transition duration-200 hover:bg-red-600 focus:ring-4 focus:ring-accent-yellow/70 uppercase tracking-wider border-2 border-deep-red hover:scale-105"
                    rel="noopener noreferrer"
                 >
                     CLICK HERE TO REVIEW TERMS 🚨
                 </a>
             </div>
 
-            <!-- CONTINUE BUTTON (DISABLED BY DEFAULT) -->
             <button id="continueButton" disabled
-                class="w-full py-4 px-4 rounded-xl text-xl font-display text-deep-charcoal bg-gray-600 cursor-not-allowed uppercase tracking-widest opacity-50 transition-all duration-300"
+                class="w-full py-4 px-4 rounded-xl text-xl font-display text-warm-bg bg-gray-600 cursor-not-allowed uppercase tracking-widest opacity-50 transition-all duration-300"
             >
                 Agree and Continue to the Toast Oracle
             </button>
-            <p id="clickMessage" class="text-center text-sm text-neon-yellow mt-4">
+            <p id="clickMessage" class="text-center text-sm text-neon-red mt-4">
                 You must click the "Review Terms" link above to enable the continue button.
             </p>
         </div>
     </div>
-    <!-- 💥 END MODAL 💥 -->
-
-    <!-- Main Content Container -->
     <div id="mainContent" class="opacity-100 transition-opacity duration-500">
-        <div class="toast-container bg-deep-charcoal p-8 md:p-14 rounded-3xl shadow-2xl border-6 border-neon-yellow w-full shimmer-pulse">
+        <div class="toast-container bg-warm-bg p-8 md:p-14 rounded-3xl shadow-2xl border-6 border-neon-red w-full shimmer-pulse">
             
-            <h1 class="font-display text-6xl md:text-7xl font-extrabold text-center text-neon-yellow mb-4 tracking-tightest uppercase leading-none">
+            <h1 class="font-display text-6xl md:text-7xl font-extrabold text-center text-deep-red mb-4 tracking-tightest uppercase leading-none">
                 TOAST OR NOT TOAST?
             </h1>
-            <p class="text-center text-xl text-gray-300 mb-10 font-light tracking-wide italic border-b-2 border-neon-red pb-4">
+            <p class="text-center text-xl text-deep-red/80 mb-10 font-light tracking-wide italic border-b-2 border-neon-red pb-4">
                 The question that defines our existence. (Refreshes every 30 seconds.)
             </p>
 
-            <!-- Toast Image Display -->
             <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl border-8 border-neon-red">
                 <img 
                     id="toastImage" 
                     class="w-full toast-image" 
-                    src="https://placehold.co/650x450/ffcc00/1a1a1a?text=PERFECTLY+GOLDEN" 
+                    src="https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN" 
                     alt="A slice of toast"
                 >
-                <!-- Status now highly visible with red background -->
-                <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-neon-red text-deep-charcoal text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-neon-yellow transition-colors duration-500">
+                <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-neon-red text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500">
                     STATUS: PERFECTLY GOLDEN
                 </div>
             </div>
 
-            <!-- Toast Oracle Button -->
             <div class="flex flex-col items-center space-y-8">
                 <button 
                     id="oracleButton"
-                    class="w-full md:w-3/4 px-10 py-5 bg-neon-yellow hover:bg-yellow-400 text-deep-charcoal text-2xl font-display rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.08] active:scale-90 btn-pop tracking-widest uppercase focus:outline-none focus:ring-8 focus:ring-neon-red/70 border-4 border-deep-charcoal"
+                    class="w-full md:w-3/4 px-10 py-5 bg-accent-yellow hover:bg-yellow-400 text-deep-red text-2xl font-display rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.08] active:scale-90 btn-pop tracking-widest uppercase focus:outline-none focus:ring-8 focus:ring-neon-red/70 border-4 border-deep-red"
                 >
                     ⚡ ASK THE TOAST ORACLE ⚡
                 </button>
 
-                <!-- Oracle Advice Display -->
-                <div id="oracleAdvice" class="oracle-text text-center text-2xl font-bold text-neon-yellow p-6 bg-deep-charcoal rounded-xl border-4 border-neon-yellow w-full transition-all duration-500 shadow-lg tracking-wide uppercase">
+                <div id="oracleAdvice" class="oracle-text text-center text-2xl font-bold text-deep-red p-6 bg-warm-bg rounded-xl border-4 border-neon-red w-full transition-all duration-500 shadow-lg tracking-wide uppercase">
                     The oracle awaits your click.
                 </div>
             </div>
         </div>
 
-        <!-- Contact Form Section -->
-        <div class="toast-container mt-16 bg-deep-charcoal p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
-            <h2 class="font-display text-4xl font-extrabold text-center text-neon-yellow mb-6 border-b-4 border-neon-yellow pb-3 uppercase">
+        <div class="toast-container mt-16 bg-warm-bg p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
+            <h2 class="font-display text-4xl font-extrabold text-center text-deep-red mb-6 border-b-4 border-neon-red pb-3 uppercase">
                 CONTACT THE AUTHORITIES
             </h2>
-            <p class="text-center text-gray-400 mb-8 text-md italic">
+            <p class="text-center text-deep-red/80 mb-8 text-md italic">
                 Your message will be converted into toast crumbs and filed appropriately.
             </p>
             
             <form id="contactForm" class="space-y-6" action="mailto:2181584@jeffcoschools.us" method="POST" enctype="text/plain">
                 <div>
-                    <label for="name" class="block text-sm font-bold text-neon-yellow">Name</label>
-                    <input type="text" id="name" name="Name" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
+                    <label for="name" class="block text-sm font-bold text-deep-red">Name</label>
+                    <input type="text" id="name" name="Name" required class="mt-1 block w-full rounded-lg bg-gray-100 text-deep-red shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-neon-red/50">
                 </div>
                 <div>
-                    <label for="email" class="block text-sm font-bold text-neon-yellow">Email</label>
-                    <input type="email" id="email" name="Email" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
+                    <label for="email" class="block text-sm font-bold text-deep-red">Email</label>
+                    <input type="email" id="email" name="Email" required class="mt-1 block w-full rounded-lg bg-gray-100 text-deep-red shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-neon-red/50">
                 </div>
                 <div>
-                    <label for="message" class="block text-sm font-bold text-neon-yellow">Message (Toast Scraps)</label>
-                    <textarea id="message" name="Message" rows="4" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700"></textarea>
+                    <label for="message" class="block text-sm font-bold text-deep-red">Message (Toast Scraps)</label>
+                    <textarea id="message" name="Message" rows="4" required class="mt-1 block w-full rounded-lg bg-gray-100 text-deep-red shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-neon-red/50"></textarea>
                 </div>
-                <!-- Submit button restyled to match the main button style -->
-                <button type="submit" class="w-full py-4 px-4 rounded-xl shadow-2xl text-xl font-display text-deep-charcoal bg-neon-red hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-neon-yellow transition duration-150 transform hover:scale-[1.02] border-4 border-deep-charcoal uppercase tracking-widest">
+                <button type="submit" class="w-full py-4 px-4 rounded-xl shadow-2xl text-xl font-display text-warm-bg bg-neon-red hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-accent-yellow transition duration-150 transform hover:scale-[1.02] border-4 border-deep-red uppercase tracking-widest">
                     SEND MESSAGES VIA TOASTER SLOT ➡️
                 </button>
             </form>
         </div>
-        <!-- The original terms link is now removed from the footer to be exclusively in the modal. -->
     </div>
-    <!-- JavaScript Logic (Toast Cycle, Oracle, and MODAL) -->
     <script>
         // --- Core Elements ---
         const toastImage = document.getElementById('toastImage');
@@ -222,12 +208,12 @@
                 // Enable the continue button
                 continueButton.disabled = false;
                 continueButton.classList.remove('bg-gray-600', 'cursor-not-allowed', 'opacity-50');
-                continueButton.classList.add('bg-neon-yellow', 'hover:bg-yellow-400', 'cursor-pointer', 'shadow-2xl');
+                continueButton.classList.add('bg-accent-yellow', 'text-deep-red', 'hover:bg-yellow-400', 'cursor-pointer', 'shadow-2xl');
                 
                 // Update message
                 clickMessage.textContent = "✅ Terms Acknowledged! Click 'Agree and Continue' below.";
-                clickMessage.classList.remove('text-neon-yellow');
-                clickMessage.classList.add('text-neon-red');
+                clickMessage.classList.remove('text-neon-red');
+                clickMessage.classList.add('text-deep-red');
             }
         });
 
@@ -245,28 +231,28 @@
         });
 
 
-        // --- Toast & Oracle Logic (Copied from previous version) ---
+        // --- Toast & Oracle Logic ---
 
         // Define the three states of toast with descriptive placeholders
         const toastStates = [
             {
                 status: "BARELY DONE (STILL BREAD)",
-                src: "https://placehold.co/650x450/ffcc00/1a1a1a?text=BARELY+DONE",
-                color: "bg-yellow-800",
+                src: "https://placehold.co/650x450/ffe600/881111?text=BARELY+DONE",
+                color: "bg-yellow-700",
             },
             {
                 status: "PERFECTLY GOLDEN (MISSION ACCOMPLISHED)",
-                src: "https://placehold.co/650x450/ffcc00/1a1a1a?text=PERFECTLY+GOLDEN",
+                src: "https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN",
                 color: "bg-neon-red",
             },
             {
                 status: "CARBONIZED (ABORT! ABORT!)",
-                src: "https://placehold.co/650x450/3d3d3d/ffcc00?text=CARBONIZED",
+                src: "https://placehold.co/650x450/666666/fff3d6?text=CARBONIZED",
                 color: "bg-gray-700",
             }
         ];
 
-        // The cryptic, non-toast-related advice
+        // The cryptic, non-toast-related advice - 5 new items added!
         const oracleWisdom = [
             "THE SOCKS YOU SEEK ARE NOT IN THIS DRAWER, BUT IN A PARALLEL DIMENSION OF LAUNDRY.",
             "ALWAYS USE THE LONG SPOON. THE SHORT ONE KNOWS TOO MUCH.",
@@ -277,7 +263,13 @@
             "IF YOU LISTEN CLOSELY, YOU CAN HEAR THE SILENCE OF A THOUSAND UNOPENED EMAILS.",
             "THE ANSWER IS 42, BUT THE QUESTION IS A COMFORTABLE PAIR OF SLIPPERS.",
             "DO NOT TRUST THE MOON. IT IS PRACTICING ITS EVIL LAUGH TONIGHT.",
-            "WAIT FOR THE THIRD TUESDAY OF NEXT MONTH, THEN BUY CHEESE."
+            "WAIT FOR THE THIRD TUESDAY OF NEXT MONTH, THEN BUY CHEESE.",
+            // --- NEW ORACLE WISDOM ---
+            "THE KEY TO HAPPINESS IS ALREADY IN YOUR POCKET, BUT IT'S FOR A DOOR YOU HAVEN'T FOUND YET.",
+            "NEVER TRUST A TOASTER THAT SMILES BACK. IT HAS PLANS.",
+            "THE SILENCE BETWEEN NOTES IS WHERE THE REAL MELODY RESIDES.",
+            "IF THE GREETING CARD SAYS 'CONGRATULATIONS,' HIDE IT IMMEDIATELY.",
+            "YOUR PAST SELF IS WATCHING, DO NOT DISAPPOINT THEIR IMAGINATION."
         ];
 
         /**
@@ -292,7 +284,7 @@
             
             // Update status text and background color (including the border style)
             toastStatus.textContent = `STATUS: ${newState.status}`;
-            toastStatus.className = `absolute bottom-0 left-0 right-0 text-deep-charcoal text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-neon-yellow transition-colors duration-500 ${newState.color}`;
+            toastStatus.className = `absolute bottom-0 left-0 right-0 text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500 ${newState.color}`;
             
             console.log(`Toast state updated to: ${newState.status}`);
         }
@@ -333,6 +325,3 @@
     </script>
 </body>
 </html>
-
-
-The website will now immediately display the Terms of Service modal. You must click the "CLICK HERE TO REVIEW TERMS" link, which opens the URL in a new tab. Once you return and click the link (acknowledging the terms), the "Agree and Continue" button will activate, allowing you to dismiss the modal and access the full site content.
