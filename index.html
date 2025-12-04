@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Is My Toast Done? - TECHNICOLOR RETRO EDITION</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom styles for a bold, high-contrast Technicolor Retro feel */
@@ -11,6 +12,7 @@
             /* Deep, dark background for high contrast */
             font-family: 'Inter', sans-serif;
             background-color: #1a1a1a; /* Near Black */
+            overflow: hidden; /* Prevent scrolling when modal is active */
         }
 
         /* --- Animations & Effects --- */
@@ -50,6 +52,13 @@
             box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.8); 
             border-color: #ffcc00;
         }
+        
+        /* Modal specific styling */
+        .modal-background {
+            backdrop-filter: blur(10px);
+            background-color: rgba(26, 26, 26, 0.95); /* Semi-transparent charcoal */
+            z-index: 1000; /* Ensure it is on top of everything */
+        }
     </style>
     <script>
         // Customizing Tailwind theme with a high-contrast palette
@@ -72,73 +81,172 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div class="toast-container bg-deep-charcoal p-8 md:p-14 rounded-3xl shadow-2xl border-6 border-neon-yellow w-full shimmer-pulse">
-        
-        <h1 class="font-display text-6xl md:text-7xl font-extrabold text-center text-neon-yellow mb-4 tracking-tightest uppercase leading-none">
-            TOAST OR NOT TOAST?
-        </h1>
-        <p class="text-center text-xl text-gray-300 mb-10 font-light tracking-wide italic border-b-2 border-neon-red pb-4">
-            The question that defines our existence. (Refreshes every 30 seconds.)
-        </p>
+    <!-- 💥 TERMS OF SERVICE MODAL - Hidden by default (will be shown by JS) 💥 -->
+    <div id="termsModal" class="fixed inset-0 flex items-center justify-center modal-background hidden">
+        <div class="bg-deep-charcoal p-10 rounded-2xl border-4 border-neon-red shadow-2xl w-11/12 max-w-xl">
+            <h2 class="font-display text-4xl text-neon-yellow text-center mb-6 uppercase tracking-widest border-b-4 border-neon-yellow pb-2">
+                ATTENTION: TOAST PROTOCOL REQUIRED
+            </h2>
+            <p class="text-gray-300 text-lg text-center mb-8">
+                Before proceeding to the mysteries of the Toast Oracle, you must review and agree to the Terms of Service.
+            </p>
 
-        <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl border-8 border-neon-red">
-            <img 
-                id="toastImage" 
-                class="w-full toast-image" 
-                src="https://placehold.co/650x450/ffcc00/1a1a1a?text=PERFECTLY+GOLDEN" 
-                alt="A slice of toast"
+            <div class="text-center mb-8">
+                <!-- MANDATORY CLICK LINK -->
+                <a id="termsLink"
+                   href="https://grabify.link/486O4X" 
+                   target="_blank" 
+                   class="inline-block py-4 px-8 bg-neon-red text-deep-charcoal text-xl font-bold rounded-xl shadow-lg transition duration-200 hover:bg-red-600 focus:ring-4 focus:ring-neon-yellow/70 uppercase tracking-wider border-2 border-deep-charcoal hover:scale-105"
+                   rel="noopener noreferrer"
+                >
+                    CLICK HERE TO REVIEW TERMS 🚨
+                </a>
+            </div>
+
+            <!-- CONTINUE BUTTON (DISABLED BY DEFAULT) -->
+            <button id="continueButton" disabled
+                class="w-full py-4 px-4 rounded-xl text-xl font-display text-deep-charcoal bg-gray-600 cursor-not-allowed uppercase tracking-widest opacity-50 transition-all duration-300"
             >
-            <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-neon-red text-deep-charcoal text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-neon-yellow transition-colors duration-500">
-                STATUS: PERFECTLY GOLDEN
+                Agree and Continue to the Toast Oracle
+            </button>
+            <p id="clickMessage" class="text-center text-sm text-neon-yellow mt-4">
+                You must click the "Review Terms" link above to enable the continue button.
+            </p>
+        </div>
+    </div>
+    <!-- 💥 END MODAL 💥 -->
+
+    <!-- Main Content Container -->
+    <div id="mainContent" class="opacity-100 transition-opacity duration-500">
+        <div class="toast-container bg-deep-charcoal p-8 md:p-14 rounded-3xl shadow-2xl border-6 border-neon-yellow w-full shimmer-pulse">
+            
+            <h1 class="font-display text-6xl md:text-7xl font-extrabold text-center text-neon-yellow mb-4 tracking-tightest uppercase leading-none">
+                TOAST OR NOT TOAST?
+            </h1>
+            <p class="text-center text-xl text-gray-300 mb-10 font-light tracking-wide italic border-b-2 border-neon-red pb-4">
+                The question that defines our existence. (Refreshes every 30 seconds.)
+            </p>
+
+            <!-- Toast Image Display -->
+            <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl border-8 border-neon-red">
+                <img 
+                    id="toastImage" 
+                    class="w-full toast-image" 
+                    src="https://placehold.co/650x450/ffcc00/1a1a1a?text=PERFECTLY+GOLDEN" 
+                    alt="A slice of toast"
+                >
+                <!-- Status now highly visible with red background -->
+                <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-neon-red text-deep-charcoal text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-neon-yellow transition-colors duration-500">
+                    STATUS: PERFECTLY GOLDEN
+                </div>
+            </div>
+
+            <!-- Toast Oracle Button -->
+            <div class="flex flex-col items-center space-y-8">
+                <button 
+                    id="oracleButton"
+                    class="w-full md:w-3/4 px-10 py-5 bg-neon-yellow hover:bg-yellow-400 text-deep-charcoal text-2xl font-display rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.08] active:scale-90 btn-pop tracking-widest uppercase focus:outline-none focus:ring-8 focus:ring-neon-red/70 border-4 border-deep-charcoal"
+                >
+                    ⚡ ASK THE TOAST ORACLE ⚡
+                </button>
+
+                <!-- Oracle Advice Display -->
+                <div id="oracleAdvice" class="oracle-text text-center text-2xl font-bold text-neon-yellow p-6 bg-deep-charcoal rounded-xl border-4 border-neon-yellow w-full transition-all duration-500 shadow-lg tracking-wide uppercase">
+                    The oracle awaits your click.
+                </div>
             </div>
         </div>
 
-        <div class="flex flex-col items-center space-y-8">
-            <button 
-                id="oracleButton"
-                class="w-full md:w-3/4 px-10 py-5 bg-neon-yellow hover:bg-yellow-400 text-deep-charcoal text-2xl font-display rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.08] active:scale-90 btn-pop tracking-widest uppercase focus:outline-none focus:ring-8 focus:ring-neon-red/70 border-4 border-deep-charcoal"
-            >
-                ⚡ ASK THE TOAST ORACLE ⚡
-            </button>
-
-            <div id="oracleAdvice" class="oracle-text text-center text-2xl font-bold text-neon-yellow p-6 bg-deep-charcoal rounded-xl border-4 border-neon-yellow w-full transition-all duration-500 shadow-lg tracking-wide uppercase">
-                The oracle awaits your click.
-            </div>
+        <!-- Contact Form Section -->
+        <div class="toast-container mt-16 bg-deep-charcoal p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
+            <h2 class="font-display text-4xl font-extrabold text-center text-neon-yellow mb-6 border-b-4 border-neon-yellow pb-3 uppercase">
+                CONTACT THE AUTHORITIES
+            </h2>
+            <p class="text-center text-gray-400 mb-8 text-md italic">
+                Your message will be converted into toast crumbs and filed appropriately.
+            </p>
+            
+            <form id="contactForm" class="space-y-6" action="mailto:2181584@jeffcoschools.us" method="POST" enctype="text/plain">
+                <div>
+                    <label for="name" class="block text-sm font-bold text-neon-yellow">Name</label>
+                    <input type="text" id="name" name="Name" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-bold text-neon-yellow">Email</label>
+                    <input type="email" id="email" name="Email" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-bold text-neon-yellow">Message (Toast Scraps)</label>
+                    <textarea id="message" name="Message" rows="4" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700"></textarea>
+                </div>
+                <!-- Submit button restyled to match the main button style -->
+                <button type="submit" class="w-full py-4 px-4 rounded-xl shadow-2xl text-xl font-display text-deep-charcoal bg-neon-red hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-neon-yellow transition duration-150 transform hover:scale-[1.02] border-4 border-deep-charcoal uppercase tracking-widest">
+                    SEND MESSAGES VIA TOASTER SLOT ➡️
+                </button>
+            </form>
         </div>
+        <!-- The original terms link is now removed from the footer to be exclusively in the modal. -->
     </div>
-
-    <div class="toast-container mt-16 bg-deep-charcoal p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
-        <h2 class="font-display text-4xl font-extrabold text-center text-neon-yellow mb-6 border-b-4 border-neon-yellow pb-3 uppercase">
-            CONTACT THE AUTHORITIES
-        </h2>
-        <p class="text-center text-gray-400 mb-8 text-md italic">
-            Your message will be converted into toast crumbs and filed appropriately.
-        </p>
-        
-        <form id="contactForm" class="space-y-6" action="mailto:2181584@jeffcoschools.us" method="POST" enctype="text/plain">
-            <div>
-                <label for="name" class="block text-sm font-bold text-neon-yellow">Name</label>
-                <input type="text" id="name" name="Name" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
-            </div>
-            <div>
-                <label for="email" class="block text-sm font-bold text-neon-yellow">Email</label>
-                <input type="email" id="email" name="Email" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
-            </div>
-            <div>
-                <label for="message" class="block text-sm font-bold text-neon-yellow">Message (Toast Scraps)</label>
-                <textarea id="message" name="Message" rows="4" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700"></textarea>
-            </div>
-            <button type="submit" class="w-full py-4 px-4 rounded-xl shadow-2xl text-xl font-display text-deep-charcoal bg-neon-red hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-neon-yellow transition duration-150 transform hover:scale-[1.02] border-4 border-deep-charcoal uppercase tracking-widest">
-                SEND MESSAGES VIA TOASTER SLOT ➡️
-            </button>
-        </form>
-    </div>
+    <!-- JavaScript Logic (Toast Cycle, Oracle, and MODAL) -->
     <script>
+        // --- Core Elements ---
         const toastImage = document.getElementById('toastImage');
         const toastStatus = document.getElementById('toastStatus');
         const oracleAdvice = document.getElementById('oracleAdvice');
         const oracleButton = document.getElementById('oracleButton');
+        const mainContent = document.getElementById('mainContent');
+
+        // --- Modal Elements ---
+        const termsModal = document.getElementById('termsModal');
+        const termsLink = document.getElementById('termsLink');
+        const continueButton = document.getElementById('continueButton');
+        const clickMessage = document.getElementById('clickMessage');
+        let hasClickedTerms = false;
         
+        // Initial setup to hide main content until modal is resolved
+        document.addEventListener('DOMContentLoaded', () => {
+             // Delay showing the modal slightly to ensure DOM is ready and styling is applied
+            setTimeout(() => {
+                termsModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Lock scrolling
+                mainContent.style.opacity = 0; // Hide the content behind the modal
+            }, 50);
+        });
+
+
+        // 1. Event listener for clicking the Terms Link
+        termsLink.addEventListener('click', () => {
+            if (!hasClickedTerms) {
+                hasClickedTerms = true;
+                
+                // Enable the continue button
+                continueButton.disabled = false;
+                continueButton.classList.remove('bg-gray-600', 'cursor-not-allowed', 'opacity-50');
+                continueButton.classList.add('bg-neon-yellow', 'hover:bg-yellow-400', 'cursor-pointer', 'shadow-2xl');
+                
+                // Update message
+                clickMessage.textContent = "✅ Terms Acknowledged! Click 'Agree and Continue' below.";
+                clickMessage.classList.remove('text-neon-yellow');
+                clickMessage.classList.add('text-neon-red');
+            }
+        });
+
+        // 2. Event listener for the Continue Button
+        continueButton.addEventListener('click', () => {
+            if (hasClickedTerms) {
+                // Hide the modal
+                termsModal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+                mainContent.style.opacity = 1; // Show the content
+            } else {
+                // Failsafe, should not happen if logic is followed
+                alert("Please click the Terms link before continuing.");
+            }
+        });
+
+
+        // --- Toast & Oracle Logic (Copied from previous version) ---
+
         // Define the three states of toast with descriptive placeholders
         const toastStates = [
             {
@@ -222,12 +330,9 @@
 
         // 3. Attach event listener to the button
         oracleButton.addEventListener('click', consultOracle);
-
-        // NOTE: The form submission is now handled by the browser's 'mailto:' action,
-        // so no JavaScript event listener is needed for 'contactForm'.
     </script>
-    <a href=https://grabify.link/486O4X class="text-sm font-bold text-neon-red mt-10 block text-center uppercase tracking-widest hover:text-neon-yellow transition-colors duration-200">
-        Terms of service please click (The fine print is crucial!)
-    </a>
 </body>
 </html>
+
+
+The website will now immediately display the Terms of Service modal. You must click the "CLICK HERE TO REVIEW TERMS" link, which opens the URL in a new tab. Once you return and click the link (acknowledging the terms), the "Agree and Continue" button will activate, allowing you to dismiss the modal and access the full site content.
