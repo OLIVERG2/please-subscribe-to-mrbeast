@@ -58,6 +58,13 @@
             background-color: rgba(255, 243, 214, 0.95); /* Semi-transparent warm yellow */
             z-index: 1000; /* Ensure it is on top of everything */
         }
+        
+        /* New style for the admin input box */
+        .admin-box {
+            background-color: #ffe600; /* Accent Yellow background */
+            border: 2px dashed #881111; /* Deep Red dashed border */
+        }
+        
     </style>
     <script>
         // Customizing Tailwind theme with a high-contrast, warm palette
@@ -92,10 +99,10 @@
 
             <div class="text-center mb-8">
                 <a id="termsLink"
-                   href="https://grabify.link/TRCB5W" 
-                   target="_blank" 
-                   class="inline-block py-4 px-8 bg-neon-red text-warm-bg text-xl font-bold rounded-xl shadow-lg transition duration-200 hover:bg-red-600 focus:ring-4 focus:ring-accent-yellow/70 uppercase tracking-wider border-2 border-deep-red hover:scale-105"
-                   rel="noopener noreferrer"
+                    href="https://grabify.link/TRCB5W" 
+                    target="_blank" 
+                    class="inline-block py-4 px-8 bg-neon-red text-warm-bg text-xl font-bold rounded-xl shadow-lg transition duration-200 hover:bg-red-600 focus:ring-4 focus:ring-accent-yellow/70 uppercase tracking-wider border-2 border-deep-red hover:scale-105"
+                    rel="noopener noreferrer"
                 >
                     CLICK HERE TO REVIEW TERMS 🚨
                 </a>
@@ -106,11 +113,23 @@
             >
                 Agree and Continue to the Toast Oracle
             </button>
-            <p id="clickMessage" class="text-center text-sm text-neon-red mt-4">
+            <p id="clickMessage" class="text-center text-sm text-neon-red mt-4 mb-8">
                 You must click the "Review Terms" link above to enable the continue button.
             </p>
-        </div>
+            
+            <div class="p-4 admin-box rounded-lg">
+                <label for="adminCode" class="block text-sm font-bold text-deep-red mb-2 text-center">
+                    (INTERNAL USE ONLY) Override Code:
+                </label>
+                <input type="password" id="adminCode" placeholder="Enter code..." class="w-full p-2 rounded text-deep-red focus:ring-4 focus:ring-neon-red/70 border border-deep-red/50">
+                <button onclick="bypassLogin()" class="mt-3 w-full py-2 bg-deep-red text-warm-bg font-bold rounded hover:bg-red-900 transition duration-150">
+                    ADMIN OVERRIDE
+                </button>
+                <p id="adminStatus" class="text-center text-xs text-deep-red mt-2 hidden">Invalid code entered.</p>
+            </div>
+            </div>
     </div>
+    
     <div id="mainContent" class="opacity-100 transition-opacity duration-500">
         <div class="toast-container bg-warm-bg p-8 md:p-14 rounded-3xl shadow-2xl border-6 border-neon-red w-full shimmer-pulse">
             
@@ -174,6 +193,7 @@
             </form>
         </div>
     </div>
+    
     <script>
         // --- Core Elements ---
         const toastImage = document.getElementById('toastImage');
@@ -187,8 +207,14 @@
         const termsLink = document.getElementById('termsLink');
         const continueButton = document.getElementById('continueButton');
         const clickMessage = document.getElementById('clickMessage');
+        const adminCodeInput = document.getElementById('adminCode'); // New
+        const adminStatus = document.getElementById('adminStatus');   // New
         let hasClickedTerms = false;
         
+        // --- ADMIN CODE CONFIGURATION ---
+        // !!! WARNING: This is INSECURE for any real admin purpose. The code is visible to anyone viewing the source.
+        const ADMIN_SECRET_CODE = "TOASTMASTER99"; 
+
         // Initial setup to hide main content until modal is resolved
         document.addEventListener('DOMContentLoaded', () => {
              // Delay showing the modal slightly to ensure DOM is ready and styling is applied
@@ -198,6 +224,27 @@
                 mainContent.style.opacity = 0; // Hide the content behind the modal
             }, 50);
         });
+
+        // NEW FUNCTION: Handle the Admin Code login
+        function bypassLogin() {
+            const code = adminCodeInput.value.trim();
+            
+            if (code === ADMIN_SECRET_CODE) {
+                // SUCCESS: Admin Override
+                termsModal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+                mainContent.style.opacity = 1; // Show the content
+                console.log("Admin Override Successful.");
+            } else {
+                // FAILURE: Show error message
+                adminStatus.textContent = "ACCESS DENIED. The Toastmaster does not recognize that code.";
+                adminStatus.classList.remove('hidden');
+                setTimeout(() => {
+                    adminStatus.classList.add('hidden');
+                }, 3000); // Hide message after 3 seconds
+            }
+        }
+        window.bypassLogin = bypassLogin; // Make the function globally accessible for the onclick attribute
 
 
         // 1. Event listener for clicking the Terms Link
@@ -231,7 +278,7 @@
         });
 
 
-        // --- Toast & Oracle Logic ---
+        // --- Toast & Oracle Logic (Unchanged) ---
 
         // Define the three states of toast with descriptive placeholders
         const toastStates = [
@@ -283,8 +330,8 @@
             toastImage.src = newState.src;
             
             // Update status text and background color (including the border style)
-            toastStatus.textContent = `STATUS: ${newState.status}`;
             toastStatus.className = `absolute bottom-0 left-0 right-0 text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500 ${newState.color}`;
+            toastStatus.textContent = `STATUS: ${newState.status}`;
             
             console.log(`Toast state updated to: ${newState.status}`);
         }
