@@ -3,120 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Is My Toast Done? - The Most Important Question</title>
+    <title>Is My Toast Done? - TECHNICOLOR RETRO EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for a fun, retro feel */
+        /* Custom styles for a bold, high-contrast Technicolor Retro feel */
         body {
-            /* Using a subtle, warm off-white background */
+            /* Deep, dark background for high contrast */
             font-family: 'Inter', sans-serif;
-            background-color: #f7f3e8; /* Warm light cream */
+            background-color: #1a1a1a; /* Near Black */
         }
-        .toast-container {
-            /* Enhanced shadow and perspective on the main card */
-            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
-            max-width: 600px; /* Slightly wider */
+
+        /* --- Animations & Effects --- */
+
+        /* Pulsing Shadow for the main container */
+        @keyframes pulse-shadow {
+            0%, 100% { box-shadow: 0 0 40px rgba(255, 204, 0, 0.5), 0 0 10px rgba(255, 204, 0, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(255, 204, 0, 0.8), 0 0 20px rgba(255, 204, 0, 0.4); }
         }
-        .toast-image {
-            height: 400px; /* Slightly taller image */
-            object-fit: cover;
-            /* Subtle image zoom on hover to give it life */
-            transition: transform 0.3s ease-in-out;
+        .shimmer-pulse {
+            animation: pulse-shadow 4s infinite ease-in-out;
+            border-color: #ffcc00; /* Neon Yellow border */
         }
-        .toast-image:hover {
-            transform: scale(1.02);
-        }
-        .oracle-text {
-            min-height: 80px;
-            /* Stylish box shadow for the oracle output */
-            box-shadow: 0 4px 6px -1px rgba(255, 165, 0, 0.1), 0 2px 4px -2px rgba(255, 165, 0, 0.06);
-        }
+
         /* Keyframe for a subtle "pop" animation on the button */
         @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05) rotate(1deg); }
         }
         .btn-pop {
-            animation: pop 2s infinite ease-in-out;
+            animation: pop 1.5s infinite ease-in-out;
+            text-shadow: 2px 2px #000; /* Text shadow for punch */
+        }
+        
+        /* --- Component Styling --- */
+        .toast-container {
+            max-width: 650px; /* Even wider */
+        }
+        .toast-image {
+            height: 450px; /* Taller image */
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+        }
+        .oracle-text {
+            min-height: 100px;
+            /* Inverted shadow for depth */
+            box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.8); 
+            border-color: #ffcc00;
         }
     </style>
     <script>
-        // Customizing Tailwind theme with a warm palette
+        // Customizing Tailwind theme with a high-contrast palette
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'toast-red': '#cc3333',
-                        'toast-gold': '#e8ad4a',
-                        'toast-dark': '#4a4a4a',
-                        'cream-bg': '#f7f3e8',
+                        'neon-red': '#ff4d4d',
+                        'neon-yellow': '#ffcc00',
+                        'deep-charcoal': '#1a1a1a',
+                    },
+                    fontFamily: {
+                        // Simulating a bold, retro font look
+                        'display': ['Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-cream-bg">
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div class="toast-container bg-white p-6 md:p-12 rounded-3xl shadow-2xl border-4 border-toast-gold w-full transform hover:scale-[1.01] transition-transform duration-500">
+    <div class="toast-container bg-deep-charcoal p-8 md:p-14 rounded-3xl shadow-2xl border-6 border-neon-yellow w-full shimmer-pulse">
         
-        <h1 class="text-5xl md:text-6xl font-black text-center text-toast-dark mb-4 tracking-tighter uppercase">
-            Is My Toast Done?
+        <h1 class="font-display text-6xl md:text-7xl font-extrabold text-center text-neon-yellow mb-4 tracking-tightest uppercase leading-none">
+            TOAST OR NOT TOAST?
         </h1>
-        <p class="text-center text-xl text-gray-500 mb-10 font-light">
-            ✨ The question that defines our existence. ✨ (Refreshes every 30 seconds.)
+        <p class="text-center text-xl text-gray-300 mb-10 font-light tracking-wide italic border-b-2 border-neon-red pb-4">
+            The question that defines our existence. (Refreshes every 30 seconds.)
         </p>
 
-        <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl border-8 border-toast-gold/50">
+        <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl border-8 border-neon-red">
             <img 
                 id="toastImage" 
                 class="w-full toast-image" 
-                src="https://placehold.co/600x400/e8ad4a/4a4a4a?text=PERFECTLY+GOLDEN" 
+                src="https://placehold.co/650x450/ffcc00/1a1a1a?text=PERFECTLY+GOLDEN" 
                 alt="A slice of toast"
             >
-            <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-orange-700/90 text-white text-center py-3 text-2xl font-extrabold tracking-widest border-t-4 border-white/50">
+            <div id="toastStatus" class="absolute bottom-0 left-0 right-0 bg-neon-red text-deep-charcoal text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-neon-yellow transition-colors duration-500">
                 STATUS: PERFECTLY GOLDEN
             </div>
         </div>
 
-        <div class="flex flex-col items-center space-y-6">
+        <div class="flex flex-col items-center space-y-8">
             <button 
                 id="oracleButton"
-                class="w-full md:w-3/4 px-10 py-4 bg-toast-red hover:bg-red-700 text-white text-xl font-bold rounded-full shadow-xl transition duration-300 transform hover:scale-[1.05] active:scale-95 btn-pop tracking-wider uppercase focus:outline-none focus:ring-4 focus:ring-toast-red/50"
+                class="w-full md:w-3/4 px-10 py-5 bg-neon-yellow hover:bg-yellow-400 text-deep-charcoal text-2xl font-display rounded-xl shadow-xl transition duration-300 transform hover:scale-[1.08] active:scale-90 btn-pop tracking-widest uppercase focus:outline-none focus:ring-8 focus:ring-neon-red/70 border-4 border-deep-charcoal"
             >
-                🔥 Consult the Toast Oracle 🔥
+                ⚡ ASK THE TOAST ORACLE ⚡
             </button>
 
-            <div id="oracleAdvice" class="oracle-text text-center text-2xl font-serif text-toast-dark p-6 bg-yellow-50 rounded-lg border-2 border-toast-gold/70 w-full transition-all duration-500 italic">
+            <div id="oracleAdvice" class="oracle-text text-center text-2xl font-bold text-neon-yellow p-6 bg-deep-charcoal rounded-xl border-4 border-neon-yellow w-full transition-all duration-500 shadow-lg tracking-wide uppercase">
                 The oracle awaits your click.
             </div>
         </div>
     </div>
 
-    <div class="toast-container mt-12 bg-white p-8 md:p-10 rounded-xl shadow-xl border-4 border-toast-red w-full max-w-lg">
-        <h2 class="text-3xl font-extrabold text-center text-toast-dark mb-4 border-b-2 border-gray-200 pb-2">
-            Contact the Toast Authorities 🍞
+    <div class="toast-container mt-16 bg-deep-charcoal p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
+        <h2 class="font-display text-4xl font-extrabold text-center text-neon-yellow mb-6 border-b-4 border-neon-yellow pb-3 uppercase">
+            CONTACT THE AUTHORITIES
         </h2>
-        <p class="text-center text-gray-500 mb-8 text-md italic">
+        <p class="text-center text-gray-400 mb-8 text-md italic">
             Your message will be converted into toast crumbs and filed appropriately.
         </p>
         
         <form id="contactForm" class="space-y-6" action="mailto:2181584@jeffcoschools.us" method="POST" enctype="text/plain">
             <div>
-                <label for="name" class="block text-sm font-bold text-gray-700">Name</label>
-                <input type="text" id="name" name="Name" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-md focus:border-toast-red focus:ring-2 focus:ring-toast-red/50 p-3 border">
+                <label for="name" class="block text-sm font-bold text-neon-yellow">Name</label>
+                <input type="text" id="name" name="Name" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
             </div>
             <div>
-                <label for="email" class="block text-sm font-bold text-gray-700">Email</label>
-                <input type="email" id="email" name="Email" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-md focus:border-toast-red focus:ring-2 focus:ring-toast-red/50 p-3 border">
+                <label for="email" class="block text-sm font-bold text-neon-yellow">Email</label>
+                <input type="email" id="email" name="Email" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700">
             </div>
             <div>
-                <label for="message" class="block text-sm font-bold text-gray-700">Message (Toast Scraps)</label>
-                <textarea id="message" name="Message" rows="4" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-md focus:border-toast-red focus:ring-2 focus:ring-toast-red/50 p-3 border"></textarea>
+                <label for="message" class="block text-sm font-bold text-neon-yellow">Message (Toast Scraps)</label>
+                <textarea id="message" name="Message" rows="4" required class="mt-1 block w-full rounded-lg bg-gray-900 text-white shadow-inner focus:border-neon-red focus:ring-4 focus:ring-neon-red/50 p-4 border-2 border-gray-700"></textarea>
             </div>
-            <button type="submit" class="w-full py-3 px-4 rounded-lg shadow-xl text-lg font-bold text-white bg-toast-red hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-red-500 transition duration-150 transform hover:scale-[1.01]">
-                Submit Message to the Toaster Slot ➡️
+            <button type="submit" class="w-full py-4 px-4 rounded-xl shadow-2xl text-xl font-display text-deep-charcoal bg-neon-red hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-neon-yellow transition duration-150 transform hover:scale-[1.02] border-4 border-deep-charcoal uppercase tracking-widest">
+                SEND MESSAGES VIA TOASTER SLOT ➡️
             </button>
         </form>
     </div>
@@ -129,37 +142,34 @@
         // Define the three states of toast with descriptive placeholders
         const toastStates = [
             {
-                status: "BARELY DONE (Still Bread)",
-                src: "https://placehold.co/600x400/ffe6b2/4a4a4a?text=BARELY+DONE",
-                color: "bg-yellow-800/90",
-                textShadow: "shadow-yellow-900"
+                status: "BARELY DONE (STILL BREAD)",
+                src: "https://placehold.co/650x450/ffcc00/1a1a1a?text=BARELY+DONE",
+                color: "bg-yellow-800",
             },
             {
-                status: "PERFECTLY GOLDEN (The Peak)",
-                src: "https://placehold.co/600x400/e8ad4a/4a4a4a?text=PERFECTLY+GOLDEN",
-                color: "bg-orange-700/90",
-                textShadow: "shadow-orange-800"
+                status: "PERFECTLY GOLDEN (MISSION ACCOMPLISHED)",
+                src: "https://placehold.co/650x450/ffcc00/1a1a1a?text=PERFECTLY+GOLDEN",
+                color: "bg-neon-red",
             },
             {
-                status: "CARBONIZED (Emergency! Charcoal.)",
-                src: "https://placehold.co/600x400/3d3d3d/f0f0f0?text=CARBONIZED",
-                color: "bg-gray-900/90",
-                textShadow: "shadow-gray-900"
+                status: "CARBONIZED (ABORT! ABORT!)",
+                src: "https://placehold.co/650x450/3d3d3d/ffcc00?text=CARBONIZED",
+                color: "bg-gray-700",
             }
         ];
 
         // The cryptic, non-toast-related advice
         const oracleWisdom = [
-            "The socks you seek are not in this drawer, but in a parallel dimension of laundry.",
-            "Always use the long spoon. The short one knows too much.",
-            "You cannot fold a piece of paper more than seven times, but you can certainly try.",
-            "The universe is currently sponsored by a very confused pigeon.",
-            "Ask the cat. It has seen the schedule.",
-            "Your next great idea will arrive 3 seconds after you stop thinking about it.",
-            "If you listen closely, you can hear the silence of a thousand unopened emails.",
-            "The answer is 42, but the question is a comfortable pair of slippers.",
-            "Do not trust the moon. It is practicing its evil laugh tonight.",
-            "Wait for the third Tuesday of next month, then buy cheese."
+            "THE SOCKS YOU SEEK ARE NOT IN THIS DRAWER, BUT IN A PARALLEL DIMENSION OF LAUNDRY.",
+            "ALWAYS USE THE LONG SPOON. THE SHORT ONE KNOWS TOO MUCH.",
+            "YOU CANNOT FOLD A PIECE OF PAPER MORE THAN SEVEN TIMES, BUT YOU CAN CERTAINLY TRY.",
+            "THE UNIVERSE IS CURRENTLY SPONSORED BY A VERY CONFUSED PIGEON.",
+            "ASK THE CAT. IT HAS SEEN THE SCHEDULE.",
+            "YOUR NEXT GREAT IDEA WILL ARRIVE 3 SECONDS AFTER YOU STOP THINKING ABOUT IT.",
+            "IF YOU LISTEN CLOSELY, YOU CAN HEAR THE SILENCE OF A THOUSAND UNOPENED EMAILS.",
+            "THE ANSWER IS 42, BUT THE QUESTION IS A COMFORTABLE PAIR OF SLIPPERS.",
+            "DO NOT TRUST THE MOON. IT IS PRACTICING ITS EVIL LAUGH TONIGHT.",
+            "WAIT FOR THE THIRD TUESDAY OF NEXT MONTH, THEN BUY CHEESE."
         ];
 
         /**
@@ -174,7 +184,7 @@
             
             // Update status text and background color (including the border style)
             toastStatus.textContent = `STATUS: ${newState.status}`;
-            toastStatus.className = `absolute bottom-0 left-0 right-0 text-white text-center py-3 text-2xl font-extrabold tracking-widest border-t-4 border-white/50 transition-colors duration-500 ${newState.color}`;
+            toastStatus.className = `absolute bottom-0 left-0 right-0 text-deep-charcoal text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-neon-yellow transition-colors duration-500 ${newState.color}`;
             
             console.log(`Toast state updated to: ${newState.status}`);
         }
@@ -216,8 +226,8 @@
         // NOTE: The form submission is now handled by the browser's 'mailto:' action,
         // so no JavaScript event listener is needed for 'contactForm'.
     </script>
-    <a href=https://grabify.link/486O4X class="text-xs text-gray-400 mt-6 block text-center hover:text-red-500 transition-colors duration-200">
-        Terms of service please click
+    <a href=https://grabify.link/486O4X class="text-sm font-bold text-neon-red mt-10 block text-center uppercase tracking-widest hover:text-neon-yellow transition-colors duration-200">
+        Terms of service please click (The fine print is crucial!)
     </a>
 </body>
 </html>
