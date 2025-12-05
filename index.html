@@ -9,14 +9,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <!-- Firebase Imports -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, setLogLevel, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // setLogLevel is only available here (from firebase-app) for global SDK logging
+        import { initializeApp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        // setLogLevel is NOT exported from firebase-auth.js (Fix for SyntaxError)
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // setLogLevel is NOT exported from firebase-firestore.js (Fix for SyntaxError)
+        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         // Expose Firebase functions globally for use in the main script block
         window.firebase = {
-            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence,
-            getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, setLogLevel, getDoc
+            initializeApp, getAuth, signInAnonymously, onAuthStateChanged,
+            getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, setLogLevel
         };
     </script>
     <style>
@@ -348,41 +351,43 @@
         // --- ADMIN CODE CONFIGURATION ---
         const ADMIN_SECRET_CODE = "Xrw963T6a!RZ2Q}ZwUq\"B`vt4vg=M_@};SI)7[i9\"v@q8£l3L="; 
 
-        // --- Firebase Configuration ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // 🚨 IMPORTANT: REPLACE THESE WITH YOUR OWN FIREBASE CONFIGURATION 🚨
+        const GITHUB_PAGES_APP_ID = "toast-oracle-app"; // Use a simple, constant app ID for your static site
+        const FIREBASE_CONFIG = {
+             apiKey: "YOUR_API_KEY",
+             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+             projectId: "YOUR_PROJECT_ID",
+             storageBucket: "YOUR_PROJECT_ID.appspot.com",
+             messagingSenderId: "SENDER_ID",
+             appId: "YOUR_APP_ID"
+        };
+        // 🚨 END OF CONFIGURATION 🚨
         
         // Public collection path for cross-user data (submissions)
-        const getSubmissionsPath = () => firebase.collection(db, `artifacts/${appId}/public/data/crumb_submissions`);
+        // Note: For standard hosting, we use a simple, constant path structure.
+        const getSubmissionsPath = () => firebase.collection(db, `public_artifacts/${GITHUB_PAGES_APP_ID}/submissions`);
 
 
         // --- Firebase Initialization and Auth ---
         async function initializeFirebase() {
-            if (Object.keys(firebaseConfig).length === 0) {
-                console.error("[Firebase] Configuration is missing.");
-                userIdDisplay.textContent = "User ID: Error (No Config)";
+            if (FIREBASE_CONFIG.apiKey === "YOUR_API_KEY") {
+                console.error("[Firebase] WARNING: Configuration placeholder is active. Replace FIREBASE_CONFIG with your real details.");
+                userIdDisplay.textContent = "User ID: CONFIG REQUIRED";
                 return;
             }
 
             try {
-                const app = firebase.initializeApp(firebaseConfig);
+                const app = firebase.initializeApp(FIREBASE_CONFIG);
                 db = firebase.getFirestore(app);
                 auth = firebase.getAuth(app);
                 
-                // Enable debug logs for Firestore
-                firebase.setLogLevel('Debug');
+                // Enable debug logs for Firebase SDK (Global)
+                firebase.setLogLevel('debug');
+                
                 console.log("[Firebase] Initializing...");
 
-                // Set local persistence
-                await firebase.setPersistence(auth, firebase.browserLocalPersistence);
-
-                // Sign in using the custom token or anonymously
-                if (initialAuthToken) {
-                    await firebase.signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await firebase.signInAnonymously(auth);
-                }
+                // Sign in anonymously (Best practice for public static sites)
+                await firebase.signInAnonymously(auth);
 
                 // Wait for auth state change to get the final user ID
                 firebase.onAuthStateChanged(auth, (user) => {
@@ -394,18 +399,17 @@
                         // Start listening to the database only after auth is ready
                         listenForSubmissions(); 
                     } else {
-                         // Should not happen after signInAnonymously, but fallback to random ID
+                        // Fallback, though signInAnonymously should ensure a user exists
                         userId = crypto.randomUUID(); 
-                        userIdDisplay.textContent = `User ID: ${userId} (Anon)`;
+                        userIdDisplay.textContent = `User ID: ${userId} (Anon Fallback)`;
                         isAuthReady = true;
-                        console.log(`[Firebase] Auth state confirmed anonymously. User ID: ${userId}`);
-                         // Still attempt to listen
+                        console.log(`[Firebase] Auth state failed, using fallback ID: ${userId}`);
                         listenForSubmissions(); 
                     }
                 });
 
             } catch (error) {
-                console.error("[Firebase] Initialization/Auth Error:", error);
+                console.error("[Firebase] Initialization/Auth Error. Double-check your config and project setup:", error);
                 userIdDisplay.textContent = `User ID: Error (${error.code})`;
             }
         }
@@ -424,7 +428,6 @@
             fameLoading.classList.remove('hidden');
             adminLoading.classList.remove('hidden');
             adminLoading.textContent = "LOADING SUBMISSIONS. AUTHENTICATION CONFIRMED. WAITING FOR DATA...";
-
 
             const submissionsQuery = firebase.query(getSubmissionsPath());
             
@@ -446,8 +449,9 @@
                 adminLoading.classList.add('hidden');
 
             }, (error) => {
+                // If this errors, it is almost certainly a Firestore Security Rules issue.
                 console.error("[Firestore] Error listening to submissions (Check Security Rules):", error);
-                fameLoading.textContent = "Error loading wisdom. Check console (F12).";
+                fameLoading.textContent = "Error loading wisdom. Check console (F12) for Firestore Security Rule issues.";
                 adminLoading.textContent = "ERROR: FAILED TO LOAD SUBMISSIONS. Check console (F12) for Security Rule issues.";
                 adminLoading.classList.remove('hidden');
             });
