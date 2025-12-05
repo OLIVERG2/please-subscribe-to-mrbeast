@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { 
   getAuth, 
   signInAnonymously, 
-  signInWithCustomToken, // Added for environment token support
+  signInWithCustomToken, // Essential for using the environment's token
   onAuthStateChanged 
 } from 'firebase/auth';
 import { 
@@ -21,6 +21,7 @@ import {
 
 // --- CANVAS ENVIRONMENT VARIABLES (MANDATORY USE) ---
 // These globals are provided by the hosting environment for Firebase setup.
+// They are required for authentication within this specific platform.
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -214,7 +215,7 @@ function App() {
       const handleAuth = async () => {
           try {
               if (initialAuthToken) {
-                  // Use the provided custom token for secure sign-in
+                  // Use the provided custom token for secure sign-in (This is the key for in-platform execution)
                   await signInWithCustomToken(userAuth, initialAuthToken);
               } else {
                   // Fallback to anonymous sign-in if no token is provided
@@ -284,7 +285,7 @@ function App() {
         setIsOracleLoading(false);
     }, 300); 
 
-  }, [submissions]); // Dependency on submissions ensures new data is considered.
+  }, [submissions]); 
   
   // --- Admin/Modal Logic (Unchanged) ---
 
@@ -314,14 +315,14 @@ function App() {
 
   // 4. Real-time Data Listener (`onSnapshot`)
   useEffect(() => {
-    // Guard clause: Only run once DB is initialized and user is authenticated (anonymous or otherwise)
+    // Guard clause: Only run once DB is initialized and user is authenticated 
     if (!db || !isAuthReady) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      // FIX: Use the 5-segment path required for collections
+      // Use the 5-segment path required for collections
       const fullCollectionPath = getPublicCollectionPath(appId);
 
       const submissionsQuery = query(
@@ -375,7 +376,7 @@ function App() {
     };
 
     try {
-      // FIX: Use the 5-segment path for adding documents
+      // Use the 5-segment path for adding documents
       const fullCollectionPath = getPublicCollectionPath(appId);
       await addDoc(collection(db, fullCollectionPath), newSubmission);
       setToastStatus('');
@@ -394,7 +395,7 @@ function App() {
     if (!isAdmin || !db) return; // Must be admin and DB must be ready
     
     try {
-      // FIX: Use the 5-segment path for updating documents
+      // Use the 5-segment path for updating documents
       const fullCollectionPath = getPublicCollectionPath(appId);
       const crumbRef = doc(db, fullCollectionPath, docId);
       await updateDoc(crumbRef, { approved: approvedStatus });
