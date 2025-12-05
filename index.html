@@ -76,6 +76,10 @@
             border: 2px dashed #881111; /* Deep Red dashed border */
         }
         
+        /* Style for pending status */
+        .pending {
+            border-left-color: #ff8c00; /* Dark Orange for pending */
+        }
     </style>
     <script>
         // Customizing Tailwind theme with a high-contrast, warm palette
@@ -87,6 +91,7 @@
                         'deep-red': '#881111', /* Dark text color on yellow */
                         'accent-yellow': '#ffe600',
                         'warm-bg': '#fff3d6',
+                        'pending-orange': '#ff8c00',
                     },
                     fontFamily: {
                         // Simulating a bold, retro font look
@@ -142,7 +147,7 @@
                 <button onclick="bypassLogin()" class="mt-3 w-full py-2 bg-deep-red text-warm-bg font-bold rounded hover:bg-red-900 transition duration-150">
                     ADMIN OVERRIDE
                 </button>
-                <p id="adminStatus" class="text-center text-xs text-deep-red mt-2 hidden">Invalid code entered.</p>
+                <p id="adminStatus" class="text-center text-xs text-deep-red mt-2 hidden"></p>
             </div>
             </div>
     </div>
@@ -196,29 +201,29 @@
             </div>
         </div>
 
-        <!-- 3. Toast Hall of Fame Section -->
+        <!-- 3. Toast Hall of Fame Section (User-Facing) -->
         <div class="toast-container mt-16 bg-warm-bg p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
             <h2 class="font-display text-4xl font-extrabold text-center text-deep-red mb-6 border-b-4 border-neon-red pb-3 uppercase">
-                TOAST HALL OF FAME: CRUMB SUBMISSIONS
+                TOAST HALL OF FAME: APPROVED WISDOM
             </h2>
             <p class="text-center text-deep-red/80 mb-6 text-md italic">
-                Enter your ultimate toast status and oracle advice for posterity.
+                These Crumbs have been sanctioned by the Toastmaster.
             </p>
 
             <div class="space-y-4 mb-8 p-6 bg-accent-yellow/50 rounded-xl border-2 border-deep-red">
                 <input type="text" id="newStatus" placeholder="Your Ultimate Toast Status (e.g., THE FINAL CRUNCH)" class="w-full p-3 rounded-lg bg-gray-100 text-deep-red shadow-inner border-2 border-neon-red/50">
                 <textarea id="newAdvice" rows="2" placeholder="Your Cryptic Oracle Advice (e.g., WHEN THE BIRDS SING, THE CHEESE IS READY)" class="w-full p-3 rounded-lg bg-gray-100 text-deep-red shadow-inner border-2 border-neon-red/50"></textarea>
                 <button onclick="submitCrumb()" class="w-full py-3 bg-neon-red text-warm-bg font-display font-bold rounded-lg hover:bg-red-600 transition duration-150 uppercase tracking-widest">
-                    SUBMIT CRUMB TO THE ARCHIVE
+                    SUBMIT CRUMB FOR APPROVAL
                 </button>
                 <p id="submissionMessage" class="text-center text-deep-red text-sm mt-2 hidden"></p>
             </div>
 
             <h3 class="font-display text-2xl font-bold text-deep-red mb-4 uppercase">
-                ARCHIVED WISDOM:
+                THE ARCHIVE:
             </h3>
             <ul id="fameList" class="space-y-4 p-4 border-4 border-deep-red/30 rounded-xl bg-warm-bg/70 max-h-96 overflow-y-auto">
-                <!-- Submissions will be injected here -->
+                <!-- Approved Submissions will be injected here -->
                 <li class="p-3 bg-warm-bg rounded-lg border-l-4 border-neon-red shadow-md text-sm text-deep-red">
                     <strong class="block text-deep-red text-base">STATUS: ORIGINAL GOLDEN AGE</strong>
                     ADVICE: THE ORACLE ALWAYS STARTS WITH A BLANK SLATE.
@@ -226,16 +231,16 @@
             </ul>
         </div>
 
-        <!-- --- ADMIN PANEL SECTION (NEW) --- -->
+        <!-- --- ADMIN PANEL SECTION (UPDATED) --- -->
         <div id="adminPanel" class="toast-container mt-16 mb-16 bg-deep-red p-10 md:p-12 rounded-3xl shadow-xl border-4 border-accent-yellow w-full max-w-lg hidden">
             <h2 class="font-display text-4xl font-extrabold text-center text-accent-yellow mb-6 border-b-4 border-accent-yellow pb-3 uppercase">
                 ADMIN TOASTMASTER CONTROL PANEL
             </h2>
             <p class="text-center text-warm-bg/80 mb-8 text-md italic">
-                Viewing current Crumb Submissions. This section is for authorized personnel only.
+                Reviewing Pending and Approved Crumb Submissions.
             </p>
             <div id="adminSubmissionsList" class="space-y-4 p-4 border-4 border-accent-yellow/30 rounded-xl bg-deep-red/90 max-h-96 overflow-y-auto">
-                <!-- Submissions will be rendered here by JS -->
+                <!-- Submissions and control buttons will be rendered here by JS -->
             </div>
         </div>
 
@@ -304,9 +309,11 @@
         const adminSubmissionsList = document.getElementById('adminSubmissionsList');
 
         // Initial, hardcoded wisdom for the Hall of Fame
+        // UPDATED: Added 'approved: boolean' flag
         let crumbSubmissions = [
-            { status: "THE CUBE IS READY", advice: "FOUR SIDES, ONE DESTINY. FOLD THE CRUST." },
-            { status: "DARK MATTER TOAST", advice: "NEVER SEEK WHAT IS NOT THERE. BUT CHECK THE FLOOR." }
+            { status: "THE CUBE IS READY", advice: "FOUR SIDES, ONE DESTINY. FOLD THE CRUST.", approved: true },
+            { status: "DARK MATTER TOAST", advice: "NEVER SEEK WHAT IS NOT THERE. BUT CHECK THE FLOOR.", approved: true },
+            { status: "PENDING CRUNCH", advice: "THIS IS A TEST SUBMISSION AWAITING TOASTMASTER APPROVAL.", approved: false }
         ];
 
         // --- ADMIN CODE CONFIGURATION ---
@@ -361,17 +368,24 @@
             const code = adminCodeInput.value.trim();
             
             if (code === ADMIN_SECRET_CODE) {
-                termsModal.classList.add('hidden');
-                document.body.style.overflow = 'auto'; 
-                mainContent.style.opacity = 1;
+                adminStatus.textContent = "ACCESS GRANTED. WELCOME, TOASTMASTER.";
+                adminStatus.classList.remove('hidden', 'text-neon-red');
+                adminStatus.classList.add('text-deep-red');
                 
-                // NEW: Reveal the Admin Panel and render submissions
-                adminPanel.classList.remove('hidden');
-                renderAdminSubmissions(); 
+                setTimeout(() => {
+                    termsModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto'; 
+                    mainContent.style.opacity = 1;
+                    
+                    // Reveal the Admin Panel and render submissions
+                    adminPanel.classList.remove('hidden');
+                    renderAdminSubmissions(); 
+                }, 1000);
 
             } else {
                 adminStatus.textContent = "ACCESS DENIED. The Toastmaster does not recognize that code.";
-                adminStatus.classList.remove('hidden');
+                adminStatus.classList.remove('hidden', 'text-deep-red');
+                adminStatus.classList.add('text-neon-red');
                 setTimeout(() => {
                     adminStatus.classList.add('hidden');
                 }, 3000);
@@ -448,8 +462,14 @@
                 oracleButton.classList.remove('animate-pulse');
             }, 500);
 
-            // Use built-in wisdom OR archived wisdom randomly
-            const wisdomSource = Math.random() < 0.7 ? oracleWisdom : crumbSubmissions.map(c => c.advice.toUpperCase());
+            // Filter submissions for only approved ones
+            const approvedCrumbWisdom = crumbSubmissions
+                .filter(c => c.approved)
+                .map(c => c.advice.toUpperCase());
+
+            // Combine fixed wisdom with approved wisdom
+            const wisdomSource = oracleWisdom.concat(approvedCrumbWisdom);
+            
             const index = Math.floor(Math.random() * wisdomSource.length);
             const advice = wisdomSource[index];
             
@@ -512,7 +532,15 @@
         // Function to render the user-facing Hall of Fame list
         function renderFameList() {
             fameList.innerHTML = ''; // Clear existing list
-            crumbSubmissions.forEach(crumb => {
+            
+            const approvedCrumbs = crumbSubmissions.filter(c => c.approved);
+
+            if (approvedCrumbs.length === 0) {
+                fameList.innerHTML = '<p class="text-center text-deep-red italic">The archive is empty. Awaiting sanctioned wisdom.</p>';
+                return;
+            }
+
+            approvedCrumbs.forEach(crumb => {
                 const li = document.createElement('li');
                 li.className = 'p-3 bg-warm-bg rounded-lg border-l-4 border-neon-red shadow-md text-sm text-deep-red';
                 li.innerHTML = `<strong class="block text-deep-red text-base">STATUS: ${crumb.status.toUpperCase()}</strong>${crumb.advice.toUpperCase()}`;
@@ -530,10 +558,10 @@
                 return;
             }
 
-            crumbSubmissions.push({ status, advice });
-            renderFameList();
+            // NEW: Submissions default to UNAPPROVED
+            crumbSubmissions.push({ status, advice, approved: false });
             
-            // If admin panel is open, update it too
+            // If admin panel is open, update it
             if (!adminPanel.classList.contains('hidden')) {
                 renderAdminSubmissions();
             }
@@ -542,7 +570,7 @@
             newStatusInput.value = '';
             newAdviceInput.value = '';
 
-            showMessage("CRUMB SUBMITTED! THE ARCHIVE IS GRATEFUL.", 'text-deep-red');
+            showMessage("CRUMB SUBMITTED! AWAITING TOASTMASTER APPROVAL.", 'text-pending-orange');
         }
         window.submitCrumb = submitCrumb; // Expose to global scope for HTML onclick
 
@@ -555,7 +583,29 @@
             }, 4000);
         }
 
-        // --- Admin Panel Logic (NEW) ---
+        // --- Admin Panel Logic (NEW Approval Functions) ---
+
+        function updateAllDisplays() {
+            renderAdminSubmissions();
+            renderFameList();
+        }
+
+        function approveCrumb(index) {
+            if (crumbSubmissions[index]) {
+                crumbSubmissions[index].approved = true;
+                updateAllDisplays();
+            }
+        }
+        window.approveCrumb = approveCrumb;
+
+        function disapproveCrumb(index) {
+            if (crumbSubmissions[index]) {
+                crumbSubmissions[index].approved = false;
+                updateAllDisplays();
+            }
+        }
+        window.disapproveCrumb = disapproveCrumb;
+
 
         // Function to render the Admin submissions list
         function renderAdminSubmissions() {
@@ -567,11 +617,30 @@
             }
 
             crumbSubmissions.forEach((crumb, index) => {
+                const isApproved = crumb.approved;
+                
+                const statusColor = isApproved ? 'text-green-400' : 'text-pending-orange';
+                const borderColor = isApproved ? 'border-neon-red' : 'border-pending-orange';
+                const statusText = isApproved ? 'APPROVED' : 'PENDING REVIEW';
+
                 const div = document.createElement('div');
-                div.className = 'p-3 bg-deep-red/90 rounded-lg border-l-4 border-accent-yellow shadow-md text-sm text-warm-bg';
+                div.className = `p-4 bg-deep-red/90 rounded-lg border-l-4 ${borderColor} shadow-md text-sm text-warm-bg mb-4`;
                 div.innerHTML = `
-                    <strong class="block text-accent-yellow text-base">ID #${index + 1} - STATUS: ${crumb.status.toUpperCase()}</strong>
-                    <span class="text-xs text-warm-bg/70">ADVICE: ${crumb.advice.toUpperCase()}</span>
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <strong class="block text-accent-yellow text-base">ID #${index + 1} - STATUS: ${crumb.status.toUpperCase()}</strong>
+                            <span class="block text-xs ${statusColor} font-bold">${statusText}</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-warm-bg/70 mb-3">ADVICE: ${crumb.advice.toUpperCase()}</p>
+                    <div class="flex space-x-2">
+                        <button onclick="approveCrumb(${index})" class="flex-1 py-1 px-2 text-xs font-bold rounded bg-green-600 text-white hover:bg-green-700 transition duration-150" ${isApproved ? 'disabled' : ''}>
+                            APPROVE ${isApproved ? '✅' : ''}
+                        </button>
+                        <button onclick="disapproveCrumb(${index})" class="flex-1 py-1 px-2 text-xs font-bold rounded bg-red-600 text-white hover:bg-red-700 transition duration-150" ${!isApproved ? 'disabled' : ''}>
+                            DISAPPROVE ${!isApproved ? '❌' : ''}
+                        </button>
+                    </div>
                 `;
                 adminSubmissionsList.appendChild(div);
             });
@@ -592,7 +661,7 @@
         // 1. Initial state setting
         updateToastState();
         updateContingencyMeter();
-        renderFameList();
+        renderFameList(); // Renders only approved items
 
         // 2. Set the recurring update interval (30,000 milliseconds = 30 seconds)
         const intervalInMilliseconds = 30000;
