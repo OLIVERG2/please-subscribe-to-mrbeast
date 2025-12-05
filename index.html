@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Is My Toast Done?</title>
+    <title>Is My Toast Done? - WARM RETRO ORACLE EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js for background music/sound effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <style>
         /* Custom styles for a bold, high-contrast Technicolor Retro feel */
         body {
             /* Warm yellowish background */
             font-family: 'Inter', sans-serif;
             background-color: #fff3d6; 
-            overflow: hidden; /* Prevent scrolling when modal is active */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         /* --- Animations & Effects --- */
@@ -36,6 +38,15 @@
             text-shadow: 2px 2px #000; /* Text shadow for punch */
         }
         
+        /* Contingency meter danger glow */
+        @keyframes danger-glow {
+            0%, 100% { background-color: #ff4d4d; }
+            50% { background-color: #ffe600; }
+        }
+        .danger-bar {
+            animation: danger-glow 1.5s infinite alternate;
+        }
+
         /* --- Component Styling --- */
         .toast-container {
             max-width: 650px; /* Even wider */
@@ -86,8 +97,14 @@
         }
     </script>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
+<body class="min-h-screen flex flex-col items-center p-4">
 
+    <!-- Audio Control Button -->
+    <button id="audioButton" class="fixed top-4 right-4 z-50 p-3 rounded-full bg-deep-red text-warm-bg shadow-xl hover:scale-105 transition-transform" aria-label="Toggle background audio">
+        <span id="audioIcon">🔊</span>
+    </button>
+
+    <!-- Initial Terms Modal (Login/Bypass) -->
     <div id="termsModal" class="fixed inset-0 flex items-center justify-center modal-background hidden">
         <div class="bg-warm-bg p-10 rounded-2xl border-4 border-neon-red shadow-2xl w-11/12 max-w-xl">
             <h2 class="font-display text-4xl text-deep-red text-center mb-6 uppercase tracking-widest border-b-4 border-neon-red pb-2">
@@ -130,7 +147,9 @@
             </div>
     </div>
     
-    <div id="mainContent" class="opacity-100 transition-opacity duration-500">
+    <!-- Main Content Area -->
+    <div id="mainContent" class="opacity-100 transition-opacity duration-500 flex flex-col items-center">
+        <!-- Main Oracle Section -->
         <div class="toast-container bg-warm-bg p-8 md:p-14 rounded-3xl shadow-2xl border-6 border-neon-red w-full shimmer-pulse">
             
             <h1 class="font-display text-6xl md:text-7xl font-extrabold text-center text-deep-red mb-4 tracking-tightest uppercase leading-none">
@@ -140,6 +159,17 @@
                 The question that defines our existence. (Refreshes every 30 seconds.)
             </p>
 
+            <!-- 2. Contingency Meter -->
+            <div id="contingencyMeter" class="mb-8 p-3 rounded-lg border-4 border-deep-red bg-gray-900 transition-all duration-500">
+                <p class="text-xs font-display text-neon-red text-center mb-1 uppercase tracking-widest">
+                    SYSTEM STABILITY: <span id="stabilityText" class="text-accent-yellow">NORMAL</span>
+                </p>
+                <div class="w-full h-4 bg-gray-700 rounded-full overflow-hidden">
+                    <div id="contingencyBar" class="h-full bg-green-500 transition-all duration-500" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- Toast Image and Status -->
             <div class="relative w-full mb-10 rounded-xl overflow-hidden shadow-2xl border-8 border-neon-red">
                 <img 
                     id="toastImage" 
@@ -166,7 +196,52 @@
             </div>
         </div>
 
+        <!-- 3. Toast Hall of Fame Section -->
         <div class="toast-container mt-16 bg-warm-bg p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
+            <h2 class="font-display text-4xl font-extrabold text-center text-deep-red mb-6 border-b-4 border-neon-red pb-3 uppercase">
+                TOAST HALL OF FAME: CRUMB SUBMISSIONS
+            </h2>
+            <p class="text-center text-deep-red/80 mb-6 text-md italic">
+                Enter your ultimate toast status and oracle advice for posterity.
+            </p>
+
+            <div class="space-y-4 mb-8 p-6 bg-accent-yellow/50 rounded-xl border-2 border-deep-red">
+                <input type="text" id="newStatus" placeholder="Your Ultimate Toast Status (e.g., THE FINAL CRUNCH)" class="w-full p-3 rounded-lg bg-gray-100 text-deep-red shadow-inner border-2 border-neon-red/50">
+                <textarea id="newAdvice" rows="2" placeholder="Your Cryptic Oracle Advice (e.g., WHEN THE BIRDS SING, THE CHEESE IS READY)" class="w-full p-3 rounded-lg bg-gray-100 text-deep-red shadow-inner border-2 border-neon-red/50"></textarea>
+                <button onclick="submitCrumb()" class="w-full py-3 bg-neon-red text-warm-bg font-display font-bold rounded-lg hover:bg-red-600 transition duration-150 uppercase tracking-widest">
+                    SUBMIT CRUMB TO THE ARCHIVE
+                </button>
+                <p id="submissionMessage" class="text-center text-deep-red text-sm mt-2 hidden"></p>
+            </div>
+
+            <h3 class="font-display text-2xl font-bold text-deep-red mb-4 uppercase">
+                ARCHIVED WISDOM:
+            </h3>
+            <ul id="fameList" class="space-y-4 p-4 border-4 border-deep-red/30 rounded-xl bg-warm-bg/70 max-h-96 overflow-y-auto">
+                <!-- Submissions will be injected here -->
+                <li class="p-3 bg-warm-bg rounded-lg border-l-4 border-neon-red shadow-md text-sm text-deep-red">
+                    <strong class="block text-deep-red text-base">STATUS: ORIGINAL GOLDEN AGE</strong>
+                    ADVICE: THE ORACLE ALWAYS STARTS WITH A BLANK SLATE.
+                </li>
+            </ul>
+        </div>
+
+        <!-- --- ADMIN PANEL SECTION (NEW) --- -->
+        <div id="adminPanel" class="toast-container mt-16 mb-16 bg-deep-red p-10 md:p-12 rounded-3xl shadow-xl border-4 border-accent-yellow w-full max-w-lg hidden">
+            <h2 class="font-display text-4xl font-extrabold text-center text-accent-yellow mb-6 border-b-4 border-accent-yellow pb-3 uppercase">
+                ADMIN TOASTMASTER CONTROL PANEL
+            </h2>
+            <p class="text-center text-warm-bg/80 mb-8 text-md italic">
+                Viewing current Crumb Submissions. This section is for authorized personnel only.
+            </p>
+            <div id="adminSubmissionsList" class="space-y-4 p-4 border-4 border-accent-yellow/30 rounded-xl bg-deep-red/90 max-h-96 overflow-y-auto">
+                <!-- Submissions will be rendered here by JS -->
+            </div>
+        </div>
+
+
+        <!-- Contact Section -->
+        <div class="toast-container mt-16 mb-16 bg-warm-bg p-10 md:p-12 rounded-3xl shadow-xl border-4 border-neon-red w-full max-w-lg">
             <h2 class="font-display text-4xl font-extrabold text-center text-deep-red mb-6 border-b-4 border-neon-red pb-3 uppercase">
                 CONTACT THE AUTHORITIES
             </h2>
@@ -201,7 +276,9 @@
         const oracleAdvice = document.getElementById('oracleAdvice');
         const oracleButton = document.getElementById('oracleButton');
         const mainContent = document.getElementById('mainContent');
-
+        const audioButton = document.getElementById('audioButton');
+        const audioIcon = document.getElementById('audioIcon');
+        
         // --- Modal Elements ---
         const termsModal = document.getElementById('termsModal');
         const termsLink = document.getElementById('termsLink');
@@ -211,69 +288,117 @@
         const adminStatus = document.getElementById('adminStatus');   
         let hasClickedTerms = false;
         
+        // --- Contingency Meter Elements ---
+        const contingencyMeter = document.getElementById('contingencyMeter');
+        const contingencyBar = document.getElementById('contingencyBar');
+        const stabilityText = document.getElementById('stabilityText');
+        
+        // --- Hall of Fame Elements ---
+        const fameList = document.getElementById('fameList');
+        const newStatusInput = document.getElementById('newStatus');
+        const newAdviceInput = document.getElementById('newAdvice');
+        const submissionMessage = document.getElementById('submissionMessage');
+        
+        // --- Admin Panel Elements (NEW) ---
+        const adminPanel = document.getElementById('adminPanel');
+        const adminSubmissionsList = document.getElementById('adminSubmissionsList');
+
+        // Initial, hardcoded wisdom for the Hall of Fame
+        let crumbSubmissions = [
+            { status: "THE CUBE IS READY", advice: "FOUR SIDES, ONE DESTINY. FOLD THE CRUST." },
+            { status: "DARK MATTER TOAST", advice: "NEVER SEEK WHAT IS NOT THERE. BUT CHECK THE FLOOR." }
+        ];
+
         // --- ADMIN CODE CONFIGURATION ---
-        // !!! WARNING: This is INSECURE for any real admin purpose. The code is visible to anyone viewing the source.
-        // The password has been updated to the requested, highly complex string.
         const ADMIN_SECRET_CODE = "Xrw963T6a!RZ2Q}ZwUq\"B`vt4vg=M_@};SI)7[i9\"v@q8£l3L="; 
 
-        // Initial setup to hide main content until modal is resolved
-        document.addEventListener('DOMContentLoaded', () => {
-             // Delay showing the modal slightly to ensure DOM is ready and styling is applied
-             setTimeout(() => {
-                 termsModal.classList.remove('hidden');
-                 document.body.style.overflow = 'hidden'; // Lock scrolling
-                 mainContent.style.opacity = 0; // Hide the content behind the modal
-             }, 50);
+        // --- Tone.js Audio Setup (1. Retro Audio Ambience) ---
+        let synth = null;
+        let isAudioPlaying = false;
+        
+        // Function to initialize and start the background drone
+        function startAudioDrone() {
+            if (Tone.context.state !== 'running') {
+                Tone.context.resume();
+            }
+
+            // Create a low-frequency, moody drone using a low-pass filtered sawtooth wave
+            synth = new Tone.PolySynth(Tone.DuoSynth, {
+                volume: -18, // Very quiet
+                oscillator: { type: "sawtooth" },
+                filter: { frequency: 400, type: "lowpass", rolloff: -24 },
+                envelope: { attack: 4, decay: 0.1, sustain: 1, release: 4 }
+            }).toDestination();
+            
+            // Play a long, low C2 chord
+            synth.triggerAttackRelease(["C2", "G2", "C3"], "10m");
+            isAudioPlaying = true;
+            audioIcon.textContent = '🔊';
+        }
+
+        // Function to stop the drone
+        function stopAudioDrone() {
+            if (synth) {
+                synth.triggerRelease();
+                synth = null;
+            }
+            isAudioPlaying = false;
+            audioIcon.textContent = '🔇';
+        }
+
+        // Event listener for the audio button
+        audioButton.addEventListener('click', () => {
+            if (isAudioPlaying) {
+                stopAudioDrone();
+            } else {
+                startAudioDrone();
+            }
         });
 
-        // FUNCTION: Handle the Admin Code login
+        // --- Modal Logic (Authentication and Bypass) ---
+
         function bypassLogin() {
             const code = adminCodeInput.value.trim();
             
             if (code === ADMIN_SECRET_CODE) {
-                // SUCCESS: Admin Override
                 termsModal.classList.add('hidden');
-                document.body.style.overflow = 'auto'; // Re-enable scrolling
-                mainContent.style.opacity = 1; // Show the content
-                console.log("Admin Override Successful.");
+                document.body.style.overflow = 'auto'; 
+                mainContent.style.opacity = 1;
+                
+                // NEW: Reveal the Admin Panel and render submissions
+                adminPanel.classList.remove('hidden');
+                renderAdminSubmissions(); 
+
             } else {
-                // FAILURE: Show error message
                 adminStatus.textContent = "ACCESS DENIED. The Toastmaster does not recognize that code.";
                 adminStatus.classList.remove('hidden');
                 setTimeout(() => {
                     adminStatus.classList.add('hidden');
-                }, 3000); // Hide message after 3 seconds
+                }, 3000);
             }
         }
-        window.bypassLogin = bypassLogin; // Make the function globally accessible for the onclick attribute
+        window.bypassLogin = bypassLogin; 
 
-
-        // 1. Event listener for clicking the Terms Link
         termsLink.addEventListener('click', () => {
             if (!hasClickedTerms) {
                 hasClickedTerms = true;
-                
-                // Enable the continue button
                 continueButton.disabled = false;
                 continueButton.classList.remove('bg-gray-600', 'cursor-not-allowed', 'opacity-50');
                 continueButton.classList.add('bg-accent-yellow', 'text-deep-red', 'hover:bg-yellow-400', 'cursor-pointer', 'shadow-2xl');
-                
-                // Update message
                 clickMessage.textContent = "✅ Terms Acknowledged! Click 'Agree and Continue' below.";
                 clickMessage.classList.remove('text-neon-red');
                 clickMessage.classList.add('text-deep-red');
             }
         });
 
-        // 2. Event listener for the Continue Button
         continueButton.addEventListener('click', () => {
             if (hasClickedTerms) {
-                // Hide the modal
                 termsModal.classList.add('hidden');
-                document.body.style.overflow = 'auto'; // Re-enable scrolling
-                mainContent.style.opacity = 1; // Show the content
+                document.body.style.overflow = 'auto'; 
+                mainContent.style.opacity = 1;
+                // Ensure admin panel remains hidden if logging in normally
+                adminPanel.classList.add('hidden');
             } else {
-                // Use a visual indicator instead of alert
                 adminStatus.textContent = "Please click the Terms link before continuing.";
                 adminStatus.classList.remove('hidden', 'text-deep-red');
                 adminStatus.classList.add('text-neon-red');
@@ -284,28 +409,13 @@
         });
 
 
-        // --- Toast & Oracle Logic (Unchanged) ---
-
-        // Define the three states of toast with descriptive placeholders
+        // --- Toast & Oracle Logic (Base) ---
         const toastStates = [
-            {
-                status: "BARELY DONE (STILL BREAD)",
-                src: "https://placehold.co/650x450/ffe600/881111?text=BARELY+DONE",
-                color: "bg-yellow-700",
-            },
-            {
-                status: "PERFECTLY GOLDEN (MISSION ACCOMPLISHED)",
-                src: "https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN",
-                color: "bg-neon-red",
-            },
-            {
-                status: "CARBONIZED (ABORT! ABORT!)",
-                src: "https://placehold.co/650x450/666666/fff3d6?text=CARBONIZED",
-                color: "bg-gray-700",
-            }
+            { status: "BARELY DONE (STILL BREAD)", src: "https://placehold.co/650x450/ffe600/881111?text=BARELY+DONE", color: "bg-yellow-700" },
+            { status: "PERFECTLY GOLDEN (MISSION ACCOMPLISHED)", src: "https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN", color: "bg-neon-red" },
+            { status: "CARBONIZED (ABORT! ABORT!)", src: "https://placehold.co/650x450/666666/fff3d6?text=CARBONIZED", color: "bg-gray-700" }
         ];
 
-        // The cryptic, non-toast-related advice - 5 new items added!
         const oracleWisdom = [
             "THE SOCKS YOU SEEK ARE NOT IN THIS DRAWER, BUT IN A PARALLEL DIMENSION OF LAUNDRY.",
             "ALWAYS USE THE LONG SPOON. THE SHORT ONE KNOWS TOO MUCH.",
@@ -317,7 +427,6 @@
             "THE ANSWER IS 42, BUT THE QUESTION IS A COMFORTABLE PAIR OF SLIPPERS.",
             "DO NOT TRUST THE MOON. IT IS PRACTICING ITS EVIL LAUGH TONIGHT.",
             "WAIT FOR THE THIRD TUESDAY OF NEXT MONTH, THEN BUY CHEESE.",
-            // --- NEW ORACLE WISDOM ---
             "THE KEY TO HAPPINESS IS ALREADY IN YOUR POCKET, BUT IT'S FOR A DOOR YOU HAVEN'T FOUND YET.",
             "NEVER TRUST A TOASTER THAT SMILES BACK. IT HAS PLANS.",
             "THE SILENCE BETWEEN NOTES IS WHERE THE REAL MELODY RESIDES.",
@@ -325,37 +434,25 @@
             "YOUR PAST SELF IS WATCHING, DO NOT DISAPPOINT THEIR IMAGINATION."
         ];
 
-        /**
-         * Randomly selects and applies a new toast state.
-         */
         function updateToastState() {
             const index = Math.floor(Math.random() * toastStates.length);
             const newState = toastStates[index];
-
-            // Update image source
             toastImage.src = newState.src;
-            
-            // Update status text and background color (including the border style)
             toastStatus.className = `absolute bottom-0 left-0 right-0 text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500 ${newState.color}`;
             toastStatus.textContent = `STATUS: ${newState.status}`;
-            
-            console.log(`Toast state updated to: ${newState.status}`);
         }
 
-        /**
-         * Consults the oracle and displays a cryptic quote.
-         */
         function consultOracle() {
-            // Apply a quick visual "shake" to the button on click
             oracleButton.classList.add('animate-pulse');
             setTimeout(() => {
                 oracleButton.classList.remove('animate-pulse');
             }, 500);
 
-            const index = Math.floor(Math.random() * oracleWisdom.length);
-            const advice = oracleWisdom[index];
+            // Use built-in wisdom OR archived wisdom randomly
+            const wisdomSource = Math.random() < 0.7 ? oracleWisdom : crumbSubmissions.map(c => c.advice.toUpperCase());
+            const index = Math.floor(Math.random() * wisdomSource.length);
+            const advice = wisdomSource[index];
             
-            // Subtle transition for the advice text
             oracleAdvice.style.opacity = 0;
             setTimeout(() => {
                 oracleAdvice.textContent = advice;
@@ -363,18 +460,144 @@
             }, 300);
         }
 
+        oracleButton.addEventListener('click', consultOracle);
+
+        // --- 2. Contingency Meter Logic ---
+        function updateContingencyMeter() {
+            const meterValue = Math.floor(Math.random() * 100);
+            
+            // Randomly make the meter disappear 5% of the time
+            if (Math.random() < 0.05) {
+                contingencyMeter.style.opacity = 0;
+                stabilityText.textContent = 'ERROR: SIGNAL LOST';
+                contingencyBar.style.width = '0%';
+                setTimeout(() => {
+                    contingencyMeter.style.opacity = 1;
+                }, 5000); // Reappear after 5 seconds
+                return;
+            }
+            
+            contingencyMeter.style.opacity = 1;
+
+            if (meterValue > 80) {
+                // High stability - Green
+                contingencyBar.style.width = `${meterValue}%`;
+                contingencyBar.classList.remove('bg-yellow-500', 'bg-neon-red', 'danger-bar');
+                contingencyBar.classList.add('bg-green-500');
+                stabilityText.textContent = 'NORMAL';
+                stabilityText.classList.remove('text-neon-red');
+                stabilityText.classList.add('text-accent-yellow');
+            } else if (meterValue > 30) {
+                // Medium stability - Yellow
+                contingencyBar.style.width = `${meterValue}%`;
+                contingencyBar.classList.remove('bg-green-500', 'bg-neon-red', 'danger-bar');
+                contingencyBar.classList.add('bg-yellow-500');
+                stabilityText.textContent = 'WARNING: CRUMB SCATTER';
+                stabilityText.classList.remove('text-accent-yellow');
+                stabilityText.classList.add('text-neon-red');
+            } else {
+                // Low stability - Red/Danger
+                contingencyBar.style.width = `${meterValue}%`;
+                contingencyBar.classList.remove('bg-green-500', 'bg-yellow-500');
+                contingencyBar.classList.add('bg-neon-red', 'danger-bar');
+                stabilityText.textContent = 'CRITICAL: COFFEE SPILL IMMINENT';
+                stabilityText.classList.remove('text-accent-yellow');
+                stabilityText.classList.add('text-neon-red');
+            }
+        }
+
+
+        // --- 3. Toast Hall of Fame Logic (User-facing) ---
+
+        // Function to render the user-facing Hall of Fame list
+        function renderFameList() {
+            fameList.innerHTML = ''; // Clear existing list
+            crumbSubmissions.forEach(crumb => {
+                const li = document.createElement('li');
+                li.className = 'p-3 bg-warm-bg rounded-lg border-l-4 border-neon-red shadow-md text-sm text-deep-red';
+                li.innerHTML = `<strong class="block text-deep-red text-base">STATUS: ${crumb.status.toUpperCase()}</strong>${crumb.advice.toUpperCase()}`;
+                fameList.prepend(li); // Add to the top
+            });
+        }
+
+        // Function to handle new crumb submissions
+        function submitCrumb() {
+            const status = newStatusInput.value.trim();
+            const advice = newAdviceInput.value.trim();
+
+            if (status.length < 5 || advice.length < 10) {
+                showMessage("STATUS AND ADVICE MUST BE LONGER THAN POCKET LINT.", 'text-neon-red');
+                return;
+            }
+
+            crumbSubmissions.push({ status, advice });
+            renderFameList();
+            
+            // If admin panel is open, update it too
+            if (!adminPanel.classList.contains('hidden')) {
+                renderAdminSubmissions();
+            }
+            
+            // Clear inputs
+            newStatusInput.value = '';
+            newAdviceInput.value = '';
+
+            showMessage("CRUMB SUBMITTED! THE ARCHIVE IS GRATEFUL.", 'text-deep-red');
+        }
+        window.submitCrumb = submitCrumb; // Expose to global scope for HTML onclick
+
+        function showMessage(text, colorClass) {
+            submissionMessage.textContent = text;
+            submissionMessage.className = `text-center text-sm mt-2 ${colorClass}`;
+            submissionMessage.classList.remove('hidden');
+            setTimeout(() => {
+                submissionMessage.classList.add('hidden');
+            }, 4000);
+        }
+
+        // --- Admin Panel Logic (NEW) ---
+
+        // Function to render the Admin submissions list
+        function renderAdminSubmissions() {
+            adminSubmissionsList.innerHTML = ''; // Clear existing list
+
+            if (crumbSubmissions.length === 0) {
+                adminSubmissionsList.innerHTML = '<p class="text-center text-warm-bg italic">No crumbs have been archived yet.</p>';
+                return;
+            }
+
+            crumbSubmissions.forEach((crumb, index) => {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-deep-red/90 rounded-lg border-l-4 border-accent-yellow shadow-md text-sm text-warm-bg';
+                div.innerHTML = `
+                    <strong class="block text-accent-yellow text-base">ID #${index + 1} - STATUS: ${crumb.status.toUpperCase()}</strong>
+                    <span class="text-xs text-warm-bg/70">ADVICE: ${crumb.advice.toUpperCase()}</span>
+                `;
+                adminSubmissionsList.appendChild(div);
+            });
+        }
+
+
         // --- Initialization ---
 
+        document.addEventListener('DOMContentLoaded', () => {
+             // Delay showing the modal slightly to ensure DOM is ready and styling is applied
+             setTimeout(() => {
+                 termsModal.classList.remove('hidden');
+                 document.body.style.overflow = 'hidden'; // Lock scrolling
+                 mainContent.style.opacity = 0; // Hide the content behind the modal
+             }, 50);
+        });
+        
         // 1. Initial state setting
         updateToastState();
+        updateContingencyMeter();
+        renderFameList();
 
         // 2. Set the recurring update interval (30,000 milliseconds = 30 seconds)
         const intervalInMilliseconds = 30000;
         setInterval(updateToastState, intervalInMilliseconds);
-        console.log(`Toast update interval set to ${intervalInMilliseconds / 1000} seconds.`);
-
-        // 3. Attach event listener to the button
-        oracleButton.addEventListener('click', consultOracle);
+        setInterval(updateContingencyMeter, 5000); // Contingency Meter updates faster
     </script>
 </body>
 </html>
