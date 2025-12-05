@@ -247,7 +247,7 @@
             </div>
 
             <h3 class="font-display text-2xl font-bold text-deep-red mb-4 uppercase">
-                THE HALL OF FAME: USER SUBMITTED STATUSES AND ORACLE ADVICE ONLY APPROVED BY THE TOASTMASTER HIMSELF
+                THE ARCHIVE:
             </h3>
             <ul id="fameList" class="space-y-4 p-4 border-4 border-deep-red/30 rounded-xl bg-warm-bg/70 max-h-96 overflow-y-auto">
                 <p id="fameLoading" class="text-center text-deep-red/70 italic">Loading approved wisdom...</p>
@@ -264,7 +264,7 @@
                 Reviewing Pending and Approved Crumb Submissions.
             </p>
             <div id="adminSubmissionsList" class="space-y-4 p-4 border-4 border-accent-yellow/30 rounded-xl bg-deep-red/90 max-h-96 overflow-y-auto">
-                 <p id="adminLoading" class="text-center text-warm-bg/70 italic">Loading submissions...</p>
+                 <p id="adminLoading" class="text-center text-warm-bg/70 italic font-bold">LOADING SUBMISSIONS. AUTHENTICATION PENDING...</p>
                 <!-- Submissions and control buttons will be rendered here by JS -->
             </div>
         </div>
@@ -360,7 +360,7 @@
         // --- Firebase Initialization and Auth ---
         async function initializeFirebase() {
             if (Object.keys(firebaseConfig).length === 0) {
-                console.error("Firebase configuration is missing.");
+                console.error("[Firebase] Configuration is missing.");
                 userIdDisplay.textContent = "User ID: Error (No Config)";
                 return;
             }
@@ -372,6 +372,7 @@
                 
                 // Enable debug logs for Firestore
                 firebase.setLogLevel('Debug');
+                console.log("[Firebase] Initializing...");
 
                 // Set local persistence
                 await firebase.setPersistence(auth, firebase.browserLocalPersistence);
@@ -389,6 +390,7 @@
                         userId = user.uid;
                         userIdDisplay.textContent = `User ID: ${userId}`;
                         isAuthReady = true;
+                        console.log(`[Firebase] Auth state confirmed. User ID: ${userId}`);
                         // Start listening to the database only after auth is ready
                         listenForSubmissions(); 
                     } else {
@@ -396,13 +398,14 @@
                         userId = crypto.randomUUID(); 
                         userIdDisplay.textContent = `User ID: ${userId} (Anon)`;
                         isAuthReady = true;
-                         // Still attempt to listen, though security rules might prevent non-auth access
+                        console.log(`[Firebase] Auth state confirmed anonymously. User ID: ${userId}`);
+                         // Still attempt to listen
                         listenForSubmissions(); 
                     }
                 });
 
             } catch (error) {
-                console.error("Firebase Initialization/Auth Error:", error);
+                console.error("[Firebase] Initialization/Auth Error:", error);
                 userIdDisplay.textContent = `User ID: Error (${error.code})`;
             }
         }
@@ -410,11 +413,18 @@
 
         // --- Firestore Data Listener ---
         function listenForSubmissions() {
-            if (!db) return;
+            if (!db) {
+                console.error("[Firestore] Cannot start listener: Firestore not initialized.");
+                return;
+            }
 
-            // Start loading indicators
+            console.log("[Firestore] Starting real-time listener for submissions.");
+            
+            // Start loading indicators (Ensuring they show while waiting)
             fameLoading.classList.remove('hidden');
             adminLoading.classList.remove('hidden');
+            adminLoading.textContent = "LOADING SUBMISSIONS. AUTHENTICATION CONFIRMED. WAITING FOR DATA...";
+
 
             const submissionsQuery = firebase.query(getSubmissionsPath());
             
@@ -425,6 +435,8 @@
                     crumbSubmissions.push({ id: doc.id, ...doc.data() });
                 });
                 
+                console.log(`[Firestore] Submissions data received. Total documents: ${crumbSubmissions.length}`);
+                
                 // Update both UI sections
                 renderFameList();
                 renderAdminSubmissions();
@@ -434,9 +446,10 @@
                 adminLoading.classList.add('hidden');
 
             }, (error) => {
-                console.error("Error listening to submissions:", error);
-                fameLoading.textContent = "Error loading wisdom. Check console.";
-                adminLoading.textContent = "Error loading submissions. Check console.";
+                console.error("[Firestore] Error listening to submissions (Check Security Rules):", error);
+                fameLoading.textContent = "Error loading wisdom. Check console (F12).";
+                adminLoading.textContent = "ERROR: FAILED TO LOAD SUBMISSIONS. Check console (F12) for Security Rule issues.";
+                adminLoading.classList.remove('hidden');
             });
         }
 
@@ -668,7 +681,7 @@
             
             const approvedCrumbs = crumbSubmissions
                 .filter(c => c.approved)
-                // Sort by creation time, assuming they are added chronologically to the array
+                // Sort by creation time, newest first
                 .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); 
 
             if (approvedCrumbs.length === 0) {
@@ -781,8 +794,8 @@
                 const statusColor = isApproved ? 'text-green-400' : 'text-pending-orange';
                 const borderColor = isApproved ? 'border-accent-yellow' : 'border-pending-orange';
                 const statusText = isApproved ? 'APPROVED' : 'PENDING REVIEW';
-                const buttonBg = isApproved ? 'bg-gray-600' : 'bg-green-600';
-                const buttonHover = isApproved ? 'hover:bg-gray-500' : 'hover:bg-green-700';
+                const approveButtonBg = isApproved ? 'bg-gray-600' : 'bg-green-600';
+                const approveButtonHover = isApproved ? 'hover:bg-gray-500' : 'hover:bg-green-700';
 
                 const div = document.createElement('div');
                 div.className = `p-4 bg-deep-red/90 rounded-lg border-l-4 ${borderColor} shadow-md text-sm text-warm-bg mb-4`;
@@ -796,11 +809,11 @@
                     </div>
                     <p class="text-xs text-warm-bg/70 mb-3">ADVICE: ${crumb.advice.toUpperCase()}</p>
                     <div class="flex space-x-2">
-                        <button onclick="approveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded ${buttonBg} text-white ${buttonHover} transition duration-150">
+                        <button onclick="approveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded ${approveButtonBg} text-white ${approveButtonHover} transition duration-150">
                             APPROVE ${isApproved ? '✅' : ''}
                         </button>
-                        <button onclick="disapproveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded bg-red-600 text-white hover:bg-red-700 transition duration-150" ${!isApproved ? 'disabled' : ''}>
-                            DISAPPROVE ${!isApproved ? '❌' : ''}
+                        <button onclick="disapproveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded bg-red-600 text-white hover:bg-red-700 transition duration-150">
+                            DISAPPROVE
                         </button>
                     </div>
                 `;
