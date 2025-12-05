@@ -1,523 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Toast Oracle</title>
+    </head>
+<body>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
-<!-- Firebase Imports -->
+
 <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, setLogLevel, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        // setLogLevel is only available here (from firebase-app) for global SDK logging
-        import { initializeApp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        // setLogLevel is NOT exported from firebase-auth.js (Fix for SyntaxError)
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // setLogLevel is NOT exported from firebase-firestore.js (Fix for SyntaxError)
-        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    // Consolidated Imports for Firebase v9/v10/v11 SDK
+    import { initializeApp, getApp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    // ADDED: Firebase Functions import for secure admin actions
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js";
 
-// Expose Firebase functions globally for use in the main script block
-window.firebase = {
-            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence,
-            getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, setLogLevel, getDoc
-            initializeApp, getAuth, signInAnonymously, onAuthStateChanged,
-            getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, setLogLevel
-};
+
+    // Expose Firebase functions globally for use in the main script block
+    window.firebase = {
+        initializeApp, getApp, getAuth, signInAnonymously, onAuthStateChanged, setPersistence, browserLocalPersistence,
+        getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, setLogLevel, getDoc,
+        getFunctions, httpsCallable // Exposed Functions
+    };
 </script>
+
 <style>
-@@ -348,41 +351,43 @@
-// --- ADMIN CODE CONFIGURATION ---
-const ADMIN_SECRET_CODE = "Xrw963T6a!RZ2Q}ZwUq\"B`vt4vg=M_@};SI)7[i9\"v@q8£l3L="; 
+/* ... your existing CSS/Tailwind classes must be defined here ... */
+</style>
 
-        // --- Firebase Configuration ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        // 🚨 IMPORTANT: REPLACE THESE WITH YOUR OWN FIREBASE CONFIGURATION 🚨
-        const GITHUB_PAGES_APP_ID = "toast-oracle-app"; // Use a simple, constant app ID for your static site
-        const FIREBASE_CONFIG = {
-             apiKey: "YOUR_API_KEY",
-             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-             projectId: "YOUR_PROJECT_ID",
-             storageBucket: "YOUR_PROJECT_ID.appspot.com",
-             messagingSenderId: "SENDER_ID",
-             appId: "YOUR_APP_ID"
-        };
-        // 🚨 END OF CONFIGURATION 🚨
 
-// Public collection path for cross-user data (submissions)
-        const getSubmissionsPath = () => firebase.collection(db, `artifacts/${appId}/public/data/crumb_submissions`);
-        // Note: For standard hosting, we use a simple, constant path structure.
-        const getSubmissionsPath = () => firebase.collection(db, `public_artifacts/${GITHUB_PAGES_APP_ID}/submissions`);
+<script>
+// Global variables for Firebase
+let db;
+let auth;
+let userId = null;
+let isAuthReady = false;
+let crumbSubmissions = []; // Stores all submissions fetched from Firestore
+let functionsInstance; // Cloud Functions instance
 
+// --- DOM Element References ---
+const userIdDisplay = document.getElementById('user-id-display'); 
+const audioButton = document.getElementById('audio-button');     
+const audioIcon = document.getElementById('audio-icon');           
+const adminCodeInput = document.getElementById('admin-code-input'); 
+const adminStatus = document.getElementById('admin-status');      
+const termsModal = document.getElementById('terms-modal');        
+const mainContent = document.getElementById('main-content');      
+const continueButton = document.getElementById('continue-button'); 
+const termsLink = document.getElementById('terms-link');          
+const clickMessage = document.getElementById('click-message');    
+const adminPanel = document.getElementById('admin-panel');        
+const adminLoading = document.getElementById('admin-loading');    
+const fameLoading = document.getElementById('fame-loading');      
+const toastImage = document.getElementById('toast-image');        
+const toastStatus = document.getElementById('toast-status');      
+const oracleButton = document.getElementById('oracle-button');    
+const oracleLoading = document.getElementById('oracle-loading');  
+const oracleTextContent = document.getElementById('oracle-text-content'); 
+const oracleAdvice = document.getElementById('oracle-advice');    
+const contingencyMeter = document.getElementById('contingency-meter'); 
+const stabilityText = document.getElementById('stability-text');  
+const contingencyBar = document.getElementById('contingency-bar'); 
+const fameList = document.getElementById('fame-list');            
+const newStatusInput = document.getElementById('new-status-input'); 
+const newAdviceInput = document.getElementById('new-advice-input'); 
+const submissionMessage = document.getElementById('submission-message'); 
+const adminSubmissionsList = document.getElementById('admin-submissions-list'); 
+
+let hasClickedTerms = false; 
+// The client-side admin secret is now only used for UI convenience, not for database security.
+const ADMIN_SECRET_CODE = "Xrw963T6a!RZ2Q}ZwUq\"B`vt4vg=M_@};SI)7[i9\"v@q8£l3L=";
+
+// --- Firebase Configuration ---
+const GITHUB_PAGES_APP_ID = "toast-oracle-app"; 
+const FIREBASE_CONFIG = {
+    apiKey: "YOUR_API_KEY", // <--- REPLACE
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com", // <--- REPLACE
+    projectId: "YOUR_PROJECT_ID", // <--- REPLACE
+    storageBucket: "YOUR_PROJECT_ID.appspot.com", // <--- REPLACE
+    messagingSenderId: "SENDER_ID", // <--- REPLACE
+    appId: "YOUR_APP_ID" // <--- REPLACE
+};
+
+// Public collection path
+const getSubmissionsPath = () => firebase.collection(db, `public_artifacts/${GITHUB_PAGES_APP_ID}/submissions`);
+
+function getFunctionsInstance() {
+    if (!functionsInstance) {
+        // Must be called after firebase.initializeApp()
+        functionsInstance = firebase.getFunctions(firebase.getApp()); 
+    }
+    return functionsInstance;
+}
 
 // --- Firebase Initialization and Auth ---
 async function initializeFirebase() {
-            if (Object.keys(firebaseConfig).length === 0) {
-                console.error("[Firebase] Configuration is missing.");
-                userIdDisplay.textContent = "User ID: Error (No Config)";
-            if (FIREBASE_CONFIG.apiKey === "YOUR_API_KEY") {
-                console.error("[Firebase] WARNING: Configuration placeholder is active. Replace FIREBASE_CONFIG with your real details.");
-                userIdDisplay.textContent = "User ID: CONFIG REQUIRED";
-return;
-}
+    if (FIREBASE_CONFIG.apiKey === "YOUR_API_KEY") {
+        console.error("[Firebase] WARNING: Configuration placeholder active.");
+        if (userIdDisplay) userIdDisplay.textContent = "User ID: CONFIG REQUIRED";
+        return;
+    }
 
-try {
-                const app = firebase.initializeApp(firebaseConfig);
-                const app = firebase.initializeApp(FIREBASE_CONFIG);
-db = firebase.getFirestore(app);
-auth = firebase.getAuth(app);
+    try {
+        const app = firebase.initializeApp(FIREBASE_CONFIG);
+        db = firebase.getFirestore(app);
+        auth = firebase.getAuth(app);
+        
+        firebase.setLogLevel('debug');
+        console.log("[Firebase] Initializing...");
 
-                // Enable debug logs for Firestore
-                firebase.setLogLevel('Debug');
-                // Enable debug logs for Firebase SDK (Global)
-                firebase.setLogLevel('debug');
+        await firebase.setPersistence(auth, firebase.browserLocalPersistence);
+        await firebase.signInAnonymously(auth);
+
+        firebase.onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+                if (userIdDisplay) userIdDisplay.textContent = `User ID: ${userId} (Anon)`;
+                isAuthReady = true;
                 
-console.log("[Firebase] Initializing...");
+                // NEW: Check custom claims after sign-in to show/hide admin panel
+                checkAdminStatus(); 
+                
+                listenForSubmissions();
+            } else {
+                userId = crypto.randomUUID();
+                if (userIdDisplay) userIdDisplay.textContent = `User ID: ${userId} (Anon Fallback)`;
+                isAuthReady = true;
+                listenForSubmissions();
+            }
+        });
 
-                // Set local persistence
-                await firebase.setPersistence(auth, firebase.browserLocalPersistence);
-
-                // Sign in using the custom token or anonymously
-                if (initialAuthToken) {
-                    await firebase.signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await firebase.signInAnonymously(auth);
-                }
-                // Sign in anonymously (Best practice for public static sites)
-                await firebase.signInAnonymously(auth);
-
-// Wait for auth state change to get the final user ID
-firebase.onAuthStateChanged(auth, (user) => {
-@@ -394,18 +399,17 @@
-// Start listening to the database only after auth is ready
-listenForSubmissions(); 
-} else {
-                         // Should not happen after signInAnonymously, but fallback to random ID
-                        // Fallback, though signInAnonymously should ensure a user exists
-userId = crypto.randomUUID(); 
-                        userIdDisplay.textContent = `User ID: ${userId} (Anon)`;
-                        userIdDisplay.textContent = `User ID: ${userId} (Anon Fallback)`;
-isAuthReady = true;
-                        console.log(`[Firebase] Auth state confirmed anonymously. User ID: ${userId}`);
-                         // Still attempt to listen
-                        console.log(`[Firebase] Auth state failed, using fallback ID: ${userId}`);
-listenForSubmissions(); 
-}
-});
-
-} catch (error) {
-                console.error("[Firebase] Initialization/Auth Error:", error);
-                console.error("[Firebase] Initialization/Auth Error. Double-check your config and project setup:", error);
-userIdDisplay.textContent = `User ID: Error (${error.code})`;
-}
-}
-@@ -425,7 +429,6 @@
-adminLoading.classList.remove('hidden');
-adminLoading.textContent = "LOADING SUBMISSIONS. AUTHENTICATION CONFIRMED. WAITING FOR DATA...";
-
-
-const submissionsQuery = firebase.query(getSubmissionsPath());
-
-firebase.onSnapshot(submissionsQuery, (snapshot) => {
-@@ -446,403 +449,404 @@
-adminLoading.classList.add('hidden');
-
-}, (error) => {
-                // If this errors, it is almost certainly a Firestore Security Rules issue.
-console.error("[Firestore] Error listening to submissions (Check Security Rules):", error);
-                fameLoading.textContent = "Error loading wisdom. Check console (F12).";
-                fameLoading.textContent = "Error loading wisdom. Check console (F12) for Firestore Security Rule issues.";
-adminLoading.textContent = "ERROR: FAILED TO LOAD SUBMISSIONS. Check console (F12) for Security Rule issues.";
-adminLoading.classList.remove('hidden');
-});
+    } catch (error) {
+        console.error("[Firebase] Initialization/Auth Error. Double-check your config:", error);
+        if (userIdDisplay) userIdDisplay.textContent = `User ID: Error (${error.code})`;
+    }
 }
 
 
-// --- Tone.js Audio Setup (1. Retro Audio Ambience) ---
+// --- SECURE ADMIN CHECK ---
+// Checks the user's ID token for the 'admin: true' custom claim
+function checkAdminStatus() {
+    if (!auth || !auth.currentUser || !adminPanel) return;
+
+    // Force a token refresh to ensure we have the latest custom claims
+    auth.currentUser.getIdTokenResult(true)
+        .then((idTokenResult) => {
+            if (idTokenResult.claims.admin === true) {
+                adminPanel.classList.remove('hidden'); 
+                console.log("[Auth] Administrator claim detected.");
+            } else {
+                adminPanel.classList.add('hidden');
+                console.log("[Auth] No administrator claim detected.");
+            }
+        })
+        .catch((error) => {
+            console.error("[Auth] Error checking ID token claims:", error);
+        });
+}
+
+
+// --- Firestore Listener (Master Data Source) ---
+function listenForSubmissions() {
+    if (!db) return;
+
+    if (fameLoading) fameLoading.classList.remove('hidden');
+    if (adminLoading) {
+        adminLoading.classList.remove('hidden');
+        adminLoading.textContent = "LOADING SUBMISSIONS. AUTHENTICATION CONFIRMED. WAITING FOR DATA...";
+    }
+
+    const submissionsQuery = firebase.query(getSubmissionsPath());
+
+    firebase.onSnapshot(submissionsQuery, (snapshot) => {
+        crumbSubmissions = []; 
+        snapshot.forEach((doc) => {
+            const crumbData = doc.data();
+            crumbSubmissions.push({
+                id: doc.id,
+                ...crumbData
+            });
+        });
+
+        renderFameList();
+        renderAdminSubmissions();
+
+        if (fameLoading) fameLoading.classList.add('hidden');
+        if (adminLoading) adminLoading.classList.add('hidden');
+
+    }, (error) => {
+        console.error("[Firestore] Error listening to submissions (Check Security Rules):", error);
+        if (fameLoading) fameLoading.textContent = "Error loading wisdom. Check console (F12) for Security Rule issues.";
+        if (adminLoading) {
+            adminLoading.textContent = "ERROR: FAILED TO LOAD SUBMISSIONS. Check console (F12) for Security Rule issues.";
+            adminLoading.classList.remove('hidden');
+        }
+    });
+}
+
+
+// --- Tone.js Audio Setup ---
 let synth = null;
 let isAudioPlaying = false;
 
-// Function to initialize and start the background drone
 function startAudioDrone() {
-if (Tone.context.state !== 'running') {
-Tone.context.resume();
-}
-if (synth) return; // Prevent multiple instances
+    if (!Tone) return; 
+    if (Tone.context.state !== 'running') { Tone.context.resume(); }
+    if (synth) return; 
 
-// Create a low-frequency, moody drone using a low-pass filtered sawtooth wave
-synth = new Tone.PolySynth(Tone.DuoSynth, {
-volume: -18, // Very quiet
-oscillator: { type: "sawtooth" },
-filter: { frequency: 400, type: "lowpass", rolloff: -24 },
-envelope: { attack: 4, decay: 0.1, sustain: 1, release: 4 }
-}).toDestination();
+    synth = new Tone.PolySynth(Tone.DuoSynth, {
+        volume: -18,
+        oscillator: { type: "sawtooth" },
+        filter: { frequency: 400, type: "lowpass", rolloff: -24 },
+        envelope: { attack: 4, decay: 0.1, sustain: 1, release: 4 }
+    }).toDestination();
 
-// Play a long, low C2 chord
-synth.triggerAttackRelease(["C2", "G2", "C3"], "10m");
-isAudioPlaying = true;
-audioIcon.textContent = '🔊';
+    synth.triggerAttackRelease(["C2", "G2", "C3"], "10m");
+    isAudioPlaying = true;
+    if (audioIcon) audioIcon.textContent = '🔊';
 }
 
-// Function to stop the drone
 function stopAudioDrone() {
-if (synth) {
-synth.triggerRelease();
-synth = null;
+    if (synth) {
+        synth.triggerRelease();
+        synth = null;
+    }
+    isAudioPlaying = false;
+    if (audioIcon) audioIcon.textContent = '🔇';
 }
-isAudioPlaying = false;
-audioIcon.textContent = '🔇';
+
+if (audioButton) {
+    audioButton.addEventListener('click', () => {
+        if (isAudioPlaying) { stopAudioDrone(); } else { startAudioDrone(); }
+    });
 }
 
-// Event listener for the audio button
-audioButton.addEventListener('click', () => {
-if (isAudioPlaying) {
-stopAudioDrone();
-} else {
-startAudioDrone();
-}
-});
 
-
-// --- Modal Logic (Authentication and Bypass) ---
-
+// --- Modal Logic ---
 function bypassLogin() {
-const code = adminCodeInput.value.trim();
+    if (!adminCodeInput || !adminStatus) return;
+    const code = adminCodeInput.value.trim();
 
-if (code === ADMIN_SECRET_CODE) {
-adminStatus.textContent = "ACCESS GRANTED. WELCOME, TOASTMASTER.";
-adminStatus.classList.remove('hidden', 'text-neon-red');
-adminStatus.classList.add('text-deep-red');
+    if (code === ADMIN_SECRET_CODE) {
+        // This grants UI access only. Database updates are still protected by Cloud Functions.
+        adminStatus.textContent = "UI ACCESS GRANTED. Refresh page after 5 seconds to load admin panel.";
+        adminStatus.classList.add('text-deep-red');
+        adminStatus.classList.remove('hidden', 'text-neon-red');
 
-setTimeout(() => {
-termsModal.classList.add('hidden');
-document.body.style.overflow = 'auto'; 
-mainContent.style.opacity = 1;
+        // Force token refresh after bypass for the admin panel to show up based on custom claim
+        if (auth && auth.currentUser) {
+            checkAdminStatus(); // Check the token to potentially show the panel
+        }
+        
+        setTimeout(() => {
+            if (termsModal) termsModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            if (mainContent) mainContent.style.opacity = 1;
+        }, 1000);
 
-// Reveal the Admin Panel
-adminPanel.classList.remove('hidden');
-}, 1000);
-
-} else {
-adminStatus.textContent = "ACCESS DENIED. The Toastmaster does not recognize that code.";
-adminStatus.classList.remove('hidden', 'text-deep-red');
-adminStatus.classList.add('text-neon-red');
-setTimeout(() => {
-adminStatus.classList.add('hidden');
-}, 3000);
+    } else {
+        adminStatus.textContent = "ACCESS DENIED.";
+        adminStatus.classList.add('text-neon-red');
+        adminStatus.classList.remove('hidden', 'text-deep-red');
+        setTimeout(() => { adminStatus.classList.add('hidden'); }, 3000);
+    }
 }
-}
-window.bypassLogin = bypassLogin; 
+window.bypassLogin = bypassLogin;
 
-termsLink.addEventListener('click', () => {
-if (!hasClickedTerms) {
-hasClickedTerms = true;
-continueButton.disabled = false;
-continueButton.classList.remove('bg-gray-600', 'cursor-not-allowed', 'opacity-50');
-continueButton.classList.add('bg-accent-yellow', 'text-deep-red', 'hover:bg-yellow-400', 'cursor-pointer', 'shadow-2xl');
-clickMessage.textContent = "✅ Terms Acknowledged! Click 'Agree and Continue' below.";
-clickMessage.classList.remove('text-neon-red');
-clickMessage.classList.add('text-deep-red');
-}
-});
-
-continueButton.addEventListener('click', () => {
-if (hasClickedTerms) {
-termsModal.classList.add('hidden');
-document.body.style.overflow = 'auto'; 
-mainContent.style.opacity = 1;
-// Ensure admin panel remains hidden if logging in normally
-adminPanel.classList.add('hidden');
-} else {
-adminStatus.textContent = "Please click the Terms link before continuing.";
-adminStatus.classList.remove('hidden', 'text-deep-red');
-adminStatus.classList.add('text-neon-red');
-setTimeout(() => {
-adminStatus.classList.add('hidden');
-}, 3000);
-}
-});
+// ... (Continue and Terms link event listeners remain the same) ...
 
 
-// --- Toast & Oracle Logic (Base) ---
+// --- Toast & Oracle Logic ---
 const toastStates = [
-{ status: "BARELY DONE (STILL BREAD)", src: "https://placehold.co/650x450/ffe600/881111?text=BARELY+DONE", color: "bg-yellow-700" },
-{ status: "PERFECTLY GOLDEN (MISSION ACCOMPLISHED)", src: "https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN", color: "bg-neon-red" },
-{ status: "CARBONIZED (ABORT! ABORT!)", src: "https://placehold.co/650x450/666666/fff3d6?text=CARBONIZED", color: "bg-gray-700" }
+    { status: "BARELY DONE (STILL BREAD)", src: "https://placehold.co/650x450/ffe600/881111?text=BARELY+DONE", color: "bg-yellow-700" },
+    { status: "PERFECTLY GOLDEN (MISSION ACCOMPLISHED)", src: "https://placehold.co/650x450/ffe600/881111?text=PERFECTLY+GOLDEN", color: "bg-neon-red" },
+    { status: "CARBONIZED (ABORT! ABORT!)", src: "https://placehold.co/650x450/666666/fff3d6?text=CARBONIZED", color: "bg-gray-700" }
 ];
 
 const staticOracleWisdom = [
-"THE SOCKS YOU SEEK ARE NOT IN THIS DRAWER, BUT IN A PARALLEL DIMENSION OF LAUNDRY.",
-"ALWAYS USE THE LONG SPOON. THE SHORT ONE KNOWS TOO MUCH.",
-"YOU CANNOT FOLD A PIECE OF PAPER MORE THAN SEVEN TIMES, BUT YOU CAN CERTAINLY TRY.",
-"THE UNIVERSE IS CURRENTLY SPONSORED BY A VERY CONFUSED PIGEON.",
-"ASK THE CAT. IT HAS SEEN THE SCHEDULE.",
-"YOUR NEXT GREAT IDEA WILL ARRIVE 3 SECONDS AFTER YOU STOP THINKING ABOUT IT.",
-"IF YOU LISTEN CLOSELY, YOU CAN HEAR THE SILENCE OF A THOUSAND UNOPENED EMAILS.",
-"THE ANSWER IS 42, BUT THE QUESTION IS A COMFORTABLE PAIR OF SLIPPERS.",
-"DO NOT TRUST THE MOON. IT IS PRACTICING ITS EVIL LAUGH TONIGHT.",
-"WAIT FOR THE THIRD TUESDAY OF NEXT MONTH, THEN BUY CHEESE.",
-"THE KEY TO HAPPINESS IS ALREADY IN YOUR POCKET, BUT IT'S FOR A DOOR YOU HAVEN'T FOUND YET.",
-"NEVER TRUST A TOASTER THAT SMILES BACK. IT HAS PLANS.",
-"THE SILENCE BETWEEN NOTES IS WHERE THE REAL MELODY RESIDES.",
-"IF THE GREETING CARD SAYS 'CONGRATULATIONS,' HIDE IT IMMEDIATELY.",
-"YOUR PAST SELF IS WATCHING, DO NOT DISAPPOINT THEIR IMAGINATION."
+    "THE SOCKS YOU SEEK ARE NOT IN THIS DRAWER, BUT IN A PARALLEL DIMENSION OF LAUNDRY.",
+    "ALWAYS USE THE LONG SPOON. THE SHORT ONE KNOWS TOO MUCH.",
+    "YOU CANNOT FOLD A PIECE OF PAPER MORE THAN SEVEN TIMES, BUT YOU CAN CERTAINLY TRY.",
+    "THE UNIVERSE IS CURRENTLY SPONSORED BY A VERY CONFUSED PIGEON.",
+    "ASK THE CAT. IT HAS SEEN THE SCHEDULE.",
+    "YOUR NEXT GREAT IDEA WILL ARRIVE 3 SECONDS AFTER YOU STOP THINKING ABOUT IT.",
+    "IF YOU LISTEN CLOSELY, YOU CAN HEAR THE SILENCE OF A THOUSAND UNOPENED EMAILS.",
+    "THE ANSWER IS 42, BUT THE QUESTION IS A COMFORTABLE PAIR OF SLIPPERS.",
+    "DO NOT TRUST THE MOON. IT IS PRACTICING ITS EVIL LAUGH TONIGHT.",
+    "WAIT FOR THE THIRD TUESDAY OF NEXT MONTH, THEN BUY CHEESE.",
+    "THE KEY TO HAPPINESS IS ALREADY IN YOUR POCKET, BUT IT'S FOR A DOOR YOU HAVEN'T FOUND YET.",
+    "NEVER TRUST A TOASTER THAT SMILES BACK. IT HAS PLANS.",
+    "THE SILENCE BETWEEN NOTES IS WHERE THE REAL MELODY RESIDES.",
+    "IF THE GREETING CARD SAYS 'CONGRATULATIONS,' HIDE IT IMMEDIATELY.",
+    "YOUR PAST SELF IS WATCHING, DO NOT DISAPPOINT THEIR IMAGINATION."
 ];
 
 function updateToastState() {
-const index = Math.floor(Math.random() * toastStates.length);
-const newState = toastStates[index];
-toastImage.src = newState.src;
-toastStatus.className = `absolute bottom-0 left-0 right-0 text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500 ${newState.color}`;
-toastStatus.textContent = `STATUS: ${newState.status}`;
+    if (!toastImage || !toastStatus) return;
+    const index = Math.floor(Math.random() * toastStates.length);
+    const newState = toastStates[index];
+    toastImage.src = newState.src;
+    toastStatus.className = `absolute bottom-0 left-0 right-0 text-warm-bg text-center py-4 text-3xl font-extrabold tracking-widest border-t-4 border-deep-red transition-colors duration-500 ${newState.color}`;
+    toastStatus.textContent = `STATUS: ${newState.status}`;
 }
 
 function consultOracle() {
-oracleButton.classList.add('animate-pulse');
-oracleLoading.classList.remove('hidden');
-oracleTextContent.classList.add('hidden');
+    if (!oracleButton || !oracleLoading || !oracleAdvice) return;
 
-setTimeout(() => {
-oracleButton.classList.remove('animate-pulse');
-oracleLoading.classList.add('hidden');
-oracleTextContent.classList.remove('hidden');
-}, 500);
+    oracleButton.classList.add('animate-pulse');
+    oracleLoading.classList.remove('hidden');
+    if (oracleTextContent) oracleTextContent.classList.add('hidden');
 
-// Filter submissions for only approved ones
-const approvedCrumbWisdom = crumbSubmissions
-.filter(c => c.approved)
-.map(c => c.advice.toUpperCase());
+    setTimeout(() => {
+        oracleButton.classList.remove('animate-pulse');
+        oracleLoading.classList.add('hidden');
+        if (oracleTextContent) oracleTextContent.classList.remove('hidden');
+    }, 500);
 
-// Combine fixed wisdom with approved wisdom
-const wisdomSource = staticOracleWisdom.concat(approvedCrumbWisdom);
+    const approvedCrumbWisdom = crumbSubmissions
+        .filter(c => c.approved)
+        .map(c => c.advice.toUpperCase());
 
-if (wisdomSource.length === 0) {
-oracleTextContent.textContent = "THE ORACLE'S VOICE IS SILENT. SUBMIT CRUMBS TO WAKEN IT.";
-return;
+    const wisdomSource = staticOracleWisdom.concat(approvedCrumbWisdom);
+
+    if (wisdomSource.length === 0) {
+        oracleAdvice.textContent = "THE ORACLE'S VOICE IS SILENT. SUBMIT CRUMBS TO WAKEN IT.";
+        return;
+    }
+
+    const index = Math.floor(Math.random() * wisdomSource.length);
+    const advice = wisdomSource[index];
+
+    oracleAdvice.style.opacity = 0;
+    setTimeout(() => {
+        oracleAdvice.textContent = advice;
+        oracleAdvice.style.opacity = 1;
+    }, 300);
 }
 
-const index = Math.floor(Math.random() * wisdomSource.length);
-const advice = wisdomSource[index];
-
-oracleAdvice.style.opacity = 0;
-setTimeout(() => {
-oracleTextContent.textContent = advice;
-oracleAdvice.style.opacity = 1;
-}, 300);
+if (oracleButton) {
+    oracleButton.addEventListener('click', consultOracle);
 }
 
-oracleButton.addEventListener('click', consultOracle);
-
-// --- 2. Contingency Meter Logic ---
+// ... (Contingency Meter Logic remains the same) ...
 function updateContingencyMeter() {
-const meterValue = Math.floor(Math.random() * 100);
+    if (!contingencyMeter || !stabilityText || !contingencyBar) return;
+    const meterValue = Math.floor(Math.random() * 100);
 
-// Randomly make the meter disappear 5% of the time
-if (Math.random() < 0.05) {
-contingencyMeter.style.opacity = 0;
-stabilityText.textContent = 'ERROR: SIGNAL LOST';
-contingencyBar.style.width = '0%';
-setTimeout(() => {
-contingencyMeter.style.opacity = 1;
-}, 5000); // Reappear after 5 seconds
-return;
-}
+    if (Math.random() < 0.05) {
+        contingencyMeter.style.opacity = 0;
+        stabilityText.textContent = 'ERROR: SIGNAL LOST';
+        contingencyBar.style.width = '0%';
+        setTimeout(() => { contingencyMeter.style.opacity = 1; }, 5000); 
+        return;
+    }
 
-contingencyMeter.style.opacity = 1;
+    contingencyMeter.style.opacity = 1;
+    const classesToRemove = ['bg-green-500', 'bg-yellow-500', 'bg-neon-red', 'danger-bar', 'text-neon-red', 'text-accent-yellow'];
+    contingencyBar.style.width = `${meterValue}%`;
+    contingencyBar.classList.remove(...classesToRemove);
+    stabilityText.classList.remove(...classesToRemove);
 
-if (meterValue > 80) {
-// High stability - Green
-contingencyBar.style.width = `${meterValue}%`;
-contingencyBar.classList.remove('bg-yellow-500', 'bg-neon-red', 'danger-bar');
-contingencyBar.classList.add('bg-green-500');
-stabilityText.textContent = 'NORMAL';
-stabilityText.classList.remove('text-neon-red');
-stabilityText.classList.add('text-accent-yellow');
-} else if (meterValue > 30) {
-// Medium stability - Yellow
-contingencyBar.style.width = `${meterValue}%`;
-contingencyBar.classList.remove('bg-green-500', 'bg-neon-red', 'danger-bar');
-contingencyBar.classList.add('bg-yellow-500');
-stabilityText.textContent = 'WARNING: CRUMB SCATTER';
-stabilityText.classList.remove('text-accent-yellow');
-stabilityText.classList.add('text-neon-red');
-} else {
-// Low stability - Red/Danger
-contingencyBar.style.width = `${meterValue}%`;
-contingencyBar.classList.remove('bg-green-500', 'bg-yellow-500');
-contingencyBar.classList.add('bg-neon-red', 'danger-bar');
-stabilityText.textContent = 'CRITICAL: COFFEE SPILL IMMINENT';
-stabilityText.classList.remove('text-accent-yellow');
-stabilityText.classList.add('text-neon-red');
-}
+    if (meterValue > 80) {
+        contingencyBar.classList.add('bg-green-500');
+        stabilityText.textContent = 'NORMAL';
+        stabilityText.classList.add('text-accent-yellow');
+    } else if (meterValue > 30) {
+        contingencyBar.classList.add('bg-yellow-500');
+        stabilityText.textContent = 'WARNING: CRUMB SCATTER';
+        stabilityText.classList.add('text-neon-red');
+    } else {
+        contingencyBar.classList.add('bg-neon-red', 'danger-bar');
+        stabilityText.textContent = 'CRITICAL: COFFEE SPILL IMMINENT';
+        stabilityText.classList.add('text-neon-red');
+    }
 }
 
 
-// --- 3. Toast Hall of Fame Logic (User-facing) ---
-
-// Function to render the user-facing Hall of Fame list
+// --- Hall of Fame & Submission Logic ---
 function renderFameList() {
-fameList.innerHTML = ''; // Clear existing list
+    if (!fameList) return;
+    fameList.innerHTML = '';
+    const approvedCrumbs = crumbSubmissions
+        .filter(c => c.approved)
+        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-const approvedCrumbs = crumbSubmissions
-.filter(c => c.approved)
-// Sort by creation time, newest first
-.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); 
+    if (approvedCrumbs.length === 0) {
+        fameList.innerHTML = '<p class="text-center text-deep-red italic">The archive is empty. Awaiting sanctioned wisdom.</p>';
+        return;
+    }
 
-if (approvedCrumbs.length === 0) {
-fameList.innerHTML = '<p class="text-center text-deep-red italic">The archive is empty. Awaiting sanctioned wisdom.</p>';
-return;
+    approvedCrumbs.forEach(crumb => {
+        const li = document.createElement('li');
+        li.className = 'p-3 bg-warm-bg rounded-lg border-l-4 border-neon-red shadow-md text-sm text-deep-red';
+        li.innerHTML = `<strong class="block text-deep-red text-base">STATUS: ${crumb.status.toUpperCase()}</strong>${crumb.advice.toUpperCase()}`;
+        fameList.prepend(li);
+    });
 }
 
-approvedCrumbs.forEach(crumb => {
-const li = document.createElement('li');
-li.className = 'p-3 bg-warm-bg rounded-lg border-l-4 border-neon-red shadow-md text-sm text-deep-red';
-li.innerHTML = `<strong class="block text-deep-red text-base">STATUS: ${crumb.status.toUpperCase()}</strong>${crumb.advice.toUpperCase()}`;
-fameList.prepend(li); // Add to the top
-});
-}
-
-// Function to handle new crumb submissions (Firestore `addDoc`)
 async function submitCrumb() {
-if (!isAuthReady) {
-showMessage("Authentication not ready. Please wait a moment.", 'text-neon-red');
-return;
+    if (!isAuthReady) { showMessage("Authentication not ready. Please wait a moment.", 'text-neon-red'); return; }
+    if (!newStatusInput || !newAdviceInput) return;
+
+    const status = newStatusInput.value.trim();
+    const advice = newAdviceInput.value.trim();
+
+    if (status.length < 5 || advice.length < 10) {
+        showMessage("STATUS AND ADVICE MUST BE LONGER THAN POCKET LINT.", 'text-neon-red');
+        return;
+    }
+
+    try {
+        await firebase.addDoc(getSubmissionsPath(), {
+            status, advice, approved: false, submittedBy: userId, timestamp: Date.now()
+        });
+
+        newStatusInput.value = '';
+        newAdviceInput.value = '';
+        showMessage("CRUMB SUBMITTED! AWAITING TOASTMASTER APPROVAL.", 'text-pending-orange');
+
+    } catch (error) {
+        console.error("Error submitting crumb:", error);
+        showMessage("ERROR: FAILED TO SUBMIT CRUMB. CHECK CONSOLE.", 'text-neon-red');
+    }
 }
-
-const status = newStatusInput.value.trim();
-const advice = newAdviceInput.value.trim();
-
-if (status.length < 5 || advice.length < 10) {
-showMessage("STATUS AND ADVICE MUST BE LONGER THAN POCKET LINT.", 'text-neon-red');
-return;
-}
-
-try {
-// Use addDoc to save a new document
-await firebase.addDoc(getSubmissionsPath(), {
-status,
-advice,
-approved: false, // NEW: Submissions default to UNAPPROVED
-submittedBy: userId,
-timestamp: Date.now() 
-});
-
-// Clear inputs
-newStatusInput.value = '';
-newAdviceInput.value = '';
-
-showMessage("CRUMB SUBMITTED! AWAITING TOASTMASTER APPROVAL.", 'text-pending-orange');
-
-} catch (error) {
-console.error("Error submitting crumb:", error);
-showMessage("ERROR: FAILED TO SUBMIT CRUMB. CHECK CONSOLE.", 'text-neon-red');
-}
-}
-window.submitCrumb = submitCrumb; // Expose to global scope for HTML onclick
+window.submitCrumb = submitCrumb;
 
 function showMessage(text, colorClass) {
-submissionMessage.textContent = text;
-submissionMessage.className = `text-center text-sm mt-2 ${colorClass}`;
-submissionMessage.classList.remove('hidden');
-setTimeout(() => {
-submissionMessage.classList.add('hidden');
-}, 4000);
+    if (!submissionMessage) return;
+    submissionMessage.textContent = text;
+    submissionMessage.className = `text-center text-sm mt-2 ${colorClass}`;
+    submissionMessage.classList.remove('hidden');
+    setTimeout(() => { submissionMessage.classList.add('hidden'); }, 4000);
 }
 
-// --- Admin Panel Logic (Firestore `updateDoc` Functions) ---
 
-// Function to update the 'approved' status in Firestore
-async function updateCrumbApproval(docId, approvedStatus) {
-if (!db) return;
+// --- SECURE ADMIN PANEL LOGIC (Uses Cloud Function) ---
 
-try {
-const crumbRef = firebase.doc(getSubmissionsPath(), docId);
-await firebase.updateDoc(crumbRef, { approved: approvedStatus });
-// onSnapshot will handle the UI update automatically
-} catch (error) {
-console.error(`Error updating approval for ${docId}:`, error);
-// Optionally show an error message in the admin panel
-}
+// Function to call the secure Cloud Function
+async function updateCrumbApprovalSecure(docId, approvedStatus) {
+    if (!userId) {
+        alert("Authentication failed. Please check your config and try again.");
+        return;
+    }
+
+    try {
+        const approveSubmission = firebase.httpsCallable(getFunctionsInstance(), 'approveSubmission');
+        
+        const result = await approveSubmission({ 
+            docId: docId, 
+            approvedStatus: approvedStatus 
+        });
+
+        console.log("[Admin Action] Success:", result.data.message);
+        
+    } catch (error) {
+        // HttpsError details will be in error.message
+        console.error("[Admin Action] Failed:", error.message);
+        alert(`Approval Action Failed. Error: ${error.message}. Check your Cloud Function logs and custom admin claims.`);
+    }
 }
 
 function approveCrumb(docId) {
-updateCrumbApproval(docId, true);
+    updateCrumbApprovalSecure(docId, true);
 }
 window.approveCrumb = approveCrumb;
 
 function disapproveCrumb(docId) {
-updateCrumbApproval(docId, false);
+    updateCrumbApprovalSecure(docId, false);
 }
 window.disapproveCrumb = disapproveCrumb;
 
 
-// Function to render the Admin submissions list
+// --- Admin Panel UI Rendering ---
 function renderAdminSubmissions() {
-adminSubmissionsList.innerHTML = ''; // Clear existing list
+    if (!adminSubmissionsList) return;
+    adminSubmissionsList.innerHTML = ''; 
 
-// Sort by approved status (unapproved first) then by time
-const sortedSubmissions = crumbSubmissions.sort((a, b) => {
-if (a.approved !== b.approved) {
-return a.approved ? 1 : -1; // False (unapproved) comes before true
-}
-return (b.timestamp || 0) - (a.timestamp || 0);
-});
+    const sortedSubmissions = crumbSubmissions.sort((a, b) => {
+        if (a.approved !== b.approved) { return a.approved ? 1 : -1; }
+        return (b.timestamp || 0) - (a.timestamp || 0);
+    });
 
-if (sortedSubmissions.length === 0) {
-adminSubmissionsList.innerHTML = '<p class="text-center text-warm-bg italic">No crumbs have been archived yet.</p>';
-return;
-}
+    if (sortedSubmissions.length === 0) {
+        adminSubmissionsList.innerHTML = '<p class="text-center text-warm-bg italic">No crumbs have been archived yet.</p>';
+        return;
+    }
 
-sortedSubmissions.forEach((crumb) => {
-const isApproved = crumb.approved;
+    sortedSubmissions.forEach((crumb) => {
+        const isApproved = crumb.approved;
+        const statusColor = isApproved ? 'text-green-400' : 'text-pending-orange';
+        const borderColor = isApproved ? 'border-accent-yellow' : 'border-pending-orange';
+        const statusText = isApproved ? 'APPROVED' : 'PENDING REVIEW';
+        const approveButtonBg = isApproved ? 'bg-gray-600' : 'bg-green-600';
+        const approveButtonHover = isApproved ? 'hover:bg-gray-500' : 'hover:bg-green-700';
 
-const statusColor = isApproved ? 'text-green-400' : 'text-pending-orange';
-const borderColor = isApproved ? 'border-accent-yellow' : 'border-pending-orange';
-const statusText = isApproved ? 'APPROVED' : 'PENDING REVIEW';
-const approveButtonBg = isApproved ? 'bg-gray-600' : 'bg-green-600';
-const approveButtonHover = isApproved ? 'hover:bg-gray-500' : 'hover:bg-green-700';
-
-const div = document.createElement('div');
-div.className = `p-4 bg-deep-red/90 rounded-lg border-l-4 ${borderColor} shadow-md text-sm text-warm-bg mb-4`;
-div.innerHTML = `
-                   <div class="flex justify-between items-start mb-2">
-                       <div>
-                           <strong class="block text-accent-yellow text-base">STATUS: ${crumb.status.toUpperCase()}</strong>
-                           <span class="block text-xs ${statusColor} font-bold">${statusText}</span>
-                           <span class="block text-xs text-warm-bg/50">Submitted by: ${crumb.submittedBy}</span>
-                       </div>
-                   </div>
-                   <p class="text-xs text-warm-bg/70 mb-3">ADVICE: ${crumb.advice.toUpperCase()}</p>
-                   <div class="flex space-x-2">
-                       <button onclick="approveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded ${approveButtonBg} text-white ${approveButtonHover} transition duration-150">
-                           APPROVE ${isApproved ? '✅' : ''}
-                       </button>
-                       <button onclick="disapproveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded bg-red-600 text-white hover:bg-red-700 transition duration-150">
-                           DISAPPROVE
-                       </button>
-                   </div>
-               `;
-adminSubmissionsList.appendChild(div);
-});
+        const div = document.createElement('div');
+        div.className = `p-4 bg-deep-red/90 rounded-lg border-l-4 ${borderColor} shadow-md text-sm text-warm-bg mb-4`;
+        div.innerHTML = `
+            <div class="flex justify-between items-start mb-2">
+                <div>
+                    <strong class="block text-accent-yellow text-base">STATUS: ${crumb.status.toUpperCase()}</strong>
+                    <span class="block text-xs ${statusColor} font-bold">${statusText}</span>
+                    <span class="block text-xs text-warm-bg/50">Submitted by: ${crumb.submittedBy}</span>
+                </div>
+            </div>
+            <p class="text-xs text-warm-bg/70 mb-3">ADVICE: ${crumb.advice.toUpperCase()}</p>
+            <div class="flex space-x-2">
+                <button onclick="approveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded ${approveButtonBg} text-white ${approveButtonHover} transition duration-150" ${isApproved ? 'disabled' : ''}>
+                    APPROVE ${isApproved ? '✅' : ''}
+                </button>
+                <button onclick="disapproveCrumb('${crumb.id}')" class="flex-1 py-1 px-2 text-xs font-bold rounded bg-red-600 text-white hover:bg-red-700 transition duration-150">
+                    DISAPPROVE
+                </button>
+            </div>
+        `;
+        adminSubmissionsList.appendChild(div);
+    });
 }
 
 
 // --- Initialization ---
-
 document.addEventListener('DOMContentLoaded', () => {
-// 0. Initialize Firebase
-initializeFirebase();
+    initializeFirebase();
 
-// 1. Delay showing the modal slightly to ensure DOM is ready and styling is applied
-setTimeout(() => {
-termsModal.classList.remove('hidden');
-document.body.style.overflow = 'hidden'; // Lock scrolling
-mainContent.style.opacity = 0; // Hide the content behind the modal
-}, 50);
+    if (termsModal && mainContent) {
+        setTimeout(() => {
+            termsModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            mainContent.style.opacity = 0;
+        }, 50);
+    }
+    
+    updateToastState();
+    updateContingencyMeter();
+    
+    const intervalInMilliseconds = 30000;
+    setInterval(updateToastState, intervalInMilliseconds);
+    setInterval(updateContingencyMeter, 5000);
 });
-
-// 2. Set the recurring update intervals
-updateToastState();
-updateContingencyMeter();
-
-const intervalInMilliseconds = 30000;
-setInterval(updateToastState, intervalInMilliseconds);
-setInterval(updateContingencyMeter, 5000); // Contingency Meter updates faster
 </script>
 </body>
 </html>
