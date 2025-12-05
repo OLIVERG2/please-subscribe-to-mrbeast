@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { 
   getAuth, 
   signInAnonymously, 
-  signInWithCustomToken, 
+  signInWithCustomToken, // Added for environment token support
   onAuthStateChanged 
 } from 'firebase/auth';
 import { 
@@ -19,15 +19,23 @@ import {
   updateDoc 
 } from 'firebase/firestore';
 
-// --- Global Variable Access (MANDATORY) ---
+// --- CANVAS ENVIRONMENT VARIABLES (MANDATORY USE) ---
+// These globals are provided by the hosting environment for Firebase setup.
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-// const apiKey = ""; // API Key no longer needed since we are pulling from Firestore
 
-// The public collection path structure is MANDATORY for shareable data:
+// --- DATA PATH CONFIGURATION ---
 const COLLECTION_NAME = 'toast-submissions';
-const PUBLIC_COLLECTION_PATH = `artifacts/${appId}/public/data/${COLLECTION_NAME}`;
+
+/**
+ * Constructs the mandatory public collection path structure.
+ * Path: /artifacts/{appId}/public/data/{collectionName}
+ * @param {string} currentAppId The ID of the current application.
+ * @returns {string} The full Firestore collection path.
+ */
+const getPublicCollectionPath = (currentAppId) => 
+  `artifacts/${currentAppId}/public/data/${COLLECTION_NAME}`;
 
 // --- ADMIN CONSTANT ---
 const ADMIN_SECRET_CODE = "Xrw963T6a!RZ2Q}ZwUq\"B`vt4vg=M_@};SI)7[i9\"v@q8£l3L="; 
@@ -47,12 +55,6 @@ const TOAST_STATUSES = [
     { name: "Crispy Frontier", color: '#e69500', text: 'Approaching the limit of goodness.' },
     { name: "The Carbon Void", color: '#333333', text: 'Retreat. The darkness consumes.' },
 ];
-
-// --- Gemini API Handler (REMOVED: Now pulling from approved submissions) ---
-/* const getOracleAdvice = async (toastStatus) => {
-    // ... API logic here
-}; 
-*/
 
 // --- Custom Styles for Retro Look (Animations and Body BG) ---
 const CustomStyles = () => (
@@ -191,13 +193,14 @@ function App() {
 
   // 1. Firebase Initialization and Authentication
   useEffect(() => {
-    if (!firebaseConfig) {
-      console.error("Firebase config is missing. Cannot initialize.");
-      setError("Configuration error: Firebase settings not found.");
-      return;
-    }
     
     setLogLevel('debug');
+
+    if (!firebaseConfig) {
+      console.error("Firebase config is missing from environment.");
+      setError("Cannot initialize: Firebase configuration is missing.");
+      return;
+    }
 
     try {
       const app = initializeApp(firebaseConfig);
@@ -207,21 +210,31 @@ function App() {
       setDb(firestore);
       setAuth(userAuth);
       
+      // Function to handle sign-in using the custom token or anonymously
+      const handleAuth = async () => {
+          try {
+              if (initialAuthToken) {
+                  // Use the provided custom token for secure sign-in
+                  await signInWithCustomToken(userAuth, initialAuthToken);
+              } else {
+                  // Fallback to anonymous sign-in if no token is provided
+                  await signInAnonymously(userAuth);
+              }
+          } catch (e) {
+              console.error("Authentication failed during sign-in:", e);
+              setError("Authentication failed. Check environment configuration or API key.");
+          }
+      }
+
+      // We rely on onAuthStateChanged to manage the user state
       const unsubscribe = onAuthStateChanged(userAuth, async (user) => {
         if (user) {
           setUserId(user.uid);
           setIsAuthReady(true);
         } else {
-          try {
-            if (initialAuthToken) {
-              await signInWithCustomToken(userAuth, initialAuthToken);
-            } else {
-              await signInAnonymously(userAuth);
-            }
-          } catch (e) {
-            console.error("Authentication failed:", e);
-            setError("Could not sign in to the database.");
-            setIsAuthReady(true);
+          // If no user is logged in, attempt to sign in immediately
+          if (!isAuthReady) {
+              await handleAuth();
           }
         }
       });
@@ -232,7 +245,8 @@ function App() {
       console.error("Failed to initialize Firebase:", e);
       setError("Failed to initialize database components.");
     }
-  }, []);
+  }, []); // Only runs once on mount
+
 
   // 2. Real-time Toast Status Update (Every 30 seconds)
   useEffect(() => {
@@ -249,11 +263,11 @@ function App() {
   }, []);
 
   // 3. Oracle Button Handler
-  // MODIFIED to pull a random piece of advice from the approved submissions.
+  // Pulls a random piece of advice from the approved submissions.
   const handleOracleClick = useCallback(() => {
     setIsOracleLoading(true);
     
-    // Filter for approved submissions (publicSubmissions logic moved here for dependency safety)
+    // Filter for approved submissions
     const approvedCrumbs = submissions.filter(s => s.approved);
 
     let advice = "The Oracle is currently contemplating the crumbs. No approved wisdom yet exists in the void.";
@@ -300,14 +314,18 @@ function App() {
 
   // 4. Real-time Data Listener (`onSnapshot`)
   useEffect(() => {
+    // Guard clause: Only run once DB is initialized and user is authenticated (anonymous or otherwise)
     if (!db || !isAuthReady) return;
 
     setLoading(true);
     setError(null);
 
     try {
+      // FIX: Use the 5-segment path required for collections
+      const fullCollectionPath = getPublicCollectionPath(appId);
+
       const submissionsQuery = query(
-        collection(db, PUBLIC_COLLECTION_PATH),
+        collection(db, fullCollectionPath),
         orderBy('createdAt', 'desc')
       );
 
@@ -320,7 +338,7 @@ function App() {
         setLoading(false);
       }, (err) => {
         console.error("Firestore real-time listener failed:", err);
-        setError("Failed to load submissions in real-time.");
+        setError("Failed to load submissions in real-time. Check security rules for path: " + fullCollectionPath);
         setLoading(false);
       });
 
@@ -357,7 +375,9 @@ function App() {
     };
 
     try {
-      await addDoc(collection(db, PUBLIC_COLLECTION_PATH), newSubmission);
+      // FIX: Use the 5-segment path for adding documents
+      const fullCollectionPath = getPublicCollectionPath(appId);
+      await addDoc(collection(db, fullCollectionPath), newSubmission);
       setToastStatus('');
       setToastAdvice('');
       // In a real app, display a success banner here instead of using console.log
@@ -374,7 +394,9 @@ function App() {
     if (!isAdmin || !db) return; // Must be admin and DB must be ready
     
     try {
-      const crumbRef = doc(db, PUBLIC_COLLECTION_PATH, docId);
+      // FIX: Use the 5-segment path for updating documents
+      const fullCollectionPath = getPublicCollectionPath(appId);
+      const crumbRef = doc(db, fullCollectionPath, docId);
       await updateDoc(crumbRef, { approved: approvedStatus });
     } catch (error) {
       console.error(`Error updating approval for ${docId}:`, error);
