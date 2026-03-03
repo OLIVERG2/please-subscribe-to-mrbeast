@@ -3,157 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coral Triangle | Deep Discovery</title>
+    <title>Coral Triangle | Fluid Discovery</title>
     <style>
         :root {
-            --accent: #00f2ff; /* Bioluminescent Cyan */
-            --bg: #01050a;
-            --glass: rgba(255, 255, 255, 0.05);
+            --accent: #4df9ff;
+            --deep-blue: #010c1a;
+            --soft-white: #f0f0f0;
         }
 
-        /* Snap Scroll Logic */
-        html {
-            scroll-snap-type: y mandatory;
-        }
-
-        body {
+        body, html {
             margin: 0;
-            background-color: var(--bg);
-            color: white;
+            padding: 0;
+            background-color: var(--deep-blue);
+            color: var(--soft-white);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
         }
 
+        /* The magic of fluid scrolling: Sticky Containers */
+        .page-wrapper {
+            position: relative;
+        }
+
         section {
+            position: relative;
+            height: 200vh; /* Extra height to allow the text to scroll "past" the image */
+            margin-top: -100vh; /* Pulls sections together for seamless transitions */
+        }
+
+        .sticky-box {
+            position: sticky;
+            top: 0;
             height: 100vh;
+            width: 100%;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            scroll-snap-align: start;
-            overflow: hidden;
         }
 
-        /* Background Parallax Effect */
-        .bg-layer {
+        /* Background Visuals */
+        .bg-image {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
-            transform: scale(1.1);
             z-index: -1;
-            filter: brightness(0.4) grayscale(20%);
-            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            filter: brightness(0.5);
+            transition: transform 0.3s ease-out;
         }
 
-        /* When the section is in view, we can simulate movement */
-        section:hover .bg-layer {
-            transform: scale(1);
-        }
-
+        /* Content Card */
         .content {
-            max-width: 800px;
-            padding: 40px;
+            max-width: 600px;
+            padding: 60px;
+            z-index: 2;
             text-align: left;
-            backdrop-filter: blur(10px);
-            background: var(--glass);
-            border-left: 2px solid var(--accent);
-            transform: translateY(30px);
-            opacity: 0.9;
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 1s ease-out;
+            /* Sublte Koenigsegg-style glassmorphism */
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border-left: 1px solid var(--accent);
         }
 
-        h1, h2 {
-            text-transform: uppercase;
-            letter-spacing: 8px;
+        /* Simple Fade-in Trigger for Fluidity */
+        section:hover .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-size: 3rem;
             font-weight: 200;
+            letter-spacing: 12px;
+            text-transform: uppercase;
             margin-bottom: 20px;
+            color: var(--accent);
         }
-
-        h1 { font-size: 4rem; color: #fff; }
-        h2 { font-size: 2.5rem; color: var(--accent); }
 
         .editable-text {
             font-size: 1.1rem;
-            line-height: 1.8;
-            color: #d1d1d1;
-            margin-bottom: 20px;
+            line-height: 2;
+            letter-spacing: 1px;
+            color: #ccc;
         }
 
-        /* Navigation Dots */
-        .nav-dots {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
+        .intro-hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle, #051937, #010c1a);
         }
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            margin: 15px 0;
-            display: block;
-        }
-
-        /* Scroll Indicator */
-        .scroll-hint {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7rem;
-            letter-spacing: 4px;
+        .intro-hero h1 {
+            font-size: 5rem;
+            letter-spacing: 20px;
+            font-weight: 100;
             text-transform: uppercase;
-            opacity: 0.5;
-            animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.8; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="nav-dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
+    <div class="intro-hero">
+        <h1>TRIANGLE</h1>
+        <p style="letter-spacing: 8px; color: var(--accent);">A FLUID EXPLORATION</p>
     </div>
 
-    <section>
-        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&q=80&w=2000');"></div>
-        <div class="content">
-            <h1>Genesis</h1>
-            <p class="editable-text">
-                Welcome to the Epicenter. Here, the currents of the Indian and Pacific Oceans collide, creating the most complex marine architecture on the planet. Scroll to dive deeper.
-            </p>
-        </div>
-        <div class="scroll-hint">Scroll to Explore</div>
-    </section>
+    <div class="page-wrapper">
+        
+        <section>
+            <div class="sticky-box">
+                <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070');"></div>
+                <div class="content">
+                    <h2>Oceanic Flow</h2>
+                    <p class="editable-text">
+                        The Coral Triangle is not a static place—it is a moving, breathing lung for our planet. Unlike a rigid machine, these reefs adapt to the shifting tides and warming sun, hosting life found nowhere else on Earth.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <section>
-        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&q=80&w=2000');"></div>
-        <div class="content">
-            <h2>Biodiversity</h2>
-            <p class="editable-text">
-                Inside these waters, evolution has moved at a breakneck pace. This isn't just a reef; it's a genetic library containing 76% of all known coral species and over 3,000 types of fish. 
-            </p>
-        </div>
-    </section>
+        <section>
+            <div class="sticky-box">
+                <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1629197520635-16570f076c07?q=80&w=2070');"></div>
+                <div class="content">
+                    <h2>Blue Synergy</h2>
+                    <p class="editable-text">
+                        Every organism here serves a purpose. From the apex predators to the microscopic polyps, the synergy of this ecosystem rival the engineering of the world’s most advanced hypercars.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <section>
-        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1682687322015-367bf6103211?auto=format&fit=crop&q=80&w=2000');"></div>
-        <div class="content">
-            <h2>The Horizon</h2>
-            <p class="editable-text">
-                To protect the Coral Triangle is to protect the future of our oceans. We are documenting the silent beauty of the deep to ensure it remains a masterpiece for generations to come.
-            </p>
-        </div>
-    </section>
+        <section>
+            <div class="sticky-box">
+                <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1459208226012-706593f4129e?q=80&w=2070');"></div>
+                <div class="content">
+                    <h2>Legacy</h2>
+                    <p class="editable-text">
+                        To preserve this triangle is to maintain the ancestral blueprint of our oceans. We invite you to discover the details, respect the power, and join the conservation.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer style="padding: 100px; text-align: center; font-size: 0.7rem; letter-spacing: 5px; opacity: 0.5;">
+        EST. 2026 | CORAL TRIANGLE EXPEDITION
+    </footer>
 
 </body>
 </html>
