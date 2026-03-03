@@ -3,108 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hypercar Concept</title>
+    <title>The Coral Triangle | Nature's Masterpiece</title>
     <style>
-        /* CSS Styles */
+        :root {
+            --accent: #ff7f50; /* Coral Pink */
+            --bg-dark: #020810;
+            --text-main: #e0e0e0;
+        }
+
         body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #050505;
-            color: #ffffff;
-            line-height: 1.6;
+            font-family: 'Inter', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.8;
+            scroll-behavior: smooth;
         }
 
-        /* Hero Section */
+        /* Hero Section - Koenigsegg Style */
         header {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                        url('https://www.themarinediaries.com/tmd-blog/the-coral-triangle-the-centre-of-marine-biodiversity') no-repeat center center/cover;
+            background: linear-gradient(rgba(2, 8, 16, 0.4), rgba(2, 8, 16, 0.8)), 
+                        url('https://images.unsplash.com/photo-1544551763-47a0159f9234?auto=format&fit=crop&q=80&w=2070') no-repeat center center/cover;
         }
 
-        .hero-text h1 {
-            font-size: 4rem;
-            letter-spacing: 10px;
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 200;
+            letter-spacing: 15px;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin: 0;
+            background: linear-gradient(to bottom, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-top: 10px;
         }
 
         /* Content Sections */
         .container {
-            max-width: 1100px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 80px 20px;
+            padding: 100px 20px;
+        }
+
+        .section-tag {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 10px;
         }
 
         .content-block {
-            margin-bottom: 100px;
-            opacity: 0.9;
+            margin-bottom: 150px;
         }
 
         .content-block h2 {
             font-size: 2.5rem;
-            border-left: 4px solid #ff9900; /* Subtle accent color */
-            padding-left: 20px;
+            font-weight: 300;
             margin-bottom: 30px;
-            text-transform: uppercase;
+            color: #fff;
         }
 
+        /* Editable Paragraph Style */
         .editable-text {
-            font-size: 1.1rem;
-            color: #ccc;
-            max-width: 700px;
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            border-left: 1px solid #333;
+            padding-left: 30px;
         }
 
         footer {
-            padding: 50px;
+            padding: 80px 20px;
             text-align: center;
-            border-top: 1px solid #222;
-            font-size: 0.8rem;
+            background: #010409;
+            border-top: 1px solid #111;
+            font-size: 0.7rem;
             letter-spacing: 2px;
-            color: #555;
+            color: #444;
+        }
+
+        /* Quick Highlight Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .stat-item b {
+            display: block;
+            font-size: 2rem;
+            color: #fff;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="hero-text">
-            <h1>EXCELLENCE</h1>
-            <p>The spirit of performance.</p>
+        <div class="hero-content">
+            <h1>THE TRIANGLE</h1>
+            <p>The Global Epicenter of Marine Life</p>
         </div>
     </header>
 
     <div class="container">
         
         <section class="content-block">
-            <h2>The Vision</h2>
+            <span class="section-tag">Overview</span>
+            <h2>Six Nations, One Ecosystem</h2>
             <p class="editable-text">
-                At the heart of our design philosophy is the pursuit of perfection. This section is where you can describe your primary mission or the history of your project.
+                Spanning Indonesia, Malaysia, the Philippines, Papua New Guinea, Solomon Islands, and Timor-Leste, the Coral Triangle is the world's ultimate underwater frontier. It covers only 1.6% of the planet's oceanic area but holds 76% of all known coral species.
             </p>
         </section>
 
         <section class="content-block">
-            <h2>Engineering</h2>
-            <p class="editable-text">
-                Koenigsegg uses a grid-based approach to highlight tech specs. You can use this space to talk about the technical side of things or specific features.
-            </p>
+            <span class="section-tag">Biodiversity</span>
+            <h2>The Amazon of the Seas</h2>
+            <div class="editable-text">
+                Nature here operates at a different scale. With over 6,000 species of reef fish and vital nesting grounds for six out of the world's seven marine turtle species, the complexity of this biological engine is unmatched by any other marine environment on Earth.
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item"><b>76%</b> Coral Species</div>
+                <div class="stat-item"><b>6,000+</b> Fish Species</div>
+                <div class="stat-item"><b>6M km²</b> Surface Area</div>
+            </div>
         </section>
 
         <section class="content-block">
-            <h2>Innovation</h2>
+            <span class="section-tag">Conservation</span>
+            <h2>A Fragile Heritage</h2>
             <p class="editable-text">
-                Add your third paragraph here. Keeping the text width constrained (max-width) makes it much easier to read on large desktop monitors.
+                High performance requires balance. Just as a machine needs precise tuning, the Coral Triangle requires intense protection against climate change and overfishing. This section is yours to define the future of marine conservation.
             </p>
         </section>
 
     </div>
 
     <footer>
-        &copy; 2026 CONCEPT MOTOR WORKS. ALL RIGHTS RESERVED.
+        &copy; 2026 OCEANIC VOYAGER | DOCUMENTING THE CORAL TRIANGLE
     </footer>
 
 </body>
