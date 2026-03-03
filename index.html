@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coral Triangle | Technical Discovery</title>
+    <title>Coral Triangle | Discovery</title>
     <style>
         :root {
             --accent: #00d4ff;
             --bg-deep: #03070b;
-            --glass: rgba(0, 0, 0, 0.75);
+            --glass: rgba(0, 0, 0, 0.7);
         }
 
         body, html {
@@ -16,27 +16,42 @@
             padding: 0;
             background-color: var(--bg-deep);
             color: #fff;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
+        }
+
+        /* STICKY MAIN TITLE: This stays fixed at the top */
+        .main-fixed-header {
+            position: fixed;
+            top: 50px;
+            left: 60px;
+            z-index: 100;
+            pointer-events: none; /* Allows clicking through to content */
+        }
+
+        .main-fixed-header h1 {
+            font-size: 1.2rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            font-weight: 200;
+            margin: 0;
+            color: var(--accent);
         }
 
         /* Progress Bar */
         #progress-container {
             position: fixed;
             top: 0; width: 100%; height: 3px;
-            z-index: 100;
+            z-index: 101;
             background: rgba(255,255,255,0.05);
         }
-        #progress-bar {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-        }
+        #progress-bar { height: 100%; background: var(--accent); width: 0%; }
 
+        /* Section Layout */
         section {
             position: relative;
-            height: 160vh; /* Smooth overlap height */
-            margin-top: -60vh;
+            height: 150vh; 
+            margin-top: -50vh;
         }
 
         .sticky-box {
@@ -55,29 +70,24 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
-            filter: brightness(0.45);
+            filter: brightness(0.4);
             z-index: -1;
-            transition: transform 1.5s ease-out;
         }
 
-        section:hover .bg-layer {
-            transform: scale(1.05);
-        }
-
-        /* Dense Content Layout */
+        /* Content Grid */
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 50px;
             max-width: 1200px;
-            width: 90%;
+            width: 85%;
             padding: 60px;
             background: var(--glass);
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1);
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
 
         section:hover .content-grid {
@@ -85,62 +95,52 @@
             transform: translateY(0);
         }
 
-        .sidebar h2 {
-            font-size: 2.8rem;
-            font-weight: 200;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            margin: 0;
-        }
-
-        .sidebar .subtitle {
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-top: 15px;
-            display: block;
-        }
+        .sidebar h2 { font-size: 2.5rem; letter-spacing: 6px; text-transform: uppercase; margin: 0; }
+        .sidebar .subtitle { font-size: 0.8rem; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-top: 10px; display: block; }
 
         .text-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            border-left: 1px solid rgba(255,255,255,0.1);
+            border-left: 1px solid rgba(255,255,255,0.2);
             padding-left: 30px;
         }
 
-        .editable-block {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: #cecece;
-            text-align: justify;
+        .editable-block { font-size: 0.95rem; line-height: 1.8; color: #cecece; }
+
+        /* Final Reef Image Styling */
+        .final-visual {
+            height: 80vh;
+            width: 100%;
+            background: url('https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid var(--accent);
         }
 
-        /* First section specific adjustments */
         .intro-section { margin-top: 0; height: 100vh; }
-
     </style>
 </head>
 <body>
 
     <div id="progress-container"><div id="progress-bar"></div></div>
 
+    <div class="main-fixed-header">
+        <h1>CORAL TRIANGLE</h1>
+    </div>
+
     <section class="intro-section">
         <div class="sticky-box">
-            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=2070');"></div>
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1582967788606-a171c1080cb0?q=80&w=2000');"></div>
             <div class="content-grid">
                 <div class="sidebar">
                     <h2>[TITLE 1]</h2>
-                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                    <span class="subtitle">[SUBTITLE 1]</span>
                 </div>
                 <div class="text-columns">
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK A]
-                    </div>
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK B]
-                    </div>
+                    <div class="editable-block">[INSERT TEXT A]</div>
+                    <div class="editable-block">[INSERT TEXT B]</div>
                 </div>
             </div>
         </div>
@@ -148,19 +148,15 @@
 
     <section>
         <div class="sticky-box">
-            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=2070');"></div>
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=2000');"></div>
             <div class="content-grid">
                 <div class="sidebar">
                     <h2>[TITLE 2]</h2>
-                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                    <span class="subtitle">[SUBTITLE 2]</span>
                 </div>
                 <div class="text-columns">
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK C]
-                    </div>
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK D]
-                    </div>
+                    <div class="editable-block">[INSERT TEXT C]</div>
+                    <div class="editable-block">[INSERT TEXT D]</div>
                 </div>
             </div>
         </div>
@@ -168,19 +164,15 @@
 
     <section>
         <div class="sticky-box">
-            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1610016302534-6f67f1c968d8?q=80&w=2070');"></div>
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1518467166778-b88f373ffec7?q=80&w=2000');"></div>
             <div class="content-grid">
                 <div class="sidebar">
                     <h2>[TITLE 3]</h2>
-                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                    <span class="subtitle">[SUBTITLE 3]</span>
                 </div>
                 <div class="text-columns">
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK E]
-                    </div>
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK F]
-                    </div>
+                    <div class="editable-block">[INSERT TEXT E]</div>
+                    <div class="editable-block">[INSERT TEXT F]</div>
                 </div>
             </div>
         </div>
@@ -188,23 +180,23 @@
 
     <section>
         <div class="sticky-box">
-            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070');"></div>
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1610016302534-6f67f1c968d8?q=80&w=2000');"></div>
             <div class="content-grid">
                 <div class="sidebar">
                     <h2>[TITLE 4]</h2>
-                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                    <span class="subtitle">[SUBTITLE 4]</span>
                 </div>
                 <div class="text-columns">
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK G]
-                    </div>
-                    <div class="editable-block">
-                        [INSERT TEXT BLOCK H]
-                    </div>
+                    <div class="editable-block">[INSERT TEXT G]</div>
+                    <div class="editable-block">[INSERT TEXT H]</div>
                 </div>
             </div>
         </div>
     </section>
+
+    <div class="final-visual">
+        <h3 style="letter-spacing: 15px; font-weight: 100; text-transform: uppercase;">The Deep Horizon</h3>
+    </div>
 
     <footer style="padding: 100px; text-align: center; font-size: 0.7rem; letter-spacing: 10px; opacity: 0.3;">
         [YOUR PROJECT NAME] &copy; 2026
