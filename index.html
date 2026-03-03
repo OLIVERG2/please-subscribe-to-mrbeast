@@ -3,161 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Coral Triangle | Nature's Masterpiece</title>
+    <title>Coral Triangle | Deep Discovery</title>
     <style>
         :root {
-            --accent: #ff7f50; /* Coral Pink */
-            --bg-dark: #020810;
-            --text-main: #e0e0e0;
+            --accent: #00f2ff; /* Bioluminescent Cyan */
+            --bg: #01050a;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        body, html {
+        /* Snap Scroll Logic */
+        html {
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
             margin: 0;
-            padding: 0;
-            font-family: 'Inter', 'Helvetica Neue', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.8;
-            scroll-behavior: smooth;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* Hero Section - Koenigsegg Style */
-        header {
+        section {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            background: linear-gradient(rgba(2, 8, 16, 0.4), rgba(2, 8, 16, 0.8)), 
-                        url('https://images.unsplash.com/photo-1544551763-47a0159f9234?auto=format&fit=crop&q=80&w=2070') no-repeat center center/cover;
+            position: relative;
+            scroll-snap-align: start;
+            overflow: hidden;
         }
 
-        .hero-content h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
+        /* Background Parallax Effect */
+        .bg-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            transform: scale(1.1);
+            z-index: -1;
+            filter: brightness(0.4) grayscale(20%);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* When the section is in view, we can simulate movement */
+        section:hover .bg-layer {
+            transform: scale(1);
+        }
+
+        .content {
+            max-width: 800px;
+            padding: 40px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+            background: var(--glass);
+            border-left: 2px solid var(--accent);
+            transform: translateY(30px);
+            opacity: 0.9;
+        }
+
+        h1, h2 {
+            text-transform: uppercase;
+            letter-spacing: 8px;
             font-weight: 200;
-            letter-spacing: 15px;
-            text-transform: uppercase;
-            margin: 0;
-            background: linear-gradient(to bottom, #fff, #999);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
         }
 
-        .hero-content p {
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            color: var(--accent);
-            margin-top: 10px;
-        }
+        h1 { font-size: 4rem; color: #fff; }
+        h2 { font-size: 2.5rem; color: var(--accent); }
 
-        /* Content Sections */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 100px 20px;
-        }
-
-        .section-tag {
-            color: var(--accent);
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .content-block {
-            margin-bottom: 150px;
-        }
-
-        .content-block h2 {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 30px;
-            color: #fff;
-        }
-
-        /* Editable Paragraph Style */
         .editable-text {
-            font-size: 1.2rem;
-            color: #a0a0a0;
-            border-left: 1px solid #333;
-            padding-left: 30px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #d1d1d1;
+            margin-bottom: 20px;
         }
 
-        footer {
-            padding: 80px 20px;
-            text-align: center;
-            background: #010409;
-            border-top: 1px solid #111;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            color: #444;
+        /* Navigation Dots */
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
         }
 
-        /* Quick Highlight Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin-top: 50px;
-        }
-
-        .stat-item b {
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            margin: 15px 0;
             display: block;
-            font-size: 2rem;
-            color: #fff;
+        }
+
+        /* Scroll Indicator */
+        .scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="hero-content">
-            <h1>THE TRIANGLE</h1>
-            <p>The Global Epicenter of Marine Life</p>
-        </div>
-    </header>
-
-    <div class="container">
-        
-        <section class="content-block">
-            <span class="section-tag">Overview</span>
-            <h2>Six Nations, One Ecosystem</h2>
-            <p class="editable-text">
-                Spanning Indonesia, Malaysia, the Philippines, Papua New Guinea, Solomon Islands, and Timor-Leste, the Coral Triangle is the world's ultimate underwater frontier. It covers only 1.6% of the planet's oceanic area but holds 76% of all known coral species.
-            </p>
-        </section>
-
-        <section class="content-block">
-            <span class="section-tag">Biodiversity</span>
-            <h2>The Amazon of the Seas</h2>
-            <div class="editable-text">
-                Nature here operates at a different scale. With over 6,000 species of reef fish and vital nesting grounds for six out of the world's seven marine turtle species, the complexity of this biological engine is unmatched by any other marine environment on Earth.
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-item"><b>76%</b> Coral Species</div>
-                <div class="stat-item"><b>6,000+</b> Fish Species</div>
-                <div class="stat-item"><b>6M km²</b> Surface Area</div>
-            </div>
-        </section>
-
-        <section class="content-block">
-            <span class="section-tag">Conservation</span>
-            <h2>A Fragile Heritage</h2>
-            <p class="editable-text">
-                High performance requires balance. Just as a machine needs precise tuning, the Coral Triangle requires intense protection against climate change and overfishing. This section is yours to define the future of marine conservation.
-            </p>
-        </section>
-
+    <div class="nav-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
     </div>
 
-    <footer>
-        &copy; 2026 OCEANIC VOYAGER | DOCUMENTING THE CORAL TRIANGLE
-    </footer>
+    <section>
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&q=80&w=2000');"></div>
+        <div class="content">
+            <h1>Genesis</h1>
+            <p class="editable-text">
+                Welcome to the Epicenter. Here, the currents of the Indian and Pacific Oceans collide, creating the most complex marine architecture on the planet. Scroll to dive deeper.
+            </p>
+        </div>
+        <div class="scroll-hint">Scroll to Explore</div>
+    </section>
+
+    <section>
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&q=80&w=2000');"></div>
+        <div class="content">
+            <h2>Biodiversity</h2>
+            <p class="editable-text">
+                Inside these waters, evolution has moved at a breakneck pace. This isn't just a reef; it's a genetic library containing 76% of all known coral species and over 3,000 types of fish. 
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1682687322015-367bf6103211?auto=format&fit=crop&q=80&w=2000');"></div>
+        <div class="content">
+            <h2>The Horizon</h2>
+            <p class="editable-text">
+                To protect the Coral Triangle is to protect the future of our oceans. We are documenting the silent beauty of the deep to ensure it remains a masterpiece for generations to come.
+            </p>
+        </div>
+    </section>
 
 </body>
 </html>
