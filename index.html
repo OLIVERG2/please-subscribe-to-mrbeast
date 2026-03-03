@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coral Triangle | Deep Data</title>
+    <title>Coral Triangle | Technical Discovery</title>
     <style>
         :root {
             --accent: #00d4ff;
-            --bg-deep: #020508;
-            --glass: rgba(0, 0, 0, 0.7);
+            --bg-deep: #03070b;
+            --glass: rgba(0, 0, 0, 0.75);
         }
 
         body, html {
@@ -16,33 +16,27 @@
             padding: 0;
             background-color: var(--bg-deep);
             color: #fff;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             scroll-behavior: smooth;
         }
 
         /* Progress Bar */
         #progress-container {
             position: fixed;
-            top: 0;
-            width: 100%;
-            height: 4px;
+            top: 0; width: 100%; height: 3px;
             z-index: 100;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
         }
         #progress-bar {
             height: 100%;
             background: var(--accent);
             width: 0%;
-            transition: width 0.1s;
         }
-
-        /* Sticky Layout */
-        .page-wrapper { position: relative; }
 
         section {
             position: relative;
-            height: 180vh; /* Controlled height for faster flow */
-            margin-top: -80vh;
+            height: 160vh; /* Smooth overlap height */
+            margin-top: -60vh;
         }
 
         .sticky-box {
@@ -56,29 +50,34 @@
             overflow: hidden;
         }
 
-        /* Background Layers */
         .bg-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
-            filter: brightness(0.4);
+            filter: brightness(0.45);
             z-index: -1;
+            transition: transform 1.5s ease-out;
         }
 
-        /* Densely Packed Content Grid */
+        section:hover .bg-layer {
+            transform: scale(1.05);
+        }
+
+        /* Dense Content Layout */
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 1.5fr; /* Left for headings, right for dense text */
-            gap: 40px;
+            grid-template-columns: 1fr 2fr;
+            gap: 50px;
             max-width: 1200px;
-            padding: 50px;
+            width: 90%;
+            padding: 60px;
             background: var(--glass);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             border: 1px solid rgba(255,255,255,0.1);
-            transform: translateY(50px);
             opacity: 0;
-            transition: all 0.8s ease-out;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         section:hover .content-grid {
@@ -86,35 +85,40 @@
             transform: translateY(0);
         }
 
-        h2 {
-            font-size: 2.2rem;
-            letter-spacing: 5px;
+        .sidebar h2 {
+            font-size: 2.8rem;
+            font-weight: 200;
+            letter-spacing: 8px;
             text-transform: uppercase;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 15px;
             margin: 0;
+        }
+
+        .sidebar .subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-top: 15px;
+            display: block;
         }
 
         .text-columns {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Split the text into two small columns */
-            gap: 25px;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding-left: 30px;
         }
 
-        .editable-text {
+        .editable-block {
             font-size: 0.95rem;
-            line-height: 1.7;
-            color: #bbb;
-            margin: 0;
+            line-height: 1.8;
+            color: #cecece;
+            text-align: justify;
         }
 
-        .spec-item {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent);
-        }
+        /* First section specific adjustments */
+        .intro-section { margin-top: 0; height: 100vh; }
 
     </style>
 </head>
@@ -122,75 +126,91 @@
 
     <div id="progress-container"><div id="progress-bar"></div></div>
 
-    <div class="page-wrapper">
-        
-        <section>
-            <div class="sticky-box">
-                <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070');"></div>
-                <div class="content-grid">
-                    <div>
-                        <h2>System<br>Overview</h2>
-                        <div class="spec-item">Region: Southeast Asia / Pacific</div>
-                        <div class="spec-item">Status: Hyper-Biodiverse</div>
+    <section class="intro-section">
+        <div class="sticky-box">
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=2070');"></div>
+            <div class="content-grid">
+                <div class="sidebar">
+                    <h2>[TITLE 1]</h2>
+                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                </div>
+                <div class="text-columns">
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK A]
                     </div>
-                    <div class="text-columns">
-                        <p class="editable-text">
-                            The Coral Triangle represents the highest density of marine life on Earth. Spanning six countries, it forms the global epicenter of marine conservation efforts. This region is not just a habitat; it is an biological engine driving the health of the entire Pacific.
-                        </p>
-                        <p class="editable-text">
-                            With over 600 species of reef-building corals alone, the structural complexity rivals any man-made architecture. It provides sustainable livelihoods for over 120 million people who rely directly on these reefs for food and coastal protection.
-                        </p>
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK B]
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section>
-            <div class="sticky-box">
-                <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1518467166778-b88f373ffec7?q=80&w=2070');"></div>
-                <div class="content-grid">
-                    <div>
-                        <h2>Species<br>Inventory</h2>
-                        <div class="spec-item">Fish Species: 3,000+</div>
-                        <div class="spec-item">Coral Species: 76% Global</div>
+    <section>
+        <div class="sticky-box">
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=2070');"></div>
+            <div class="content-grid">
+                <div class="sidebar">
+                    <h2>[TITLE 2]</h2>
+                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                </div>
+                <div class="text-columns">
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK C]
                     </div>
-                    <div class="text-columns">
-                        <p class="editable-text">
-                            Inventory management in the Coral Triangle reveals staggering numbers. 37% of the world’s coral reef fish species and 56% of the ornamental coral reef fish are found here. It is the only place on Earth where six of the world's seven marine turtle species reside.
-                        </p>
-                        <p class="editable-text">
-                            The "Amazon of the Seas" acts as a nursery for the world’s tuna supply. Without the nurseries located within the Triangle, global tuna populations—a multi-billion dollar industry—would face immediate and catastrophic collapse.
-                        </p>
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK D]
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section>
-            <div class="sticky-box">
-                <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1610016302534-6f67f1c968d8?q=80&w=2070');"></div>
-                <div class="content-grid">
-                    <div>
-                        <h2>Future<br>Protection</h2>
-                        <div class="spec-item">Goal: 30x30 Protected</div>
-                        <div class="spec-item">Threat Level: High</div>
+    <section>
+        <div class="sticky-box">
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1610016302534-6f67f1c968d8?q=80&w=2070');"></div>
+            <div class="content-grid">
+                <div class="sidebar">
+                    <h2>[TITLE 3]</h2>
+                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                </div>
+                <div class="text-columns">
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK E]
                     </div>
-                    <div class="text-columns">
-                        <p class="editable-text">
-                            Conservation efforts are now moving toward high-tech monitoring. Using satellite data and AI, scientists are tracking coral bleaching in real-time. The goal is to establish resilient Marine Protected Areas (MPAs) that can withstand rising sea temperatures.
-                        </p>
-                        <p class="editable-text">
-                            Every paragraph here can be customized to reflect your specific data points. The focus remains on "Discovery through Data"—ensuring that visitors understand the density and importance of every square meter of the Coral Triangle.
-                        </p>
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK F]
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </div>
+    <section>
+        <div class="sticky-box">
+            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070');"></div>
+            <div class="content-grid">
+                <div class="sidebar">
+                    <h2>[TITLE 4]</h2>
+                    <span class="subtitle">[SUBTITLE GOES HERE]</span>
+                </div>
+                <div class="text-columns">
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK G]
+                    </div>
+                    <div class="editable-block">
+                        [INSERT TEXT BLOCK H]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 100px; text-align: center; font-size: 0.7rem; letter-spacing: 10px; opacity: 0.3;">
+        [YOUR PROJECT NAME] &copy; 2026
+    </footer>
 
     <script>
-        // Progress Bar Logic
         window.onscroll = function() {
             let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
