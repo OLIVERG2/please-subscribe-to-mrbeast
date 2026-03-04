@@ -20,7 +20,7 @@
             scroll-behavior: smooth;
         }
 
-        /* STICKY MAIN TITLE: This stays fixed at the top */
+        /* STICKY MAIN TITLE */
         .main-fixed-header {
             position: fixed;
             top: 50px;
@@ -95,10 +95,53 @@
             transform: translateY(0);
         }
 
-        .sidebar h2 { font-size: 2.5rem; letter-spacing: 6px; text-transform: uppercase; margin: 0; }
-        .sidebar h3 { font-size: 2rem; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
-        .sidebar .subtitle { font-size: 0.8rem; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-top: 10px; display: block; }
+        /* --- STICKY VIDEO STYLING --- */
+        #video-wrapper {
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: #000;
+        }
 
+        #my-video {
+            width: 100%;
+            display: block;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Floating state */
+        #my-video.sticky {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 300px;
+            z-index: 2000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+        }
+
+        #close-sticky {
+            display: none;
+            position: fixed;
+            bottom: 185px; /* Adjust based on video height */
+            right: 40px;
+            z-index: 2001;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #my-video.sticky + #close-sticky { display: block; }
+
+        /* Grid text styles */
+        .sidebar h2 { font-size: 2.5rem; letter-spacing: 6px; text-transform: uppercase; margin: 0; }
+        .sidebar .subtitle { font-size: 0.8rem; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-top: 10px; display: block; }
         .text-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -106,20 +149,15 @@
             border-left: 1px solid rgba(255,255,255,0.2);
             padding-left: 30px;
         }
-
         .editable-block { font-size: 0.95rem; line-height: 1.8; color: #cecece; }
 
-        /* Final Reef Image Styling */
         .final-visual {
             height: 80vh;
             width: 100%;
             background: url('https://images.unsplash.com/photo-1544551763-47a0159f9234?q=80&w=2070') no-repeat center center/cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             border-top: 1px solid var(--accent);
         }
-
         .intro-section { margin-top: 0; height: 100vh; }
     </style>
 </head>
@@ -147,17 +185,24 @@
         </div>
     </section>
 
-    <section>
+    <section id="trigger-section">
         <div class="sticky-box">
             <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=2000');"></div>
             <div class="content-grid">
                 <div class="sidebar">
                     <h2>What Is the Coral Triangle</h2>
                     <span class="subtitle">And why it matters.</span>
+                    
+                    <div id="video-wrapper">
+                        <video id="my-video" controls muted>
+                            <source src="https://www.youtube.com/watch?v=M6AM2PozsbQ" type="video/mp4">
+                        </video>
+                        <button id="close-sticky" onclick="dismissSticky()">×</button>
+                    </div>
                 </div>
                 <div class="text-columns">
-                    <div class="editable-block">The coral triangle is a beautiful set of islands above australia. the coral triangle is a breeding ground for fish where most of the fish from around the world go to reproduce. the coral triangle is aslo a big tourist destination witch has grown the economy in that area. as the tourist population grows so does the local population and it is getting out of hand.</div>
-                    <div class="editable-block">The Coral Triangle is also home to almost 76% of the worlds coral.</div>
+                    <div class="editable-block">The coral triangle is a beautiful set of islands above australia. it is a breeding ground for fish where most of the fish from around the world go to reproduce. it is also a big tourist destination which has grown the economy in that area.</div>
+                    <div class="editable-block">The Coral Triangle is also home to almost 76% of the worlds coral. As the tourist population grows, so does the local population and it is getting out of hand.</div>
                 </div>
             </div>
         </div>
@@ -168,44 +213,12 @@
             <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1518467166778-b88f373ffec7?q=80&w=2000');"></div>
             <div class="content-grid">
                 <div class="sidebar">
-                    <h2>Natural Resource Consumption</h2>
-                    <span class="subtitle">And how they're being used.</span>
+                    <h2>Natural Resources</h2>
+                    <span class="subtitle">Consumption.</span>
                 </div>
                 <div class="text-columns">
-                    <div class="editable-block">According to britannica the average person in the coral triangle uses 24-42 gallons of water a day. tourists want places to stay so land needs to be cleared for the hotels. the space being cleared is mostly in mangrove forests destroying the natural habitat. </div>
-                    <div class="editable-block">While people are there they are mostly eating fish which is a big food source there. because more people are traveling and the tourist population grows the sea is starting to be overfished.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="sticky-box">
-            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1610016302534-6f67f1c968d8?q=80&w=2000');"></div>
-            <div class="content-grid">
-                <div class="sidebar">
-                    <h2>Tourism </h2>
-                    <span class="subtitle">And how it is affecting Earth's Systems</span>
-                </div>
-                <div class="text-columns">
-                    <div class="editable-block">Because of the overfishing and the coral bleaching as well as the mangrove tree removal the ecosystem has been thrown into disarray. the fish have no homes and the others that rely on the coral having less things to eat disrupting the food chain. </div>
-                    <div class="editable-block">because of the flights to the coral triangle there have been a lot of greenhouse gases released into the atmosphere not only that but there are also car and other variables. because the roots of the mangrove trees the ground does not have a way to stick together so it makes the ground unstable</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="sticky-box">
-            <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1459208226012-706593f4129e?q=80&w=2000');"></div>
-            <div class="content-grid">
-                <div class="sidebar">
-                    <h2>Hope for the Future</h2>
-                    <span class="subtitle">And how you can help.</span>
-                </div>
-                <div class="text-columns">
-                    <div class="editable-block">to reduce the effects of these things the best thing would be to shows the amount of tourists. It would slow the amount of overfishing.</div>
-                    <div class="editable-block">it would stop the deforestation of mangroves. The water consumption would go way down. The co2 emissions would be lowered because less people are traveling. </div>
+                    <div class="editable-block">Average consumption is 24-42 gallons of water a day. Land is being cleared for hotels, destroying mangrove forests.</div>
+                    <div class="editable-block">Overfishing is becoming a major threat as demand for seafood grows with tourism.</div>
                 </div>
             </div>
         </div>
@@ -220,12 +233,40 @@
     </footer>
 
     <script>
+        // Progress Bar Logic
         window.onscroll = function() {
             let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             let scrolled = (winScroll / height) * 100;
             document.getElementById("progress-bar").style.width = scrolled + "%";
         };
+
+        // Sticky Video Logic
+        const video = document.getElementById('my-video');
+        const triggerSection = document.getElementById('trigger-section');
+        let isDismissed = false;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Back in the original section
+                    video.classList.remove('sticky');
+                    isDismissed = false; 
+                } else {
+                    // Left the section
+                    if (!isDismissed && entry.boundingClientRect.top < 0) {
+                        video.classList.add('sticky');
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        observer.observe(triggerSection);
+
+        function dismissSticky() {
+            video.classList.remove('sticky');
+            isDismissed = true; 
+        }
     </script>
 
 </body>
