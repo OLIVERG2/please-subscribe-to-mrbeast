@@ -1,153 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA HUNCH Project</title>
-    <style>
-        :root {
-            --space-black: #0b0d17;
-            --deep-navy: #101935;
-            --nasa-blue: #0b3d91;
-            --accent-red: #fc3d21;
-            --text-light: #f1f5f9;
-            --card-bg: #1a233d;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Gallery - NASA HUNCH</title>
+  <style>
+    :root {
+      --space-bg: #0b0d17;
+      --panel-bg: #15192b;
+      --accent-blue: #00d2ff;
+      --accent-purple: #7a22ff;
+      --text-main: #e2e8f0;
+      --text-dim: #94a3b8;
+    }
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--space-black);
-            color: var(--text-light);
-            line-height: 1.6;
-        }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--space-bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
 
-        header {
-            background-color: var(--deep-navy);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            border-bottom: 3px solid var(--nasa-blue);
-        }
+    header {
+      background: linear-gradient(135deg, var(--panel-bg), #000000);
+      padding: 2rem 5%;
+      border-bottom: 2px solid var(--accent-blue);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-red);
-            letter-spacing: 2px;
-        }
+    .logo-container h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      background: linear-gradient(to right, #ffffff, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 1.5rem;
-            margin: 0;
-            padding: 0;
-        }
+    .logo-container span {
+      color: var(--accent-purple);
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
 
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-        }
+    nav a {
+      color: var(--text-main);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
 
-        nav a:hover {
-            color: var(--accent-red);
-        }
+    nav a:hover, nav a.active {
+      color: var(--accent-blue);
+    }
 
-        .hero {
-            text-align: center;
-            padding: 4rem 1rem;
-            background: linear-gradient(180deg, var(--deep-navy) 0%, var(--space-black) 100%);
-            border-bottom: 1px solid var(--nasa-blue);
-        }
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
 
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+    .media-card {
+      background: var(--panel-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2a314d;
+      transition: transform 0.2s;
+    }
 
-        .card {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--nasa-blue);
-        }
+    .media-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-blue);
+    }
 
-        .card h2 {
-            margin-top: 0;
-            color: var(--accent-red);
-        }
+    .media-placeholder {
+      width: 100%;
+      height: 200px;
+      background: #090b12;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      border-bottom: 1px solid #2a314d;
+    }
 
-        .media-placeholder {
-            background-color: var(--deep-navy);
-            border: 2px dashed var(--nasa-blue);
-            padding: 3rem;
-            text-align: center;
-            margin-top: 1rem;
-            border-radius: 6px;
-        }
+    .media-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            background-color: var(--deep-navy);
-            font-size: 0.9rem;
-        }
-    </style>
+    .media-info {
+      padding: 1rem;
+    }
+
+    .media-info h4 {
+      margin: 0 0 0.5rem 0;
+      color: var(--accent-blue);
+    }
+
+    .media-info p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      border-top: 1px solid #1e2438;
+      margin-top: 3rem;
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">NASA HUNCH</div>
-        <nav>
-            <ul>
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#design">Design & Progress</a></li>
-                <li><a href="#team">Team</a></li>
-            </ul>
-        </nav>
-    </header>
+  <header>
+    <div class="logo-container">
+      <h1>NASA HUNCH</h1>
+      <span>PROJECT DOCUMENTATION PORTAL</span>
+    </div>
+    <nav>
+      <a href="index.html">Overview & Logs</a>
+      <a href="gallery.html" class="active">Media Gallery</a>
+    </nav>
+  </header>
 
-    <section class="hero">
-        <h1>Project Title Goes Here</h1>
-        <p>A brief one-sentence summary of your NASA HUNCH innovation or hardware design.</p>
-    </section>
+  <div class="container">
+    <h2>Photo & Media Documentation</h2>
+    <p>Visual record of design reviews, fabrication, and testing procedures.</p>
 
-    <main class="container">
-        
-        <section id="overview" class="card">
-            <h2>Project Overview</h2>
-            <p>Describe the problem your project solves for NASA. Include background context, the mission constraints, and your team's objective.</p>
-        </section>
+    <div class="gallery-grid">
+      
+      <div class="media-card">
+        <div class="media-placeholder">
+          <span>[ Insert Image: cad-render-v1.jpg ]</span>
+        </div>
+        <div class="media-info">
+          <h4>CAD Model Render (v1)</h4>
+          <p>Initial full-assembly render showing internal component routing.</p>
+        </div>
+      </div>
 
-        <section id="design" class="card">
-            <h2>Design & Key Features</h2>
-            <p>Detail your solution here. You can break down technical specifications, materials used, or CAD design iterations.</p>
-            
-            <div class="media-placeholder">
-                <p>[ Place image or CAD rendering of your design here ]</p>
-            </div>
-        </section>
+      <div class="media-card">
+        <div class="media-placeholder">
+          <span>[ Insert Image: machining-process.jpg ]</span>
+        </div>
+        <div class="media-info">
+          <h4>CNC Machining</h4>
+          <p>Milling the primary aluminum bracket in the high school shop.</p>
+        </div>
+      </div>
 
-        <section id="team" class="card">
-            <h2>The Team & Acknowledgments</h2>
-            <p>Introduce your team members, school, mentor, and NASA HUNCH advisors who supported the project.</p>
-        </section>
+      <div class="media-card">
+        <div class="media-placeholder">
+          <span>[ Insert Image: fit-test.jpg ]</span>
+        </div>
+        <div class="media-info">
+          <h4>Locker Fit Test</h4>
+          <p>Verifying outer dimensions against standard NASA ISS locker specs.</p>
+        </div>
+      </div>
 
-    </main>
+    </div>
+  </div>
 
-    <footer>
-        <p>&copy; 2026 NASA HUNCH Project Team | High School Name</p>
-    </footer>
+  <footer>
+    <p>NASA HUNCH Project Portal &bull; Developed by High School Engineering Team</p>
+  </footer>
 
 </body>
 </html>
