@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA HUNCH // HYPER-ENGINEERING PROJECT</title>
+    <title>NASA HUNCH // HYPER-ENGINEERING MISSION PORTAL</title>
     
-    <!-- Koenigsegg Style Typography -->
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@200;300;400;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@200;300;400;600&family=JetBrains+Mono:ital,wght@0,200;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
+        /* ==========================================================================
+           01. DESIGN SYSTEM & CSS VARIABLES
+           ========================================================================== */
         :root {
-            --bg-dark: #050505;
-            --bg-card: rgba(15, 15, 15, 0.7);
+            --bg-dark: #030407;
+            --bg-card: rgba(10, 14, 23, 0.75);
+            --bg-card-hover: rgba(18, 26, 43, 0.85);
             --accent-gold: #c5a059;
-            --accent-white: #ffffff;
-            --text-muted: #737373;
-            --border-line: rgba(255, 255, 255, 0.12);
-            --border-active: rgba(197, 160, 89, 0.6);
+            --accent-gold-glow: rgba(197, 160, 89, 0.4);
+            --accent-cyan: #00f0ff;
+            --accent-cyan-glow: rgba(0, 240, 255, 0.3);
+            --accent-red: #ff2a2a;
+            --text-main: #f0f4f8;
+            --text-muted: #64748b;
+            --border-line: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(197, 160, 89, 0.5);
+            --border-cyan: rgba(0, 240, 255, 0.4);
+            
             --font-head: 'Syne', sans-serif;
             --font-body: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
@@ -29,83 +39,178 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
-            cursor: none; /* Custom crosshair active */
+            cursor: none !important; /* Managed by JS HUD Reticle */
+        }
+
+        ::selection {
+            background: var(--accent-gold);
+            color: #000;
         }
 
         body {
             background-color: var(--bg-dark);
-            color: var(--accent-white);
+            color: var(--text-main);
             font-family: var(--font-body);
             overflow-x: hidden;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Interactive HUD Canvas & Grid Background --- */
+        /* Scanline Overlay Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.03),
+                rgba(0, 255, 0, 0.01),
+                rgba(0, 0, 255, 0.03)
+            );
+            background-size: 100% 4px, 6px 100%;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* ==========================================================================
+           02. HUD CANVAS & TARGET RETICLE CURSOR
+           ========================================================================== */
         #hudCanvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: -1;
             pointer-events: none;
         }
 
-        /* --- Custom Koenigsegg Crosshair Cursor --- */
-        #cursor-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--accent-gold);
+        #reticle-dot {
             position: fixed;
+            width: 4px; height: 4px;
+            background: var(--accent-cyan);
             border-radius: 50%;
             pointer-events: none;
             z-index: 10000;
             transform: translate(-50%, -50%);
-            transition: transform 0.05s ease;
+            box-shadow: 0 0 10px var(--accent-cyan);
         }
 
-        #cursor-ring {
-            width: 36px;
-            height: 36px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+        #reticle-ring {
             position: fixed;
+            width: 40px; height: 40px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, border-color 0.2s, transform 0.1s ease-out;
+            transition: width 0.2s, height 0.2s, border-color 0.2s, transform 0.05s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* --- Vertical Timeline Scrollbar --- */
-        .scroll-tracker {
+        #reticle-ring::before, #reticle-ring::after {
+            content: '';
+            position: absolute;
+            background: var(--accent-cyan);
+        }
+        #reticle-ring::before { width: 100%; height: 1px; opacity: 0.2; }
+        #reticle-ring::after { width: 1px; height: 100%; opacity: 0.2; }
+
+        #reticle-label {
             position: fixed;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 200px;
-            width: 2px;
-            background: var(--border-line);
-            z-index: 1000;
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(25px, 15px);
+            white-space: nowrap;
         }
 
-        .scroll-tracker-bar {
-            width: 100%;
-            height: 0%;
-            background: var(--accent-gold);
-            box-shadow: 0 0 10px var(--accent-gold);
+        /* ==========================================================================
+           03. TELEMETRY TICKER & TOP BAR
+           ========================================================================== */
+        .top-telemetry-bar {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 32px;
+            background: rgba(3, 4, 7, 0.95);
+            border-bottom: 1px solid var(--border-line);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
         }
 
-        /* --- Minimal Navigation --- */
+        .ticker-wrap {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 60%;
+        }
+
+        .ticker-move {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+
+        .ticker-item {
+            display: inline-block;
+            margin-right: 3rem;
+        }
+
+        .ticker-item span { color: var(--accent-gold); }
+
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        .audio-toggle {
+            background: transparent;
+            border: 1px solid var(--border-line);
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .audio-toggle:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
+        }
+
+        /* Progress Bar */
+        .scroll-progress-line {
+            position: fixed;
+            top: 32px; left: 0;
+            width: 0%; height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));
+            z-index: 1002;
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        /* ==========================================================================
+           04. NAVIGATION BAR
+           ========================================================================== */
         .navbar {
             position: fixed;
-            top: 0;
-            width: 100%;
+            top: 32px; width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 5%;
-            background: linear-gradient(180deg, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%);
+            padding: 1.5rem 5%;
+            background: linear-gradient(180deg, rgba(3,4,7,0.9) 0%, rgba(3,4,7,0) 100%);
+            backdrop-filter: blur(8px);
             z-index: 1000;
         }
 
@@ -122,16 +227,17 @@
 
         .brand-badge {
             font-family: var(--font-mono);
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--accent-gold);
             border: 1px solid var(--accent-gold);
             padding: 2px 6px;
             letter-spacing: 1px;
+            background: rgba(197, 160, 89, 0.05);
         }
 
         .nav-links {
             display: flex;
-            gap: 3rem;
+            gap: 2.5rem;
             list-style: none;
         }
 
@@ -139,73 +245,198 @@
             color: var(--text-muted);
             text-decoration: none;
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            transition: color 0.3s;
+            transition: color 0.3s, text-shadow 0.3s;
+            position: relative;
         }
 
         .nav-links a:hover {
             color: var(--accent-white);
+            text-shadow: 0 0 8px rgba(255,255,255,0.5);
         }
 
-        /* --- Hero Section --- */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0; width: 0%; height: 1px;
+            background: var(--accent-gold);
+            transition: width 0.3s;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* ==========================================================================
+           05. HERO SECTION & 3D INTERACTIVE CANVAS
+           ========================================================================== */
         .hero-section {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 8%;
+            min-height: 100vh;
+            padding: 140px 5% 60px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
             position: relative;
+        }
+
+        .hero-content {
+            z-index: 2;
         }
 
         .hero-tag {
             font-family: var(--font-mono);
             color: var(--accent-gold);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 4px;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-tag::before {
+            content: '';
+            width: 8px; height: 8px;
+            background: var(--accent-gold);
+            display: inline-block;
+            box-shadow: 0 0 8px var(--accent-gold);
         }
 
         .hero-title {
             font-family: var(--font-head);
-            font-size: clamp(3rem, 8vw, 7rem);
+            font-size: clamp(2.8rem, 5.5vw, 5.5rem);
             font-weight: 800;
             text-transform: uppercase;
             line-height: 0.95;
             letter-spacing: -2px;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(180deg, #ffffff 0%, #88a0c0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .hero-specs-strip {
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 300;
+            max-width: 540px;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* Hero Specs Matrix Strip */
+        .hero-specs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 2rem;
-            max-width: 900px;
-            margin-top: 3rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
             padding-top: 2rem;
             border-top: 1px solid var(--border-line);
         }
 
-        .spec-item .spec-label {
+        .hero-spec-item {
             font-family: var(--font-mono);
+        }
+
+        .hero-spec-item .label {
             color: var(--text-muted);
-            font-size: 0.7rem;
-            letter-spacing: 2px;
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
         }
 
-        .spec-item .spec-value {
+        .hero-spec-item .value {
             font-family: var(--font-head);
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
+            color: var(--text-main);
             margin-top: 0.2rem;
         }
 
-        /* --- Section Container & Card Stacking --- */
+        /* 3D CAD Canvas Container */
+        .canvas-3d-container {
+            width: 100%;
+            height: 520px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-line);
+            position: relative;
+            backdrop-filter: blur(16px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+            transition: border-color 0.4s;
+        }
+
+        .canvas-3d-container:hover {
+            border-color: var(--border-cyan);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        #cad3d {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        .cad-overlay-ui {
+            position: relative;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent-cyan);
+        }
+
+        .cad-controls {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(3, 4, 7, 0.8);
+            padding: 8px 12px;
+            border: 1px solid var(--border-line);
+            width: fit-content;
+        }
+
+        .cad-btn {
+            background: transparent;
+            border: 1px solid var(--border-line);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            transition: all 0.2s;
+        }
+
+        .cad-btn:hover, .cad-btn.active {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            background: rgba(197, 160, 89, 0.1);
+        }
+
+        /* Corner Tech Decorators */
+        .corner-bracket {
+            position: absolute;
+            width: 12px; height: 12px;
+            border-color: var(--accent-gold);
+            border-style: solid;
+            pointer-events: none;
+        }
+        .cb-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+        .cb-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+        .cb-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+        .cb-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+        /* ==========================================================================
+           06. EDITORIAL CONTENT SECTIONS
+           ========================================================================== */
         .content-section {
-            padding: 10rem 8%;
+            padding: 8rem 5%;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -222,50 +453,52 @@
             padding-bottom: 1.5rem;
         }
 
-        .section-num {
+        .section-tag {
             font-family: var(--font-mono);
             color: var(--accent-gold);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             letter-spacing: 3px;
         }
 
         .section-title {
             font-family: var(--font-head);
-            font-size: 2.8rem;
+            font-size: clamp(2rem, 4vw, 3.2rem);
             text-transform: uppercase;
             font-weight: 800;
             letter-spacing: -1px;
+            margin-top: 0.5rem;
         }
 
-        /* --- Koenigsegg Editorial Grid --- */
-        .editorial-grid {
+        /* Section 01 Layout: Editorial Glass Grid & Chart */
+        .grid-2col {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 3rem;
             align-items: center;
         }
 
         .glass-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-line);
-            padding: 3.5rem;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            padding: 3rem;
+            backdrop-filter: blur(16px);
             position: relative;
-            transition: border-color 0.4s;
+            transition: all 0.4s;
         }
 
         .glass-panel:hover {
             border-color: var(--border-active);
+            background: var(--bg-card-hover);
         }
 
         .panel-quote {
             font-family: var(--font-head);
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             line-height: 1.3;
             letter-spacing: -0.5px;
             margin-bottom: 1.5rem;
+            color: var(--accent-white);
         }
 
         .panel-text {
@@ -273,51 +506,67 @@
             font-size: 0.95rem;
             font-weight: 300;
             line-height: 1.8;
+            margin-bottom: 1.5rem;
         }
 
-        /* CAD / Blueprint Showcase Container */
-        .blueprint-box {
-            width: 100%;
-            height: 420px;
+        /* Realtime Telemetry Canvas Chart Box */
+        .chart-box {
+            background: var(--bg-card);
             border: 1px solid var(--border-line);
-            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.8) 100%);
+            padding: 2rem;
+            height: 380px;
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 2rem;
+        }
+
+        #telemetryChart {
+            width: 100%;
+            height: 240px;
+        }
+
+        /* Section 02 Layout: CAD Exploded View Engine */
+        .exploded-simulator {
+            background: var(--bg-card);
+            border: 1px solid var(--border-line);
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
             position: relative;
-            overflow: hidden;
         }
 
-        .blueprint-corner {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-color: var(--accent-gold);
-            border-style: solid;
-        }
-        .tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
-        .tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
-        .bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
-        .br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
-
-        .blueprint-text {
+        .slider-control-group {
+            margin-top: 2rem;
             font-family: var(--font-mono);
             font-size: 0.75rem;
+        }
+
+        .slider-control-group label {
+            display: flex;
+            justify-content: space-between;
             color: var(--accent-gold);
-            letter-spacing: 2px;
+            margin-bottom: 8px;
         }
 
-        .cad-placeholder {
-            margin: auto;
-            text-align: center;
-            font-family: var(--font-head);
-            letter-spacing: 3px;
-            color: var(--text-muted);
-            text-transform: uppercase;
+        .custom-slider {
+            width: 100%;
+            height: 4px;
+            background: var(--border-line);
+            outline: none;
+            -webkit-appearance: none;
         }
 
-        /* Specifications Matrix */
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px;
+            background: var(--accent-gold);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* Section 03 Layout: Spec Matrix Cards */
         .spec-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -328,24 +577,37 @@
             border: 1px solid var(--border-line);
             padding: 2.5rem 2rem;
             background: var(--bg-card);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .spec-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 3px; height: 0%;
+            background: var(--accent-gold);
+            transition: height 0.4s;
         }
 
         .spec-card:hover {
             transform: translateY(-8px);
-            border-color: var(--accent-gold);
+            border-color: var(--border-active);
+            background: var(--bg-card-hover);
         }
+
+        .spec-card:hover::before { height: 100%; }
 
         .spec-card-num {
             font-family: var(--font-mono);
             font-size: 0.7rem;
             color: var(--accent-gold);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .spec-card-title {
             font-family: var(--font-head);
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             margin-bottom: 0.8rem;
             text-transform: uppercase;
         }
@@ -354,9 +616,94 @@
             color: var(--text-muted);
             font-size: 0.85rem;
             font-weight: 300;
+            line-height: 1.6;
         }
 
-        /* Team Section */
+        .inspect-btn {
+            margin-top: 1.5rem;
+            background: transparent;
+            border: 1px solid var(--border-line);
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 6px 12px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .inspect-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 12px var(--accent-cyan-glow);
+        }
+
+        /* ==========================================================================
+           07. INTERACTIVE TERMINAL SECTION
+           ========================================================================== */
+        .terminal-box {
+            background: rgba(2, 3, 5, 0.95);
+            border: 1px solid var(--border-cyan);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+
+        .terminal-header {
+            background: rgba(10, 15, 25, 0.9);
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-line);
+        }
+
+        .terminal-title {
+            color: var(--accent-cyan);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            height: 320px;
+            overflow-y: auto;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .terminal-line { line-height: 1.4; }
+        .terminal-line.sys { color: var(--accent-gold); }
+        .terminal-line.err { color: var(--accent-red); }
+        .terminal-line.out { color: var(--text-muted); }
+
+        .terminal-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 1.5rem;
+            background: rgba(5, 8, 15, 0.9);
+            border-top: 1px solid var(--border-line);
+        }
+
+        .terminal-prompt { color: var(--accent-cyan); }
+
+        #termInput {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            width: 100%;
+        }
+
+        /* ==========================================================================
+           08. CREW DOSSIER & FOOTER
+           ========================================================================== */
         .team-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -368,12 +715,31 @@
             padding: 3rem 2rem;
             text-align: center;
             background: var(--bg-card);
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-active);
+        }
+
+        .team-avatar {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-gold);
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: rgba(197, 160, 89, 0.05);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.15);
         }
 
         .team-name {
             font-family: var(--font-head);
             font-size: 1.3rem;
-            margin-top: 1rem;
             text-transform: uppercase;
         }
 
@@ -385,23 +751,66 @@
             margin-top: 0.4rem;
         }
 
-        /* --- Minimal Koenigsegg Footer --- */
         footer {
-            padding: 6rem 8% 3rem 8%;
+            padding: 5rem 5% 3rem 5%;
             border-top: 1px solid var(--border-line);
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
+            align-items: center;
             font-family: var(--font-mono);
             font-size: 0.75rem;
             color: var(--text-muted);
+            background: #010204;
         }
 
-        /* --- Scroll Reveal Animations --- */
+        /* ==========================================================================
+           09. MODAL SPECIFICATION DIALOG
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(2, 3, 6, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+
+        .modal-container {
+            width: 90%; max-width: 700px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            padding: 3rem;
+            position: relative;
+            box-shadow: 0 0 50px rgba(197, 160, 89, 0.2);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        .modal-close:hover { color: var(--accent-gold); }
+
+        /* ==========================================================================
+           10. ANIMATIONS & REVEAL CLASSES
+           ========================================================================== */
         .reveal {
             opacity: 0;
             transform: translateY(60px) scale(0.98);
-            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
 
@@ -410,167 +819,284 @@
             transform: translateY(0) scale(1);
         }
 
-        @media (max-width: 900px) {
-            .editorial-grid, .spec-grid, .team-grid { grid-template-columns: 1fr; }
+        @media (max-width: 968px) {
+            .hero-section, .grid-2col, .exploded-simulator, .spec-grid, .team-grid {
+                grid-template-columns: 1fr;
+            }
             .nav-links { display: none; }
-            .hero-title { font-size: 3.5rem; }
             * { cursor: auto !important; }
-            #cursor-dot, #cursor-ring { display: none; }
+            #reticle-dot, #reticle-ring, #reticle-label { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Custom Cursor -->
-    <div id="cursor-dot"></div>
-    <div id="cursor-ring"></div>
+    <!-- Target Reticle Custom Cursor -->
+    <div id="reticle-dot"></div>
+    <div id="reticle-ring"></div>
+    <div id="reticle-label">TARGET // 00.00, 00.00</div>
 
-    <!-- HUD Background Canvas -->
+    <!-- HUD Grid Background Canvas -->
     <canvas id="hudCanvas"></canvas>
 
-    <!-- Scroll Progress Line -->
-    <div class="scroll-tracker">
-        <div class="scroll-tracker-bar" id="scrollBar"></div>
+    <!-- Top Telemetry Stream & Audio Toggle -->
+    <div class="top-telemetry-bar">
+        <div class="ticker-wrap">
+            <div class="ticker-move">
+                <div class="ticker-item">ORBIT: <span>ISS LOW-EARTH [408 KM]</span></div>
+                <div class="ticker-item">VELOCITY: <span>7.66 KM/S</span></div>
+                <div class="ticker-item">ATMOSPHERE: <span>0.00 PSI</span></div>
+                <div class="ticker-item">SYSTEM STATUS: <span>NOMINAL</span></div>
+                <div class="ticker-item">NASA HUNCH PROTOCOL: <span>ACTIVE</span></div>
+            </div>
+        </div>
+        <button class="audio-toggle" id="audioBtn">SYNTH AUDIO: OFF</button>
     </div>
 
-    <!-- Navigation -->
+    <!-- Scroll Progress Line -->
+    <div class="scroll-progress-line" id="progressLine"></div>
+
+    <!-- Navigation Header -->
     <nav class="navbar">
         <div class="brand-logo">
-            NASA HUNCH <span class="brand-badge">HUNCH-01</span>
+            NASA HUNCH <span class="brand-badge">FLIGHT-SPEC</span>
         </div>
         <ul class="nav-links">
             <li><a href="#hero">01 // OVERVIEW</a></li>
-            <li><a href="#challenge">02 // CHALLENGE</a></li>
-            <li><a href="#solution">03 // PROTOTYPE</a></li>
-            <li><a href="#specs">04 // TELEMETRY</a></li>
-            <li><a href="#team">05 // CREW</a></li>
+            <li><a href="#challenge">02 // BRIEF</a></li>
+            <li><a href="#cad-engine">03 // CAD SIMULATOR</a></li>
+            <li><a href="#matrix">04 // SPECS</a></li>
+            <li><a href="#terminal">05 // TERMINAL</a></li>
+            <li><a href="#crew">06 // CREW</a></li>
         </ul>
     </nav>
 
     <!-- Hero Section -->
     <section id="hero" class="hero-section">
-        <div class="hero-tag">// NASA HUNCH DESIGN & ENGINEERING SHOWCASE</div>
-        <h1 class="hero-title">[PROJECT TITLE]</h1>
-        
-        <div class="hero-specs-strip">
-            <div class="spec-item">
-                <div class="spec-label">ENV RATING</div>
-                <div class="spec-value">MICRO-G</div>
+        <div class="hero-content">
+            <div class="hero-tag">KOENIGSEGG-INSPIRED HYPER HARDWARE</div>
+            <h1 class="hero-title">[PROJECT TITLE]</h1>
+            <p class="hero-desc">
+                An advanced zero-gravity hardware innovation engineered under the NASA HUNCH initiative for extreme reliability aboard the International Space Station.
+            </p>
+
+            <div class="hero-specs-grid">
+                <div class="hero-spec-item">
+                    <div class="label">MASS REDUCTION</div>
+                    <div class="value" style="color: var(--accent-gold);"><span class="counter" data-target="42.8">0</span>%</div>
+                </div>
+                <div class="hero-spec-item">
+                    <div class="label">LOAD RATING</div>
+                    <div class="value"><span class="counter" data-target="1250">0</span> N</div>
+                </div>
+                <div class="hero-spec-item">
+                    <div class="label">TOLERANCE</div>
+                    <div class="value">±<span class="counter" data-target="0.05">0</span>mm</div>
+                </div>
             </div>
-            <div class="spec-item">
-                <div class="spec-label">MASS EFFICIENCY</div>
-                <div class="spec-value"><span class="counter" data-target="98.4">0</span>%</div>
+        </div>
+
+        <!-- 3D Interactive Software Canvas -->
+        <div class="canvas-3d-container">
+            <div class="corner-bracket cb-tl"></div>
+            <div class="corner-bracket cb-tr"></div>
+            <div class="corner-bracket cb-bl"></div>
+            <div class="corner-bracket cb-br"></div>
+
+            <div class="cad-overlay-ui">
+                <div>MODEL: HUNCH-FLIGHT-CONTAINER</div>
+                <div id="rotReadout">ROT: 0° X / 0° Y</div>
             </div>
-            <div class="spec-item">
-                <div class="spec-label">PAYLOAD MASS</div>
-                <div class="spec-value"><span class="counter" data-target="420">0</span>g</div>
-            </div>
-            <div class="spec-item">
-                <div class="spec-label">STATUS</div>
-                <div class="spec-value" style="color: var(--accent-gold);">FLIGHT READY</div>
+
+            <canvas id="cad3d"></canvas>
+
+            <div class="cad-controls">
+                <span style="font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted);">VIEW MODE:</span>
+                <button class="cad-btn active" id="btnWireframe">WIREFRAME</button>
+                <button class="cad-btn" id="btnVertices">NODES</button>
+                <button class="cad-btn" id="btnSolid">SOLID</button>
             </div>
         </div>
     </section>
 
-    <!-- Challenge Section -->
+    <!-- Challenge Section with Live Telemetry Graph -->
     <section id="challenge" class="content-section reveal">
         <div class="section-header">
-            <h2 class="section-title">MISSION BRIEF</h2>
-            <div class="section-num">01 / 04</div>
-        </div>
-        
-        <div class="editorial-grid">
-            <div class="glass-panel">
-                <div class="panel-quote">"Zero gravity leaves no margin for error or unnecessary mass."</div>
-                <p class="panel-text">
-                    Summarize the critical engineering problem assigned by NASA HUNCH. Detail the constraints encountered by crew members aboard the International Space Station, emphasizing structural integrity, ergonomics, and material safety.
-                </p>
+            <div>
+                <div class="section-tag">01 // MISSION CONSTRAINTS</div>
+                <h2 class="section-title">THE PROBLEM STATEMENT</h2>
             </div>
-            <div class="blueprint-box">
-                <div class="blueprint-corner tl"></div>
-                <div class="blueprint-corner tr"></div>
-                <div class="blueprint-corner bl"></div>
-                <div class="blueprint-corner br"></div>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-COLUMBUS</div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="glass-panel">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-br"></div>
+                <div class="panel-quote">"In microgravity, even microscopic tolerance errors cascade into orbital failures."</div>
+                <p class="panel-text">
+                    Summarize the specific challenge NASA provided for your project. Detail the exact payload, tool, or ergonomic limitation faced by astronauts during long-duration orbital operations.
+                </p>
+                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan);">
+                    > PRIMARY OBJECTIVE: STRUCTURAL INTEGRITY + ZERO PINCH POINTS
+                </div>
+            </div>
+
+            <!-- Realtime Telemetry Graph Canvas -->
+            <div class="chart-box">
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem;">
+                    <span>LIVE STRUCTURAL HARMONIC SPECTRUM</span>
+                    <span style="color: var(--accent-gold);" id="chartHz">142 Hz</span>
+                </div>
                 
-                <div class="blueprint-text">TELEMETRY // ORBITAL CONSTRAINTS</div>
-                <div class="cad-placeholder">[ ISS COLUMBUS MODULE GRID ]</div>
-                <div class="blueprint-text">LATENCY: 0.00ms // GRAVITY: 0.00G</div>
+                <canvas id="telemetryChart"></canvas>
+
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">
+                    <span>SENSOR ARRAY: ALPHA-01</span>
+                    <span>SAMPLE RATE: 1000 S/s</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Prototype / Solution Section -->
-    <section id="solution" class="content-section reveal">
+    <!-- Interactive Exploded Assembly CAD Simulator -->
+    <section id="cad-engine" class="content-section reveal">
         <div class="section-header">
-            <h2 class="section-title">THE SOLUTION</h2>
-            <div class="section-num">02 / 04</div>
+            <div>
+                <div class="section-tag">02 // KINEMATICS & PROTOTYPING</div>
+                <h2 class="section-title">EXPLODED ASSEMBLY ENGINE</h2>
+            </div>
+            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">TOLERANCE MATCHING</div>
         </div>
 
-        <div class="editorial-grid">
-            <div class="blueprint-box" style="height: 480px;">
-                <div class="blueprint-corner tl"></div>
-                <div class="blueprint-corner tr"></div>
-                <div class="blueprint-corner bl"></div>
-                <div class="blueprint-corner br"></div>
-                
-                <div class="blueprint-text">3D CAD RENDERING // HARDWARE ENGINE</div>
-                <div class="cad-placeholder">📷 [ INSERT HIGH-RES CAD / PROTOTYPE PHOTO HERE ]</div>
-                <div class="blueprint-text">MATERIAL: HIGH-DENSITY POLYMER</div>
-            </div>
-            <div class="glass-panel">
-                <div class="panel-quote">Extreme Precision Manufacturing.</div>
-                <p class="panel-text">
-                    Detail your physical prototype design. Describe the mechanical actuation, material selections, tolerance analysis, and iterative testing performed to comply with official NASA guidelines.
+        <div class="exploded-simulator">
+            <div class="corner-bracket cb-tl"></div>
+            <div class="corner-bracket cb-tr"></div>
+            <div class="corner-bracket cb-bl"></div>
+            <div class="corner-bracket cb-br"></div>
+
+            <div>
+                <div style="font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 1rem;">
+                    HARDWARE COMPONENT DISSECTION
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 300;">
+                    Use the interactive expansion slider to dynamically explode the multi-stage assembly. Each sub-component has been engineered for modular replacement during orbital EVA procedures.
                 </p>
+
+                <div class="slider-control-group">
+                    <label>
+                        <span>EXPLOSION STAGE DISTANCE</span>
+                        <span id="explodeVal">0 mm</span>
+                    </label>
+                    <input type="range" min="0" max="100" value="0" class="custom-slider" id="explodeSlider">
+                </div>
+            </div>
+
+            <div style="border-left: 1px solid var(--border-line); padding-left: 2rem; font-family: var(--font-mono); font-size: 0.75rem;">
+                <div style="color: var(--accent-gold); margin-bottom: 1rem;">[ SUB-ASSEMBLY INDEX ]</div>
+                <div style="margin-bottom: 0.8rem;">01. OUTER EXOSKELETON</div>
+                <div style="margin-bottom: 0.8rem;">02. CORE DAMPENING MATRIX</div>
+                <div style="margin-bottom: 0.8rem;">03. QUICK-RELEASE LATCH</div>
+                <div style="color: var(--accent-cyan);">04. ISS MOUNTING BUSHING</div>
             </div>
         </div>
     </section>
 
-    <!-- Technical Specs Matrix -->
-    <section id="specs" class="content-section reveal">
+    <!-- Engineering Specs Matrix -->
+    <section id="matrix" class="content-section reveal">
         <div class="section-header">
-            <h2 class="section-title">TECHNICAL TELEMETRY</h2>
-            <div class="section-num">03 / 04</div>
+            <div>
+                <div class="section-tag">03 // SPECIFICATIONS</div>
+                <h2 class="section-title">ENGINEERING MATRIX</h2>
+            </div>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold);">VERIFIED BY NASA HUNCH</div>
         </div>
 
         <div class="spec-grid">
             <div class="spec-card">
-                <div class="spec-card-num">// SPEC_01</div>
-                <div class="spec-card-title">Microgravity Stability</div>
-                <div class="spec-card-desc">Engineered to eliminate floating hardware hazards during rapid astronaut operation.</div>
+                <div class="spec-card-num">// MATRIX_SPEC_01</div>
+                <div class="spec-card-title">Zero-G Ergonomics</div>
+                <div class="spec-card-desc">Contoured actuation mechanisms designed for thick EVA pressure-glove operation without slip risks.</div>
+                <button class="inspect-btn" onclick="openModal('Zero-G Ergonomics', 'Full ergonomics testing carried out in neutral buoyancy simulators. Actuation torque optimized to 1.2 Nm.')">INSPECT TELEMETRY</button>
             </div>
+
             <div class="spec-card">
-                <div class="spec-card-num">// SPEC_02</div>
-                <div class="spec-card-title">Additive Precision</div>
-                <div class="spec-card-desc">Fabricated with precise tolerances to withstand pressurized orbital environments.</div>
+                <div class="spec-card-num">// MATRIX_SPEC_02</div>
+                <div class="spec-card-title">Thermal Resilience</div>
+                <div class="spec-card-desc">Material compound selected to maintain elasticity across orbital thermal swings (-120°C to +150°C).</div>
+                <button class="inspect-btn" onclick="openModal('Thermal Resilience', 'Vacuum thermal chamber testing verified zero fracture propagation over 500 thermal expansion cycles.')">INSPECT TELEMETRY</button>
             </div>
+
             <div class="spec-card">
-                <div class="spec-card-num">// SPEC_03</div>
-                <div class="spec-card-title">Safety Certified</div>
-                <div class="spec-card-desc">Zero sharp edges, zero toxic off-gassing, and optimized pinch-point protection.</div>
+                <div class="spec-card-num">// MATRIX_SPEC_03</div>
+                <div class="spec-card-title">Flight Safety Standard</div>
+                <div class="spec-card-desc">Fully compliant with NASA MSFC-SPEC-522 for off-gassing, toxicity, and edge-radius safety limits.</div>
+                <button class="inspect-btn" onclick="openModal('Flight Safety Standard', 'Radii on all exposed surfaces exceed 1.5mm minimal chamfer. Material toxicity index: 0.0.')">INSPECT TELEMETRY</button>
             </div>
         </div>
     </section>
 
-    <!-- Team Section -->
-    <section id="team" class="content-section reveal">
+    <!-- Interactive Flight Command Terminal -->
+    <section id="terminal" class="content-section reveal">
         <div class="section-header">
-            <h2 class="section-title">FLIGHT CREW</h2>
-            <div class="section-num">04 / 04</div>
+            <div>
+                <div class="section-tag">04 // ORBITAL INTERFACE</div>
+                <h2 class="section-title">COMMAND TERMINAL</h2>
+            </div>
+            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">TYPE 'HELP' FOR COMMANDS</div>
+        </div>
+
+        <div class="terminal-box">
+            <div class="terminal-header">
+                <div class="terminal-title">NASA_HUNCH_DIAGNOSTICS_SHELL v4.2</div>
+                <div style="color: var(--accent-gold);">LINK: ONLINE</div>
+            </div>
+            <div class="terminal-body" id="termBody">
+                <div class="terminal-line sys">INITIALIZING NASA HUNCH TELEMETRY SYSTEM DIRECT LINK...</div>
+                <div class="terminal-line sys">TYPE 'specs', 'crew', 'telemetry', OR 'clear' TO EXECUTE COMMANDS.</div>
+            </div>
+            <div class="terminal-input-row">
+                <span class="terminal-prompt">HUNCH-01></span>
+                <input type="text" id="termInput" placeholder="Enter command..." autocomplete="off">
+            </div>
+        </div>
+    </section>
+
+    <!-- Crew Dossier Section -->
+    <section id="crew" class="content-section reveal">
+        <div class="section-header">
+            <div>
+                <div class="section-tag">05 // FLIGHT CREW</div>
+                <h2 class="section-title">PROJECT ENGINEERS</h2>
+            </div>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold);">DESIGN TEAM</div>
         </div>
 
         <div class="team-grid">
             <div class="team-card">
-                <div class="team-name">[ Engineer Name ]</div>
-                <div class="team-role">LEAD HARDWARE ARCHITECT</div>
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-br"></div>
+                <div class="team-avatar">👨‍🚀</div>
+                <div class="team-name">[ Engineer 1 ]</div>
+                <div class="team-role">LEAD CAD ARCHITECT</div>
             </div>
+
             <div class="team-card">
-                <div class="team-name">[ Engineer Name ]</div>
-                <div class="team-role">CAD & TOLERANCE ENGINEER</div>
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-br"></div>
+                <div class="team-avatar">👩‍🚀</div>
+                <div class="team-name">[ Engineer 2 ]</div>
+                <div class="team-role">MATERIALS & MANUFACTURING</div>
             </div>
+
             <div class="team-card">
-                <div class="team-name">[ Engineer Name ]</div>
-                <div class="team-role">MATERIALS & DOCUMENTATION</div>
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-br"></div>
+                <div class="team-avatar">🧑‍🚀</div>
+                <div class="team-name">[ Engineer 3 ]</div>
+                <div class="team-role">FLIGHT SPECS & TESTING</div>
             </div>
         </div>
     </section>
@@ -581,123 +1107,374 @@
             <strong>NASA HUNCH PROGRAM</strong> // HIGH SCHOOL STUDENTS UNITED WITH NASA TO CREATE HARDWARE
         </div>
         <div>
-            ORBITAL COORDINATES: 28.5721° N, 80.6480° W
+            SYSTEM READY FOR ISS DEPLOYMENT // 2026
         </div>
     </footer>
 
-    <!-- Interactive JS -->
+    <!-- Spec Inspection Modal -->
+    <div class="modal-overlay" id="specModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold); font-size: 0.75rem; margin-bottom: 0.5rem;" id="modalTag">// TELEMETRY DEEP INSPECTION</div>
+            <h2 style="font-family: var(--font-head); font-size: 2rem; margin-bottom: 1.5rem;" id="modalTitle">SPEC TITLE</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;" id="modalBody">Spec detail content goes here.</p>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       11. JAVASCRIPT ENGINE & SYSTEM CONTROLLERS
+       ========================================================================== -->
     <script>
-        // --- 1. Custom Interactive Cursor ---
-        const dot = document.getElementById('cursor-dot');
-        const ring = document.getElementById('cursor-ring');
+        /* --------------------------------------------------------------------------
+           A. WEB AUDIO SYNTHESIZER ENGINE (Pure Web Audio API)
+           -------------------------------------------------------------------------- */
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.enabled = false;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playTone(freq, type = 'sine', duration = 0.08, vol = 0.05) {
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch (e) {}
+            }
+
+            hoverSound() { this.playTone(880, 'sine', 0.04, 0.02); }
+            clickSound() { this.playTone(440, 'triangle', 0.1, 0.05); }
+            warpSound() { 
+                this.playTone(120, 'sawtooth', 0.3, 0.08); 
+                setTimeout(() => this.playTone(320, 'sine', 0.2, 0.05), 50);
+            }
+        }
+
+        const audio = new SoundEngine();
+        const audioBtn = document.getElementById('audioBtn');
+        audioBtn.addEventListener('click', () => {
+            audio.init();
+            audio.enabled = !audio.enabled;
+            audioBtn.innerText = `SYNTH AUDIO: ${audio.enabled ? 'ON' : 'OFF'}`;
+            audioBtn.style.borderColor = audio.enabled ? 'var(--accent-gold)' : 'var(--border-line)';
+            if (audio.enabled) audio.warpSound();
+        });
+
+        /* --------------------------------------------------------------------------
+           B. TARGET RETICLE & HUD GRID CANVAS
+           -------------------------------------------------------------------------- */
+        const dot = document.getElementById('reticle-dot');
+        const ring = document.getElementById('reticle-ring');
+        const label = document.getElementById('reticle-label');
 
         window.addEventListener('mousemove', (e) => {
             dot.style.left = `${e.clientX}px`;
             dot.style.top = `${e.clientY}px`;
-            
+            label.style.left = `${e.clientX}px`;
+            label.style.top = `${e.clientY}px`;
+            label.innerText = `TARGET // ${e.clientX.toFixed(0)}, ${e.clientY.toFixed(0)}`;
+
             ring.animate({
                 left: `${e.clientX}px`,
                 top: `${e.clientY}px`
-            }, { duration: 400, fill: "forwards" });
+            }, { duration: 250, fill: "forwards" });
         });
 
-        // Hover effect for interactive elements
-        document.querySelectorAll('a, .glass-panel, .spec-card, .team-card').forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                ring.style.width = '55px';
-                ring.style.height = '55px';
+        document.querySelectorAll('a, button, input, .glass-panel, .spec-card').forEach(elem => {
+            elem.addEventListener('mouseenter', () => {
+                ring.style.width = '60px';
+                ring.style.height = '60px';
                 ring.style.borderColor = 'var(--accent-gold)';
+                audio.hoverSound();
             });
-            item.addEventListener('mouseleave', () => {
-                ring.style.width = '36px';
-                ring.style.height = '36px';
-                ring.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+            elem.addEventListener('mouseleave', () => {
+                ring.style.width = '40px';
+                ring.style.height = '40px';
+                ring.style.borderColor = 'rgba(0, 240, 255, 0.3)';
             });
+            elem.addEventListener('click', () => audio.clickSound());
         });
 
-        // --- 2. Koenigsegg Style Grid HUD Canvas ---
-        const canvas = document.getElementById('hudCanvas');
-        const ctx = canvas.getContext('2d');
+        // HUD Canvas Grid Render
+        const hudCanvas = document.getElementById('hudCanvas');
+        const hudCtx = hudCanvas.getContext('2d');
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        function resizeHud() {
+            hudCanvas.width = window.innerWidth;
+            hudCanvas.height = window.innerHeight;
         }
 
-        function drawGrid() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-            ctx.lineWidth = 1;
+        function drawHudGrid() {
+            hudCtx.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
+            hudCtx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+            hudCtx.lineWidth = 1;
 
-            const gridSize = 80;
-            for (let x = 0; x < canvas.width; x += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
+            const step = 90;
+            for (let x = 0; x < hudCanvas.width; x += step) {
+                hudCtx.beginPath();
+                hudCtx.moveTo(x, 0); hudCtx.lineTo(x, hudCanvas.height);
+                hudCtx.stroke();
             }
-            for (let y = 0; y < canvas.height; y += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
+            for (let y = 0; y < hudCanvas.height; y += step) {
+                hudCtx.beginPath();
+                hudCtx.moveTo(0, y); hudCtx.lineTo(hudCanvas.width, y);
+                hudCtx.stroke();
             }
         }
+        window.addEventListener('resize', () => { resizeHud(); drawHudGrid(); });
+        resizeHud(); drawHudGrid();
 
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            drawGrid();
+        /* --------------------------------------------------------------------------
+           C. ZERO-DEPENDENCY 3D SOFTWARE CANVAS RENDERER
+           -------------------------------------------------------------------------- */
+        const cadCanvas = document.getElementById('cad3d');
+        const cadCtx = cadCanvas.getContext('2d');
+
+        function resizeCad() {
+            cadCanvas.width = cadCanvas.parentElement.clientWidth;
+            cadCanvas.height = cadCanvas.parentElement.clientHeight;
+        }
+        resizeCad();
+        window.addEventListener('resize', resizeCad);
+
+        // 3D Cube/Hexagon Mesh Vertices
+        let nodes = [
+            [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+            [-1, -1, 1],  [1, -1, 1],  [1, 1, 1],  [-1, 1, 1]
+        ];
+        let edges = [
+            [0,1],[1,2],[2,3],[3,0],
+            [4,5],[5,6],[6,7],[7,4],
+            [0,4],[1,5],[2,6],[3,7]
+        ];
+
+        let rotX = 0.5, rotY = 0.5;
+        let viewMode = 'wireframe';
+        let explodeFactor = 0;
+
+        document.getElementById('btnWireframe').addEventListener('click', (e) => { setMode('wireframe', e.target); });
+        document.getElementById('btnVertices').addEventListener('click', (e) => { setMode('nodes', e.target); });
+        document.getElementById('btnSolid').addEventListener('click', (e) => { setMode('solid', e.target); });
+
+        function setMode(mode, btn) {
+            viewMode = mode;
+            document.querySelectorAll('.cad-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Mouse Drag to Rotate 3D Model
+        let isDragging = false, prevMouseX = 0, prevMouseY = 0;
+        cadCanvas.parentElement.addEventListener('mousedown', (e) => {
+            isDragging = true; prevMouseX = e.clientX; prevMouseY = e.clientY;
         });
-        resizeCanvas();
-        drawGrid();
-
-        // --- 3. Scroll Tracker & Reveal Logic ---
-        const scrollBar = document.getElementById('scrollBar');
-
-        window.addEventListener('scroll', () => {
-            const winScroll = document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            scrollBar.style.height = scrolled + '%';
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let dx = e.clientX - prevMouseX;
+            let dy = e.clientY - prevMouseY;
+            rotY += dx * 0.01;
+            rotX += dy * 0.01;
+            prevMouseX = e.clientX; prevMouseY = e.clientY;
+            document.getElementById('rotReadout').innerText = `ROT: ${(rotX*180/Math.PI).toFixed(0)}° X / ${(rotY*180/Math.PI).toFixed(0)}° Y`;
         });
 
-        const revealElements = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
+        function render3D() {
+            cadCtx.clearRect(0, 0, cadCanvas.width, cadCanvas.height);
+            let cx = cadCanvas.width / 2;
+            let cy = cadCanvas.height / 2;
+            let scale = 110 + explodeFactor * 0.5;
+
+            // Auto rotation if not dragging
+            if (!isDragging) { rotY += 0.005; }
+
+            let projected = nodes.map(node => {
+                // Apply Explosion Offset
+                let x = node[0] * (1 + explodeFactor * 0.008);
+                let y = node[1] * (1 + explodeFactor * 0.008);
+                let z = node[2] * (1 + explodeFactor * 0.008);
+
+                // Rotate Y
+                let x1 = x * Math.cos(rotY) + z * Math.sin(rotY);
+                let z1 = -x * Math.sin(rotY) + z * Math.cos(rotY);
+                // Rotate X
+                let y2 = y * Math.cos(rotX) - z1 * Math.sin(rotX);
+                let z2 = y * Math.sin(rotX) + z1 * Math.cos(rotX);
+
+                // Perspective Projection
+                let fov = 300;
+                let px = (x1 * fov) / (z2 + 5) + cx;
+                let py = (y2 * fov) / (z2 + 5) + cy;
+                return [px, py, z2];
+            });
+
+            // Draw Edges
+            if (viewMode === 'wireframe' || viewMode === 'solid') {
+                cadCtx.strokeStyle = 'rgba(0, 240, 255, 0.8)';
+                cadCtx.lineWidth = 1.5;
+                edges.forEach(edge => {
+                    let p1 = projected[edge[0]];
+                    let p2 = projected[edge[1]];
+                    cadCtx.beginPath();
+                    cadCtx.moveTo(p1[0], p1[1]);
+                    cadCtx.lineTo(p2[0], p2[1]);
+                    cadCtx.stroke();
+                });
+            }
+
+            // Draw Nodes
+            if (viewMode === 'nodes' || viewMode === 'wireframe') {
+                projected.forEach(p => {
+                    cadCtx.fillStyle = '#c5a059';
+                    cadCtx.beginPath();
+                    cadCtx.arc(p[0], p[1], 4, 0, Math.PI * 2);
+                    cadCtx.fill();
+                });
+            }
+
+            requestAnimationFrame(render3D);
+        }
+        render3D();
+
+        // Exploded Slider Link
+        const explodeSlider = document.getElementById('explodeSlider');
+        const explodeVal = document.getElementById('explodeVal');
+        explodeSlider.addEventListener('input', (e) => {
+            explodeFactor = e.target.value;
+            explodeVal.innerText = `${explodeFactor} mm`;
+        });
+
+        /* --------------------------------------------------------------------------
+           D. TELEMETRY REALTIME WAVEFORM CHART
+           -------------------------------------------------------------------------- */
+        const chartCanvas = document.getElementById('telemetryChart');
+        const chartCtx = chartCanvas.getContext('2d');
+        let chartTime = 0;
+
+        function renderChart() {
+            chartCanvas.width = chartCanvas.parentElement.clientWidth - 60;
+            chartCanvas.height = 240;
+
+            chartCtx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+            chartCtx.strokeStyle = '#c5a059';
+            chartCtx.lineWidth = 2;
+            chartCtx.beginPath();
+
+            let midY = chartCanvas.height / 2;
+            for (let x = 0; x < chartCanvas.width; x += 2) {
+                let y = midY + Math.sin(x * 0.03 + chartTime) * 35 + Math.cos(x * 0.08 - chartTime) * 15;
+                if (x === 0) chartCtx.moveTo(x, y);
+                else chartCtx.lineTo(x, y);
+            }
+            chartCtx.stroke();
+            chartTime += 0.05;
+
+            document.getElementById('chartHz').innerText = `${(140 + Math.sin(chartTime)*12).toFixed(1)} Hz`;
+            requestAnimationFrame(renderChart);
+        }
+        renderChart();
+
+        /* --------------------------------------------------------------------------
+           E. COMMAND TERMINAL INTERFACE ENGINE
+           -------------------------------------------------------------------------- */
+        const termInput = document.getElementById('termInput');
+        const termBody = document.getElementById('termBody');
+
+        termInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                let cmd = termInput.value.trim().toLowerCase();
+                termInput.value = '';
+                appendTermLine(`HUNCH-01> ${cmd}`, 'sys');
+
+                if (cmd === 'help') {
+                    appendTermLine("AVAILABLE COMMANDS: 'specs', 'crew', 'telemetry', 'clear'", 'out');
+                } else if (cmd === 'specs') {
+                    appendTermLine("MASS: 420g | TOLERANCE: ±0.05mm | MATERIAL: HIGH-TEMP POLYMER", 'out');
+                } else if (cmd === 'crew') {
+                    appendTermLine("CREW: LEAD CAD / MATERIALS / DOCUMENTATION ARCHITECTS", 'out');
+                } else if (cmd === 'telemetry') {
+                    appendTermLine("STATUS: 100% NOMINAL | HARMONICS: 142Hz | ORBIT: ISS", 'out');
+                } else if (cmd === 'clear') {
+                    termBody.innerHTML = '';
+                } else {
+                    appendTermLine(`UNKNOWN COMMAND: '${cmd}'. TYPE 'help'.`, 'err');
                 }
-            });
-        }, { threshold: 0.15 });
+                termBody.scrollTop = termBody.scrollHeight;
+            }
+        });
 
-        revealElements.forEach(el => observer.observe(el));
+        function appendTermLine(text, type) {
+            let div = document.createElement('div');
+            div.className = `terminal-line ${type}`;
+            div.innerText = text;
+            termBody.appendChild(div);
+        }
 
-        // --- 4. Number Stat Counter Animation ---
+        /* --------------------------------------------------------------------------
+           F. MODAL SYSTEM & SCROLL REVEALS
+           -------------------------------------------------------------------------- */
+        function openModal(title, text) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerText = text;
+            document.getElementById('specModal').classList.add('active');
+            audio.warpSound();
+        }
+
+        function closeModal() {
+            document.getElementById('specModal').classList.remove('active');
+        }
+
+        // Scroll Progress and Number Counter
+        const progressLine = document.getElementById('progressLine');
         const counters = document.querySelectorAll('.counter');
         let animated = false;
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 100 && !animated) {
-                counters.forEach(counter => {
-                    const target = +counter.getAttribute('data-target');
-                    const duration = 1500;
-                    const step = target / (duration / 16);
-                    let current = 0;
+            let winScroll = document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            progressLine.style.width = `${(winScroll / height) * 100}%`;
 
-                    const updateCount = () => {
+            if (winScroll > 80 && !animated) {
+                counters.forEach(counter => {
+                    let target = +counter.getAttribute('data-target');
+                    let current = 0;
+                    let step = target / 40;
+                    let update = () => {
                         current += step;
                         if (current < target) {
                             counter.innerText = current.toFixed(1);
-                            requestAnimationFrame(updateCount);
+                            requestAnimationFrame(update);
                         } else {
                             counter.innerText = target;
                         }
                     };
-                    updateCount();
+                    update();
                 });
                 animated = true;
             }
         });
+
+        // Intersection Observer for Reveal Class
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     </script>
 </body>
 </html>
