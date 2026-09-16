@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA HUNCH Project | Mission Portal</title>
+    <title>NASA HUNCH // HYPER-ENGINEERING PROJECT</title>
+    
+    <!-- Koenigsegg Style Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@200;300;400;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-color: #02040a;
-            --card-bg: rgba(13, 21, 38, 0.55);
-            --border-color: rgba(56, 189, 248, 0.25);
-            --border-glow: rgba(56, 189, 248, 0.6);
-            --primary-cyan: #38bdf8;
-            --nasa-red: #fc3d21;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --font-heading: 'Orbitron', sans-serif;
+            --bg-dark: #050505;
+            --bg-card: rgba(15, 15, 15, 0.7);
+            --accent-gold: #c5a059;
+            --accent-white: #ffffff;
+            --text-muted: #737373;
+            --border-line: rgba(255, 255, 255, 0.12);
+            --border-active: rgba(197, 160, 89, 0.6);
+            --font-head: 'Syne', sans-serif;
             --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * {
@@ -27,18 +29,20 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
+            cursor: none; /* Custom crosshair active */
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg-dark);
+            color: var(--accent-white);
             font-family: var(--font-body);
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Fixed Canvas Background */
-        #starfield {
+        /* --- Interactive HUD Canvas & Grid Background --- */
+        #hudCanvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -48,25 +52,51 @@
             pointer-events: none;
         }
 
-        /* Top Progress Bar */
-        .progress-container {
+        /* --- Custom Koenigsegg Crosshair Cursor --- */
+        #cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-gold);
             position: fixed;
-            top: 0;
-            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease;
+        }
+
+        #cursor-ring {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, border-color 0.2s, transform 0.1s ease-out;
+        }
+
+        /* --- Vertical Timeline Scrollbar --- */
+        .scroll-tracker {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 200px;
+            width: 2px;
+            background: var(--border-line);
+            z-index: 1000;
+        }
+
+        .scroll-tracker-bar {
             width: 100%;
-            height: 3px;
-            background: transparent;
-            z-index: 1001;
+            height: 0%;
+            background: var(--accent-gold);
+            box-shadow: 0 0 10px var(--accent-gold);
         }
 
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--nasa-red), var(--primary-cyan));
-            width: 0%;
-            box-shadow: 0 0 10px var(--primary-cyan);
-        }
-
-        /* Navigation Bar */
+        /* --- Minimal Navigation --- */
         .navbar {
             position: fixed;
             top: 0;
@@ -74,518 +104,563 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 8%;
-            background: rgba(2, 4, 10, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            padding: 2rem 5%;
+            background: linear-gradient(180deg, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%);
             z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .logo {
-            font-family: var(--font-heading);
+        .brand-logo {
+            font-family: var(--font-head);
             font-weight: 800;
             font-size: 1.1rem;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .nasa-red { color: var(--nasa-red); }
-        .badge {
+        .brand-badge {
+            font-family: var(--font-mono);
             font-size: 0.65rem;
-            background: var(--primary-cyan);
-            color: #000;
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
             padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 5px;
-            vertical-align: middle;
+            letter-spacing: 1px;
         }
 
         .nav-links {
             display: flex;
+            gap: 3rem;
             list-style: none;
-            gap: 2rem;
         }
 
         .nav-links a {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.85rem;
-            font-family: var(--font-heading);
-            transition: color 0.3s, text-shadow 0.3s;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
         }
 
         .nav-links a:hover {
-            color: var(--primary-cyan);
-            text-shadow: 0 0 8px var(--primary-cyan);
+            color: var(--accent-white);
         }
 
-        /* Hero Section */
+        /* --- Hero Section --- */
         .hero-section {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 1rem;
+            padding: 0 8%;
             position: relative;
         }
 
-        .glow-text {
-            font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 6vw, 4.8rem);
-            text-transform: uppercase;
+        .hero-tag {
+            font-family: var(--font-mono);
+            color: var(--accent-gold);
+            font-size: 0.8rem;
             letter-spacing: 4px;
-            margin: 1rem 0;
-            background: linear-gradient(180deg, #ffffff 0%, var(--primary-cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
-        }
-
-        .subtitle {
-            font-family: var(--font-heading);
-            color: var(--primary-cyan);
-            letter-spacing: 5px;
-            font-size: 0.8rem;
-        }
-
-        .description {
-            max-width: 600px;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            font-size: 1.05rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1.2rem;
-        }
-
-        .btn {
-            padding: 0.9rem 2rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-family: var(--font-heading);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-
-        .primary-btn {
-            background: var(--primary-cyan);
-            color: #000;
-            font-weight: 600;
-        }
-
-        .primary-btn:hover {
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.8);
-            transform: translateY(-3px);
-        }
-
-        .secondary-btn {
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-        }
-
-        .secondary-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary-cyan);
-            transform: translateY(-3px);
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            font-family: var(--font-heading);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            letter-spacing: 3px;
-            animation: float 2.5s infinite ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* 3D Dynamic Card Styling */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 3rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            transition: border-color 0.4s, box-shadow 0.4s;
-        }
-
-        .glass-card:hover {
-            border-color: var(--border-glow);
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
-        }
-
-        /* Content Sections */
-        .content-section {
-            max-width: 1050px;
-            margin: 0 auto 10rem auto;
-            padding: 0 1.5rem;
-            perspective: 1000px;
-        }
-
-        .section-tag {
-            font-family: var(--font-heading);
-            color: var(--primary-cyan);
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-
-        h2 {
-            font-family: var(--font-heading);
-            font-size: 2.2rem;
             margin-bottom: 1.5rem;
-            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .grid-2 {
+        .hero-title {
+            font-family: var(--font-head);
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-specs-strip {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-line);
         }
 
-        .highlight-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            border-radius: 10px;
-        }
-
-        .highlight-box h3 {
-            font-family: var(--font-heading);
-            font-size: 0.9rem;
-            color: var(--primary-cyan);
-            margin-bottom: 0.4rem;
-        }
-
-        .media-placeholder {
-            width: 100%;
-            height: 320px;
-            border: 1px dashed var(--border-glow);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 2rem;
+        .spec-item .spec-label {
+            font-family: var(--font-mono);
             color: var(--text-muted);
-            background: rgba(0, 0, 0, 0.3);
-            font-family: var(--font-heading);
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .grid-card .icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .team-card {
-            text-align: center;
-            padding: 2rem 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.25);
-            transition: transform 0.3s ease;
-        }
-
-        .team-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--border-glow);
-        }
-
-        .avatar {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .role {
-            color: var(--primary-cyan);
-            font-size: 0.8rem;
-            font-family: var(--font-heading);
+        .spec-item .spec-value {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            font-weight: 700;
             margin-top: 0.2rem;
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 4rem 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+        /* --- Section Container & Card Stacking --- */
+        .content-section {
+            padding: 10rem 8%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
         }
 
-        /* Advanced Scroll Animations */
+        .section-header {
+            margin-bottom: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 1.5rem;
+        }
+
+        .section-num {
+            font-family: var(--font-mono);
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+        }
+
+        .section-title {
+            font-family: var(--font-head);
+            font-size: 2.8rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        /* --- Koenigsegg Editorial Grid --- */
+        .editorial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .glass-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-line);
+            padding: 3.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            transition: border-color 0.4s;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--border-active);
+        }
+
+        .panel-quote {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        /* CAD / Blueprint Showcase Container */
+        .blueprint-box {
+            width: 100%;
+            height: 420px;
+            border: 1px solid var(--border-line);
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.8) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blueprint-corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-color: var(--accent-gold);
+            border-style: solid;
+        }
+        .tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+        .bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+        .br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+        .blueprint-text {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+            letter-spacing: 2px;
+        }
+
+        .cad-placeholder {
+            margin: auto;
+            text-align: center;
+            font-family: var(--font-head);
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Specifications Matrix */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .spec-card {
+            border: 1px solid var(--border-line);
+            padding: 2.5rem 2rem;
+            background: var(--bg-card);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s;
+        }
+
+        .spec-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-gold);
+        }
+
+        .spec-card-num {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-card-title {
+            font-family: var(--font-head);
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .spec-card-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 300;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .team-card {
+            border: 1px solid var(--border-line);
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--bg-card);
+        }
+
+        .team-name {
+            font-family: var(--font-head);
+            font-size: 1.3rem;
+            margin-top: 1rem;
+            text-transform: uppercase;
+        }
+
+        .team-role {
+            font-family: var(--font-mono);
+            color: var(--accent-gold);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            margin-top: 0.4rem;
+        }
+
+        /* --- Minimal Koenigsegg Footer --- */
+        footer {
+            padding: 6rem 8% 3rem 8%;
+            border-top: 1px solid var(--border-line);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Scroll Reveal Animations --- */
         .reveal {
             opacity: 0;
-            transform: translateY(80px) rotateX(12deg) scale(0.95);
-            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(60px) scale(0.98);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
 
         .reveal.active {
             opacity: 1;
-            transform: translateY(0) rotateX(0deg) scale(1);
+            transform: translateY(0) scale(1);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); opacity: 0.6; }
-            50% { transform: translateY(-10px); opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
+            .editorial-grid, .spec-grid, .team-grid { grid-template-columns: 1fr; }
             .nav-links { display: none; }
-            .glass-card { padding: 1.8rem; }
+            .hero-title { font-size: 3.5rem; }
+            * { cursor: auto !important; }
+            #cursor-dot, #cursor-ring { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Scroll Progress Indicator -->
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
+    <!-- Custom Cursor -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <!-- HUD Background Canvas -->
+    <canvas id="hudCanvas"></canvas>
+
+    <!-- Scroll Progress Line -->
+    <div class="scroll-tracker">
+        <div class="scroll-tracker-bar" id="scrollBar"></div>
     </div>
 
-    <!-- Starfield Parallax Canvas Background -->
-    <canvas id="starfield"></canvas>
-
-    <!-- Navigation Bar -->
+    <!-- Navigation -->
     <nav class="navbar">
-        <div class="logo">
-            <span class="nasa-red">NASA</span> HUNCH <span class="badge">2026</span>
+        <div class="brand-logo">
+            NASA HUNCH <span class="brand-badge">HUNCH-01</span>
         </div>
         <ul class="nav-links">
-            <li><a href="#hero">Home</a></li>
-            <li><a href="#about">Challenge</a></li>
-            <li><a href="#solution">Solution</a></li>
-            <li><a href="#specs"> Specs</a></li>
-            <li><a href="#team">Team</a></li>
+            <li><a href="#hero">01 // OVERVIEW</a></li>
+            <li><a href="#challenge">02 // CHALLENGE</a></li>
+            <li><a href="#solution">03 // PROTOTYPE</a></li>
+            <li><a href="#specs">04 // TELEMETRY</a></li>
+            <li><a href="#team">05 // CREW</a></li>
         </ul>
     </nav>
 
     <!-- Hero Section -->
     <section id="hero" class="hero-section">
-        <div class="hero-content">
-            <p class="subtitle">NASA HUNCH DESIGN & ENGINEERING</p>
-            <h1 class="glow-text">[PROJECT NAME]</h1>
-            <p class="description">Developing advanced zero-gravity hardware solutions for long-duration space flight and orbital research.</p>
-            <div class="cta-buttons">
-                <a href="#about" class="btn primary-btn">Explore Mission</a>
-                <a href="#solution" class="btn secondary-btn">View Prototype</a>
+        <div class="hero-tag">// NASA HUNCH DESIGN & ENGINEERING SHOWCASE</div>
+        <h1 class="hero-title">[PROJECT TITLE]</h1>
+        
+        <div class="hero-specs-strip">
+            <div class="spec-item">
+                <div class="spec-label">ENV RATING</div>
+                <div class="spec-value">MICRO-G</div>
             </div>
-        </div>
-        <div class="scroll-indicator">
-            <span>SCROLL TO LAUNCH</span>
-            <span>↓</span>
-        </div>
-    </section>
-
-    <!-- Problem / Challenge Section -->
-    <section id="about" class="content-section reveal">
-        <div class="glass-card">
-            <div class="section-tag">01 // THE CHALLENGE</div>
-            <h2>Problem Statement</h2>
-            <p>
-                Briefly summarize the engineering challenge submitted by NASA. What operational bottleneck, tool requirement, or microgravity constraint does your project aim to solve for astronauts on the International Space Station?
-            </p>
-            <div class="grid-2">
-                <div class="highlight-box">
-                    <h3>Operational Environment</h3>
-                    <p>International Space Station (ISS) Microgravity</p>
-                </div>
-                <div class="highlight-box">
-                    <h3>Primary Design Goal</h3>
-                    <p>Optimization of mass, durability, and user ergonomics</p>
-                </div>
+            <div class="spec-item">
+                <div class="spec-label">MASS EFFICIENCY</div>
+                <div class="spec-value"><span class="counter" data-target="98.4">0</span>%</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-label">PAYLOAD MASS</div>
+                <div class="spec-value"><span class="counter" data-target="420">0</span>g</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-label">STATUS</div>
+                <div class="spec-value" style="color: var(--accent-gold);">FLIGHT READY</div>
             </div>
         </div>
     </section>
 
-    <!-- Solution Section -->
+    <!-- Challenge Section -->
+    <section id="challenge" class="content-section reveal">
+        <div class="section-header">
+            <h2 class="section-title">MISSION BRIEF</h2>
+            <div class="section-num">01 / 04</div>
+        </div>
+        
+        <div class="editorial-grid">
+            <div class="glass-panel">
+                <div class="panel-quote">"Zero gravity leaves no margin for error or unnecessary mass."</div>
+                <p class="panel-text">
+                    Summarize the critical engineering problem assigned by NASA HUNCH. Detail the constraints encountered by crew members aboard the International Space Station, emphasizing structural integrity, ergonomics, and material safety.
+                </p>
+            </div>
+            <div class="blueprint-box">
+                <div class="blueprint-corner tl"></div>
+                <div class="blueprint-corner tr"></div>
+                <div class="blueprint-corner bl"></div>
+                <div class="blueprint-corner br"></div>
+                
+                <div class="blueprint-text">TELEMETRY // ORBITAL CONSTRAINTS</div>
+                <div class="cad-placeholder">[ ISS COLUMBUS MODULE GRID ]</div>
+                <div class="blueprint-text">LATENCY: 0.00ms // GRAVITY: 0.00G</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prototype / Solution Section -->
     <section id="solution" class="content-section reveal">
-        <div class="glass-card">
-            <div class="section-tag">02 // PROTOTYPE DESIGN</div>
-            <h2>Engineering Solution</h2>
-            <p>
-                Explain your project's mechanisms, materials choice, and iteration lifecycle. Outline how CAD modeling, tolerance testing, and physical prototyping led to your final design.
-            </p>
-            
-            <div class="media-placeholder">
-                📷 [ INSERT 3D MODEL VIEW / CAD RENDER HERE ]
+        <div class="section-header">
+            <h2 class="section-title">THE SOLUTION</h2>
+            <div class="section-num">02 / 04</div>
+        </div>
+
+        <div class="editorial-grid">
+            <div class="blueprint-box" style="height: 480px;">
+                <div class="blueprint-corner tl"></div>
+                <div class="blueprint-corner tr"></div>
+                <div class="blueprint-corner bl"></div>
+                <div class="blueprint-corner br"></div>
+                
+                <div class="blueprint-text">3D CAD RENDERING // HARDWARE ENGINE</div>
+                <div class="cad-placeholder">📷 [ INSERT HIGH-RES CAD / PROTOTYPE PHOTO HERE ]</div>
+                <div class="blueprint-text">MATERIAL: HIGH-DENSITY POLYMER</div>
+            </div>
+            <div class="glass-panel">
+                <div class="panel-quote">Extreme Precision Manufacturing.</div>
+                <p class="panel-text">
+                    Detail your physical prototype design. Describe the mechanical actuation, material selections, tolerance analysis, and iterative testing performed to comply with official NASA guidelines.
+                </p>
             </div>
         </div>
     </section>
 
-    <!-- Technical Specs Section -->
+    <!-- Technical Specs Matrix -->
     <section id="specs" class="content-section reveal">
-        <div class="card-grid">
-            <div class="glass-card grid-card">
-                <div class="icon">🚀</div>
-                <h3>Zero-G Operations</h3>
-                <p>Designed for frictionless usage without reliance on gravity-fed mechanisms or loose components.</p>
+        <div class="section-header">
+            <h2 class="section-title">TECHNICAL TELEMETRY</h2>
+            <div class="section-num">03 / 04</div>
+        </div>
+
+        <div class="spec-grid">
+            <div class="spec-card">
+                <div class="spec-card-num">// SPEC_01</div>
+                <div class="spec-card-title">Microgravity Stability</div>
+                <div class="spec-card-desc">Engineered to eliminate floating hardware hazards during rapid astronaut operation.</div>
             </div>
-            <div class="glass-card grid-card">
-                <div class="icon">⚙️</div>
-                <h3>Additive Manufacture</h3>
-                <p>Optimized for rapid 3D printing in space-grade polymers compliant with flight requirements.</p>
+            <div class="spec-card">
+                <div class="spec-card-num">// SPEC_02</div>
+                <div class="spec-card-title">Additive Precision</div>
+                <div class="spec-card-desc">Fabricated with precise tolerances to withstand pressurized orbital environments.</div>
             </div>
-            <div class="glass-card grid-card">
-                <div class="icon">🛡️</div>
-                <h3>Flight Safety Compliant</h3>
-                <p>Engineered without sharp pinch points, flame hazards, or toxic material off-gassing risks.</p>
+            <div class="spec-card">
+                <div class="spec-card-num">// SPEC_03</div>
+                <div class="spec-card-title">Safety Certified</div>
+                <div class="spec-card-desc">Zero sharp edges, zero toxic off-gassing, and optimized pinch-point protection.</div>
             </div>
         </div>
     </section>
 
     <!-- Team Section -->
     <section id="team" class="content-section reveal">
-        <div class="glass-card">
-            <div class="section-tag">03 // THE TEAM</div>
-            <h2>Project Engineers</h2>
-            <div class="team-grid">
-                <div class="team-card">
-                    <div class="avatar">👨‍🚀</div>
-                    <h3>[Member 1]</h3>
-                    <p class="role">CAD Design & Assembly</p>
-                </div>
-                <div class="team-card">
-                    <div class="avatar">👩‍🚀</div>
-                    <h3>[Member 2]</h3>
-                    <p class="role">Prototyping & Testing</p>
-                </div>
-                <div class="team-card">
-                    <div class="avatar">🧑‍🚀</div>
-                    <h3>[Member 3]</h3>
-                    <p class="role">Documentation & Flight Specs</p>
-                </div>
+        <div class="section-header">
+            <h2 class="section-title">FLIGHT CREW</h2>
+            <div class="section-num">04 / 04</div>
+        </div>
+
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-name">[ Engineer Name ]</div>
+                <div class="team-role">LEAD HARDWARE ARCHITECT</div>
+            </div>
+            <div class="team-card">
+                <div class="team-name">[ Engineer Name ]</div>
+                <div class="team-role">CAD & TOLERANCE ENGINEER</div>
+            </div>
+            <div class="team-card">
+                <div class="team-name">[ Engineer Name ]</div>
+                <div class="team-role">MATERIALS & DOCUMENTATION</div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>Built for the <strong>NASA HUNCH Program</strong> | High School Students United with NASA to Create Hardware</p>
-        <p style="margin-top: 8px; opacity: 0.5;">Hosted on GitHub / GitLab Pages</p>
+        <div>
+            <strong>NASA HUNCH PROGRAM</strong> // HIGH SCHOOL STUDENTS UNITED WITH NASA TO CREATE HARDWARE
+        </div>
+        <div>
+            ORBITAL COORDINATES: 28.5721° N, 80.6480° W
+        </div>
     </footer>
 
-    <!-- Interactive Warp Starfield & Scroll Logic -->
+    <!-- Interactive JS -->
     <script>
-        const canvas = document.getElementById('starfield');
-        const ctx = canvas.getContext('2d');
-        const progressBar = document.getElementById('progressBar');
+        // --- 1. Custom Interactive Cursor ---
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
 
-        let stars = [];
-        const numStars = 200;
-        let lastScrollY = window.scrollY;
-        let scrollVelocity = 0;
+        window.addEventListener('mousemove', (e) => {
+            dot.style.left = `${e.clientX}px`;
+            dot.style.top = `${e.clientY}px`;
+            
+            ring.animate({
+                left: `${e.clientX}px`,
+                top: `${e.clientY}px`
+            }, { duration: 400, fill: "forwards" });
+        });
+
+        // Hover effect for interactive elements
+        document.querySelectorAll('a, .glass-panel, .spec-card, .team-card').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                ring.style.width = '55px';
+                ring.style.height = '55px';
+                ring.style.borderColor = 'var(--accent-gold)';
+            });
+            item.addEventListener('mouseleave', () => {
+                ring.style.width = '36px';
+                ring.style.height = '36px';
+                ring.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+            });
+        });
+
+        // --- 2. Koenigsegg Style Grid HUD Canvas ---
+        const canvas = document.getElementById('hudCanvas');
+        const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
 
-        class Star {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.baseAlpha = Math.random() * 0.8 + 0.2;
-                this.alpha = this.baseAlpha;
-                this.speed = Math.random() * 0.8 + 0.2; // Depth layer
-            }
-
-            draw(scrollPos, velocity) {
-                // Parallax displacement based on scroll pos
-                let renderY = (this.y - scrollPos * this.speed) % canvas.height;
-                if (renderY < 0) renderY += canvas.height;
-
-                // Stretch star depending on scroll speed (Hyper-drive warp effect)
-                let stretch = Math.min(Math.abs(velocity) * 0.8, 30);
-
-                ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha})`;
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
-                ctx.lineWidth = this.size;
-
-                if (stretch > 2) {
-                    ctx.beginPath();
-                    ctx.moveTo(this.x, renderY);
-                    ctx.lineTo(this.x, renderY + (velocity > 0 ? stretch : -stretch));
-                    ctx.stroke();
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(this.x, renderY, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-        }
-
-        function initStars() {
-            stars = [];
-            for (let i = 0; i < numStars; i++) {
-                stars.push(new Star());
-            }
-        }
-
-        function animateStars() {
+        function drawGrid() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Fade scroll velocity back down gradually
-            scrollVelocity *= 0.9;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            ctx.lineWidth = 1;
 
-            stars.forEach(star => star.draw(window.scrollY, scrollVelocity));
-            requestAnimationFrame(animateStars);
+            const gridSize = 80;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
         }
-
-        // Scroll listener calculating speed & progress
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
-            scrollVelocity = currentScrollY - lastScrollY;
-            lastScrollY = currentScrollY;
-
-            // Update top progress bar
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (currentScrollY / totalHeight) * 100;
-            progressBar.style.width = progress + '%';
-        });
 
         window.addEventListener('resize', () => {
             resizeCanvas();
-            initStars();
+            drawGrid();
+        });
+        resizeCanvas();
+        drawGrid();
+
+        // --- 3. Scroll Tracker & Reveal Logic ---
+        const scrollBar = document.getElementById('scrollBar');
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            scrollBar.style.height = scrolled + '%';
         });
 
-        // Initialize Background
-        resizeCanvas();
-        initStars();
-        animateStars();
-
-        // Reveal animations on scroll via Intersection Observer
         const revealElements = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -593,11 +668,36 @@
                     entry.target.classList.add('active');
                 }
             });
-        }, {
-            threshold: 0.12
-        });
+        }, { threshold: 0.15 });
 
         revealElements.forEach(el => observer.observe(el));
+
+        // --- 4. Number Stat Counter Animation ---
+        const counters = document.querySelectorAll('.counter');
+        let animated = false;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100 && !animated) {
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 1500;
+                    const step = target / (duration / 16);
+                    let current = 0;
+
+                    const updateCount = () => {
+                        current += step;
+                        if (current < target) {
+                            counter.innerText = current.toFixed(1);
+                            requestAnimationFrame(updateCount);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCount();
+                });
+                animated = true;
+            }
+        });
     </script>
 </body>
 </html>
