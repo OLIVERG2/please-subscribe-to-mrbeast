@@ -1,186 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Media Gallery - NASA HUNCH</title>
-  <style>
-    :root {
-      --space-bg: #0b0d17;
-      --panel-bg: #15192b;
-      --accent-blue: #00d2ff;
-      --accent-purple: #7a22ff;
-      --text-main: #e2e8f0;
-      --text-dim: #94a3b8;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--space-bg);
-      color: var(--text-main);
-      line-height: 1.6;
-    }
-
-    header {
-      background: linear-gradient(135deg, var(--panel-bg), #000000);
-      padding: 2rem 5%;
-      border-bottom: 2px solid var(--accent-blue);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo-container h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      letter-spacing: 2px;
-      background: linear-gradient(to right, #ffffff, var(--accent-blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .logo-container span {
-      color: var(--accent-purple);
-      font-size: 0.9rem;
-      font-weight: bold;
-    }
-
-    nav a {
-      color: var(--text-main);
-      text-decoration: none;
-      margin-left: 1.5rem;
-      font-weight: 600;
-      transition: color 0.3s;
-    }
-
-    nav a:hover, nav a.active {
-      color: var(--accent-blue);
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .media-card {
-      background: var(--panel-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid #2a314d;
-      transition: transform 0.2s;
-    }
-
-    .media-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent-blue);
-    }
-
-    .media-placeholder {
-      width: 100%;
-      height: 200px;
-      background: #090b12;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-dim);
-      border-bottom: 1px solid #2a314d;
-    }
-
-    .media-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .media-info {
-      padding: 1rem;
-    }
-
-    .media-info h4 {
-      margin: 0 0 0.5rem 0;
-      color: var(--accent-blue);
-    }
-
-    .media-info p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: var(--text-dim);
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-dim);
-      font-size: 0.85rem;
-      border-top: 1px solid #1e2438;
-      margin-top: 3rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA HUNCH Project | [Your Project Name]</title>
+    <!-- Modern Space Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header>
-    <div class="logo-container">
-      <h1>NASA HUNCH</h1>
-      <span>PROJECT DOCUMENTATION PORTAL</span>
-    </div>
-    <nav>
-      <a href="index.html">Overview & Logs</a>
-      <a href="gallery.html" class="active">Media Gallery</a>
+    <!-- Starfield Parallax Canvas Background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="nasa-red">NASA</span> HUNCH <span class="badge">2026</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">Problem</a></li>
+            <li><a href="#solution">Solution</a></li>
+            <li><a href="#specs">Technical Specs</a></li>
+            <li><a href="#team">Team</a></li>
+        </ul>
     </nav>
-  </header>
 
-  <div class="container">
-    <h2>Photo & Media Documentation</h2>
-    <p>Visual record of design reviews, fabrication, and testing procedures.</p>
-
-    <div class="gallery-grid">
-      
-      <div class="media-card">
-        <div class="media-placeholder">
-          <span>[ Insert Image: cad-render-v1.jpg ]</span>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <p class="subtitle">NASA HUNCH DESIGN & ENGINEERING</p>
+            <h1 class="glow-text">[PROJECT TITLE]</h1>
+            <p class="description">Engineering innovative solutions for space exploration and life aboard the International Space Station.</p>
+            <div class="cta-buttons">
+                <a href="#about" class="btn primary-btn">Explore Project</a>
+                <a href="#solution" class="btn secondary-btn">View Prototype</a>
+            </div>
         </div>
-        <div class="media-info">
-          <h4>CAD Model Render (v1)</h4>
-          <p>Initial full-assembly render showing internal component routing.</p>
+        <div class="scroll-indicator">
+            <span>SCROLL TO EXPLORE</span>
+            <div class="arrow">↓</div>
         </div>
-      </div>
+    </section>
 
-      <div class="media-card">
-        <div class="media-placeholder">
-          <span>[ Insert Image: machining-process.jpg ]</span>
+    <!-- Problem / Challenge Section -->
+    <section id="about" class="content-section reveal">
+        <div class="glass-card">
+            <div class="section-tag">01 // THE CHALLENGE</div>
+            <h2>The Problem Statement</h2>
+            <p>
+                Describe the specific challenge NASA provided for your project. What problem are astronauts or mission planners facing? 
+                Explain why addressing this issue is essential for long-duration spaceflight or microgravity operations.
+            </p>
+            <div class="grid-2">
+                <div class="highlight-box">
+                    <h3>Environment</h3>
+                    <p>Microgravity / ISS Low-Earth Orbit</p>
+                </div>
+                <div class="highlight-box">
+                    <h3>Core Requirement</h3>
+                    <p>Weight reduction, durability, and astronaut safety</p>
+                </div>
+            </div>
         </div>
-        <div class="media-info">
-          <h4>CNC Machining</h4>
-          <p>Milling the primary aluminum bracket in the high school shop.</p>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="solution" class="content-section reveal">
+        <div class="glass-card">
+            <div class="section-tag">02 // THE PROTOTYPE</div>
+            <h2>Our Solution & Design</h2>
+            <p>
+                Detail your engineering approach. Explain how your prototype functions, materials chosen, and how CAD testing/3D printing was utilized to fulfill NASA HUNCH guidelines.
+            </p>
+            
+            <div class="media-placeholder">
+                <p>📷 [Insert CAD Render, 3D Model View, or Project Photo Here]</p>
+            </div>
         </div>
-      </div>
+    </section>
 
-      <div class="media-card">
-        <div class="media-placeholder">
-          <span>[ Insert Image: fit-test.jpg ]</span>
+    <!-- Technical Specs Section -->
+    <section id="specs" class="content-section reveal">
+        <div class="section-header">
+            <div class="section-tag">03 // SPECIFICATIONS</div>
+            <h2>Key Technical Features</h2>
         </div>
-        <div class="media-info">
-          <h4>Locker Fit Test</h4>
-          <p>Verifying outer dimensions against standard NASA ISS locker specs.</p>
+        <div class="card-grid">
+            <div class="glass-card grid-card">
+                <div class="icon">🚀</div>
+                <h3>Microgravity Compatibility</h3>
+                <p>Designed to operate effectively without gravity dependence, eliminating loose hardware risks.</p>
+            </div>
+            <div class="glass-card grid-card">
+                <div class="icon">⚙️</div>
+                <h3>Rapid Prototyping</h3>
+                <p>Fabricated using high-durability polymers and precision CNC machining tailored for space flight hardware.</p>
+            </div>
+            <div class="glass-card grid-card">
+                <div class="icon">🛡️</div>
+                <h3>Safety Compliant</h3>
+                <p>Meets strict NASA safety standards regarding sharp edges, toxic off-gassing, and pinch points.</p>
+            </div>
         </div>
-      </div>
+    </section>
 
-    </div>
-  </div>
+    <!-- Team Section -->
+    <section id="team" class="content-section reveal">
+        <div class="glass-card">
+            <div class="section-tag">04 // THE TEAM</div>
+            <h2>Meet the Engineers</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="avatar">👨‍🚀</div>
+                    <h3>[Member Name]</h3>
+                    <p class="role">Lead CAD Designer</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">👩‍🚀</div>
+                    <h3>[Member Name]</h3>
+                    <p class="role">Materials & Manufacturing</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">🧑‍🚀</div>
+                    <h3>[Member Name]</h3>
+                    <p class="role">Documentation & Testing</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <footer>
-    <p>NASA HUNCH Project Portal &bull; Developed by High School Engineering Team</p>
-  </footer>
+    <!-- Footer -->
+    <footer>
+        <p>Developed for the <strong>NASA HUNCH Program</strong> | High School Students United with NASA to Create Hardware</p>
+        <p class="copyright">Hosted on GitHub Pages</p>
+    </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
