@@ -3,14 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA HUNCH Project | [Your Project Name]</title>
-    <!-- Modern Space Font -->
+    <title>NASA HUNCH Project | Mission Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        :root {
+            --bg-color: #02040a;
+            --card-bg: rgba(13, 21, 38, 0.55);
+            --border-color: rgba(56, 189, 248, 0.25);
+            --border-glow: rgba(56, 189, 248, 0.6);
+            --primary-cyan: #38bdf8;
+            --nasa-red: #fc3d21;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Fixed Canvas Background */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Top Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            z-index: 1001;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--nasa-red), var(--primary-cyan));
+            width: 0%;
+            box-shadow: 0 0 10px var(--primary-cyan);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 8%;
+            background: rgba(2, 4, 10, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .nasa-red { color: var(--nasa-red); }
+        .badge {
+            font-size: 0.65rem;
+            background: var(--primary-cyan);
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-family: var(--font-heading);
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-cyan);
+            text-shadow: 0 0 8px var(--primary-cyan);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .glow-text {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 4.8rem);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin: 1rem 0;
+            background: linear-gradient(180deg, #ffffff 0%, var(--primary-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
+        }
+
+        .subtitle {
+            font-family: var(--font-heading);
+            color: var(--primary-cyan);
+            letter-spacing: 5px;
+            font-size: 0.8rem;
+        }
+
+        .description {
+            max-width: 600px;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn {
+            background: var(--primary-cyan);
+            color: #000;
+            font-weight: 600;
+        }
+
+        .primary-btn:hover {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.8);
+            transform: translateY(-3px);
+        }
+
+        .secondary-btn {
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-cyan);
+            transform: translateY(-3px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            animation: float 2.5s infinite ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 3D Dynamic Card Styling */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.4s, box-shadow 0.4s;
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-glow);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+        }
+
+        /* Content Sections */
+        .content-section {
+            max-width: 1050px;
+            margin: 0 auto 10rem auto;
+            padding: 0 1.5rem;
+            perspective: 1000px;
+        }
+
+        .section-tag {
+            font-family: var(--font-heading);
+            color: var(--primary-cyan);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .highlight-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .highlight-box h3 {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--primary-cyan);
+            margin-bottom: 0.4rem;
+        }
+
+        .media-placeholder {
+            width: 100%;
+            height: 320px;
+            border: 1px dashed var(--border-glow);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.3);
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-card .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .team-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.25);
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-glow);
+        }
+
+        .avatar {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role {
+            color: var(--primary-cyan);
+            font-size: 0.8rem;
+            font-family: var(--font-heading);
+            margin-top: 0.2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 4rem 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Advanced Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(80px) rotateX(12deg) scale(0.95);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg) scale(1);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(-10px); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .glass-card { padding: 1.8rem; }
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Scroll Progress Indicator -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
     <!-- Starfield Parallax Canvas Background -->
     <canvas id="starfield"></canvas>
@@ -22,9 +379,9 @@
         </div>
         <ul class="nav-links">
             <li><a href="#hero">Home</a></li>
-            <li><a href="#about">Problem</a></li>
+            <li><a href="#about">Challenge</a></li>
             <li><a href="#solution">Solution</a></li>
-            <li><a href="#specs">Technical Specs</a></li>
+            <li><a href="#specs"> Specs</a></li>
             <li><a href="#team">Team</a></li>
         </ul>
     </nav>
@@ -33,16 +390,16 @@
     <section id="hero" class="hero-section">
         <div class="hero-content">
             <p class="subtitle">NASA HUNCH DESIGN & ENGINEERING</p>
-            <h1 class="glow-text">[PROJECT TITLE]</h1>
-            <p class="description">Engineering innovative solutions for space exploration and life aboard the International Space Station.</p>
+            <h1 class="glow-text">[PROJECT NAME]</h1>
+            <p class="description">Developing advanced zero-gravity hardware solutions for long-duration space flight and orbital research.</p>
             <div class="cta-buttons">
-                <a href="#about" class="btn primary-btn">Explore Project</a>
+                <a href="#about" class="btn primary-btn">Explore Mission</a>
                 <a href="#solution" class="btn secondary-btn">View Prototype</a>
             </div>
         </div>
         <div class="scroll-indicator">
-            <span>SCROLL TO EXPLORE</span>
-            <div class="arrow">↓</div>
+            <span>SCROLL TO LAUNCH</span>
+            <span>↓</span>
         </div>
     </section>
 
@@ -50,19 +407,18 @@
     <section id="about" class="content-section reveal">
         <div class="glass-card">
             <div class="section-tag">01 // THE CHALLENGE</div>
-            <h2>The Problem Statement</h2>
+            <h2>Problem Statement</h2>
             <p>
-                Describe the specific challenge NASA provided for your project. What problem are astronauts or mission planners facing? 
-                Explain why addressing this issue is essential for long-duration spaceflight or microgravity operations.
+                Briefly summarize the engineering challenge submitted by NASA. What operational bottleneck, tool requirement, or microgravity constraint does your project aim to solve for astronauts on the International Space Station?
             </p>
             <div class="grid-2">
                 <div class="highlight-box">
-                    <h3>Environment</h3>
-                    <p>Microgravity / ISS Low-Earth Orbit</p>
+                    <h3>Operational Environment</h3>
+                    <p>International Space Station (ISS) Microgravity</p>
                 </div>
                 <div class="highlight-box">
-                    <h3>Core Requirement</h3>
-                    <p>Weight reduction, durability, and astronaut safety</p>
+                    <h3>Primary Design Goal</h3>
+                    <p>Optimization of mass, durability, and user ergonomics</p>
                 </div>
             </div>
         </div>
@@ -71,39 +427,35 @@
     <!-- Solution Section -->
     <section id="solution" class="content-section reveal">
         <div class="glass-card">
-            <div class="section-tag">02 // THE PROTOTYPE</div>
-            <h2>Our Solution & Design</h2>
+            <div class="section-tag">02 // PROTOTYPE DESIGN</div>
+            <h2>Engineering Solution</h2>
             <p>
-                Detail your engineering approach. Explain how your prototype functions, materials chosen, and how CAD testing/3D printing was utilized to fulfill NASA HUNCH guidelines.
+                Explain your project's mechanisms, materials choice, and iteration lifecycle. Outline how CAD modeling, tolerance testing, and physical prototyping led to your final design.
             </p>
             
             <div class="media-placeholder">
-                <p>📷 [Insert CAD Render, 3D Model View, or Project Photo Here]</p>
+                📷 [ INSERT 3D MODEL VIEW / CAD RENDER HERE ]
             </div>
         </div>
     </section>
 
     <!-- Technical Specs Section -->
     <section id="specs" class="content-section reveal">
-        <div class="section-header">
-            <div class="section-tag">03 // SPECIFICATIONS</div>
-            <h2>Key Technical Features</h2>
-        </div>
         <div class="card-grid">
             <div class="glass-card grid-card">
                 <div class="icon">🚀</div>
-                <h3>Microgravity Compatibility</h3>
-                <p>Designed to operate effectively without gravity dependence, eliminating loose hardware risks.</p>
+                <h3>Zero-G Operations</h3>
+                <p>Designed for frictionless usage without reliance on gravity-fed mechanisms or loose components.</p>
             </div>
             <div class="glass-card grid-card">
                 <div class="icon">⚙️</div>
-                <h3>Rapid Prototyping</h3>
-                <p>Fabricated using high-durability polymers and precision CNC machining tailored for space flight hardware.</p>
+                <h3>Additive Manufacture</h3>
+                <p>Optimized for rapid 3D printing in space-grade polymers compliant with flight requirements.</p>
             </div>
             <div class="glass-card grid-card">
                 <div class="icon">🛡️</div>
-                <h3>Safety Compliant</h3>
-                <p>Meets strict NASA safety standards regarding sharp edges, toxic off-gassing, and pinch points.</p>
+                <h3>Flight Safety Compliant</h3>
+                <p>Engineered without sharp pinch points, flame hazards, or toxic material off-gassing risks.</p>
             </div>
         </div>
     </section>
@@ -111,23 +463,23 @@
     <!-- Team Section -->
     <section id="team" class="content-section reveal">
         <div class="glass-card">
-            <div class="section-tag">04 // THE TEAM</div>
-            <h2>Meet the Engineers</h2>
+            <div class="section-tag">03 // THE TEAM</div>
+            <h2>Project Engineers</h2>
             <div class="team-grid">
                 <div class="team-card">
                     <div class="avatar">👨‍🚀</div>
-                    <h3>[Member Name]</h3>
-                    <p class="role">Lead CAD Designer</p>
+                    <h3>[Member 1]</h3>
+                    <p class="role">CAD Design & Assembly</p>
                 </div>
                 <div class="team-card">
                     <div class="avatar">👩‍🚀</div>
-                    <h3>[Member Name]</h3>
-                    <p class="role">Materials & Manufacturing</p>
+                    <h3>[Member 2]</h3>
+                    <p class="role">Prototyping & Testing</p>
                 </div>
                 <div class="team-card">
                     <div class="avatar">🧑‍🚀</div>
-                    <h3>[Member Name]</h3>
-                    <p class="role">Documentation & Testing</p>
+                    <h3>[Member 3]</h3>
+                    <p class="role">Documentation & Flight Specs</p>
                 </div>
             </div>
         </div>
@@ -135,10 +487,117 @@
 
     <!-- Footer -->
     <footer>
-        <p>Developed for the <strong>NASA HUNCH Program</strong> | High School Students United with NASA to Create Hardware</p>
-        <p class="copyright">Hosted on GitHub Pages</p>
+        <p>Built for the <strong>NASA HUNCH Program</strong> | High School Students United with NASA to Create Hardware</p>
+        <p style="margin-top: 8px; opacity: 0.5;">Hosted on GitHub / GitLab Pages</p>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Interactive Warp Starfield & Scroll Logic -->
+    <script>
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        const progressBar = document.getElementById('progressBar');
+
+        let stars = [];
+        const numStars = 200;
+        let lastScrollY = window.scrollY;
+        let scrollVelocity = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.baseAlpha = Math.random() * 0.8 + 0.2;
+                this.alpha = this.baseAlpha;
+                this.speed = Math.random() * 0.8 + 0.2; // Depth layer
+            }
+
+            draw(scrollPos, velocity) {
+                // Parallax displacement based on scroll pos
+                let renderY = (this.y - scrollPos * this.speed) % canvas.height;
+                if (renderY < 0) renderY += canvas.height;
+
+                // Stretch star depending on scroll speed (Hyper-drive warp effect)
+                let stretch = Math.min(Math.abs(velocity) * 0.8, 30);
+
+                ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.lineWidth = this.size;
+
+                if (stretch > 2) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, renderY);
+                    ctx.lineTo(this.x, renderY + (velocity > 0 ? stretch : -stretch));
+                    ctx.stroke();
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(this.x, renderY, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Fade scroll velocity back down gradually
+            scrollVelocity *= 0.9;
+
+            stars.forEach(star => star.draw(window.scrollY, scrollVelocity));
+            requestAnimationFrame(animateStars);
+        }
+
+        // Scroll listener calculating speed & progress
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            scrollVelocity = currentScrollY - lastScrollY;
+            lastScrollY = currentScrollY;
+
+            // Update top progress bar
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (currentScrollY / totalHeight) * 100;
+            progressBar.style.width = progress + '%';
+        });
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initStars();
+        });
+
+        // Initialize Background
+        resizeCanvas();
+        initStars();
+        animateStars();
+
+        // Reveal animations on scroll via Intersection Observer
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.12
+        });
+
+        revealElements.forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
