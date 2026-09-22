@@ -26,8 +26,6 @@
             --accent-purple: #a855f7;
             --accent-purple-glow: rgba(168, 85, 247, 0.5);
             --accent-emerald: #10b981;
-            --accent-emerald-glow: rgba(16, 185, 129, 0.5);
-            --accent-red: #ff2a5f;
             
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -47,7 +45,6 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
-            cursor: none !important;
         }
 
         ::selection {
@@ -72,81 +69,6 @@
             pointer-events: none;
         }
 
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: 
-                radial-gradient(circle at center, transparent 20%, rgba(1, 2, 6, 0.94) 100%),
-                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
-            background-size: 100% 100%, 100% 4px;
-            z-index: 998;
-            pointer-events: none;
-        }
-
-        .laser-sweep {
-            position: fixed;
-            top: -10px; left: 0; width: 100vw; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            z-index: 999;
-            pointer-events: none;
-            opacity: 0.4;
-            animation: sweep 6s infinite linear;
-        }
-
-        @keyframes sweep {
-            0% { top: 0%; }
-            100% { top: 100%; }
-        }
-
-        /* ==========================================================================
-           02. HUD RETICLE & TACTICAL CURSOR
-           ========================================================================== */
-        #reticle-dot {
-            position: fixed;
-            width: 6px; height: 6px;
-            background: var(--accent-cyan);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 14px var(--accent-cyan);
-        }
-
-        #reticle-ring {
-            position: fixed;
-            width: 52px; height: 52px;
-            border: 1px solid var(--accent-cyan-glow);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s ease-out, height 0.2s ease-out, border-color 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #reticle-ring::before, #reticle-ring::after {
-            content: '';
-            position: absolute;
-            background: var(--accent-cyan);
-        }
-        #reticle-ring::before { width: 160%; height: 1px; opacity: 0.3; }
-        #reticle-ring::after { width: 1px; height: 160%; opacity: 0.3; }
-
-        #reticle-label {
-            position: fixed;
-            font-family: var(--font-mono);
-            font-size: 0.55rem;
-            color: var(--accent-cyan);
-            letter-spacing: 2px;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(36px, 24px);
-            white-space: nowrap;
-            text-shadow: 0 0 8px var(--accent-cyan-glow);
-        }
-
         .scroll-progress-line {
             position: fixed;
             top: 0; left: 0;
@@ -157,7 +79,7 @@
         }
 
         /* ==========================================================================
-           03. HIGH-TECH NAVIGATION BAR
+           02. NAVIGATION BAR
            ========================================================================== */
         .navbar {
             position: fixed;
@@ -218,35 +140,8 @@
             text-shadow: 0 0 10px var(--accent-cyan-glow);
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -6px; left: 0; width: 0%; height: 2px;
-            background: var(--accent-cyan);
-            box-shadow: 0 0 8px var(--accent-cyan);
-            transition: width 0.3s;
-        }
-        .nav-links a:hover::after { width: 100%; }
-
-        .audio-toggle {
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid var(--border-cyan);
-            color: var(--accent-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            padding: 6px 14px;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            border-radius: 2px;
-        }
-        .audio-toggle:hover {
-            border-color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.2);
-            box-shadow: 0 0 18px var(--accent-cyan-glow);
-        }
-
         /* ==========================================================================
-           04. HERO SECTION & HIGH-TECH OPTICAL PHOTO DISPLAY
+           03. HERO SECTION & PHOTO DISPLAY
            ========================================================================== */
         .hero-section {
             min-height: 100vh;
@@ -314,8 +209,7 @@
             justify-content: space-between;
             padding: 1.5rem;
             box-shadow: 0 0 50px rgba(0, 240, 255, 0.15);
-            transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s ease-out;
-            transform-style: preserve-3d;
+            transition: border-color 0.4s, box-shadow 0.4s;
         }
 
         .photo-viewer-card:hover {
@@ -341,52 +235,11 @@
             height: 100%;
             object-fit: cover;
             filter: contrast(1.15) saturate(1.25) brightness(0.95);
-            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s, opacity 0.4s;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
         }
 
         .photo-viewer-card:hover .main-photo-img {
             transform: scale(1.05);
-            filter: contrast(1.2) saturate(1.35) brightness(1);
-        }
-
-        .photo-hud-grid {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 50% 50%, transparent 60%, rgba(2, 4, 10, 0.7) 100%),
-                linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
-            background-size: 100% 100%, 24px 24px, 24px 24px;
-            pointer-events: none;
-        }
-
-        .photo-scan-beam {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            box-shadow: 0 0 18px var(--accent-cyan);
-            animation: scanPhoto 5s infinite ease-in-out;
-            pointer-events: none;
-        }
-
-        @keyframes scanPhoto {
-            0% { top: 0%; opacity: 0.9; }
-            50% { top: 96%; opacity: 0.9; }
-            100% { top: 0%; opacity: 0.9; }
-        }
-
-        .optical-aperture-overlay {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: rgba(2, 4, 10, 0.85);
-            border: 1px solid var(--accent-cyan);
-            padding: 6px 12px;
-            font-size: 0.62rem;
-            color: var(--accent-cyan);
-            letter-spacing: 2px;
-            border-radius: 2px;
-            box-shadow: 0 0 12px var(--accent-cyan-glow);
-            pointer-events: none;
         }
 
         .photo-nav-controls {
@@ -407,6 +260,7 @@
             letter-spacing: 1.5px;
             transition: all 0.3s;
             border-radius: 2px;
+            cursor: pointer;
         }
 
         .photo-btn:hover, .photo-btn.active {
@@ -456,7 +310,7 @@
         }
 
         /* ==========================================================================
-           05. EDITORIAL SECTIONS & GLASS CARDS
+           04. CONTENT SECTIONS & GLASS CARDS
            ========================================================================== */
         .content-section {
             padding: 7rem 4%;
@@ -499,8 +353,7 @@
             backdrop-filter: blur(20px);
             position: relative;
             border-radius: 4px;
-            transition: transform 0.2s ease-out, border-color 0.4s, box-shadow 0.4s;
-            transform-style: preserve-3d;
+            transition: border-color 0.4s, box-shadow 0.4s;
         }
 
         .glass-panel:hover {
@@ -564,164 +417,75 @@
             box-shadow: 0 0 20px var(--accent-cyan-glow);
         }
 
-        /* Interactive Physics Testing Module */
-        .physics-lab {
+        /* Theory Cards Grid */
+        .theory-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            background: rgba(4, 9, 20, 0.95);
-            border: 1px solid var(--border-cyan);
-            border-radius: 6px;
-            padding: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
         }
 
-        .physics-canvas-container {
-            position: relative;
-            width: 100%;
-            height: 380px;
-            background: #010308;
-            border: 1px solid var(--border-line);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        #physicsCanvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        .physics-controls {
+        .theory-card {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            justify-content: space-between;
+        }
+
+        .theory-image-slot {
+            position: relative;
+            width: 100%;
+            height: 290px;
+            background: #030712;
+            border: 1px dashed var(--border-cyan);
+            margin-bottom: 1.8rem;
+            overflow: hidden;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
             justify-content: center;
         }
 
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        .theory-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            filter: saturate(1.2) contrast(1.15);
         }
 
-        .control-group label {
+        .theory-card:hover .theory-img {
+            transform: scale(1.06);
+        }
+
+        .img-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            background: rgba(2, 4, 10, 0.9);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
             font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent-gold);
+            font-size: 0.6rem;
+            padding: 4px 10px;
+            letter-spacing: 2px;
+            box-shadow: 0 0 12px var(--accent-cyan-glow);
+        }
+
+        .theory-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            color: #fff;
             letter-spacing: 1px;
         }
 
-        .control-group input[type="range"] {
-            width: 100%;
-            accent-color: var(--accent-cyan);
-        }
-
-        /* Advanced Data Analytics Grid */
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.8rem;
-            margin-top: 2rem;
-        }
-
-        .analytics-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-line);
-            padding: 2rem;
-            border-radius: 4px;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .analytics-card:hover {
-            border-color: var(--accent-cyan);
-            transform: translateY(-4px);
-        }
-
-        .analytics-val {
-            font-family: var(--font-display);
-            font-size: 2.2rem;
-            color: var(--accent-cyan);
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Flight Timeline Component */
-        .timeline-container {
-            position: relative;
-            padding-left: 2rem;
-            border-left: 2px solid var(--border-cyan);
-            margin-top: 2rem;
-        }
-
-        .timeline-event {
-            position: relative;
-            margin-bottom: 2.5rem;
-        }
-
-        .timeline-event::before {
-            content: '';
-            position: absolute;
-            left: -2.6rem;
-            top: 0.2rem;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent-cyan);
-            box-shadow: 0 0 12px var(--accent-cyan);
-        }
-
-        .timeline-title {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            color: #fff;
-            margin-bottom: 0.4rem;
-        }
-
-        /* Technical Documentation Deep Dive Cards */
-        .doc-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .doc-card {
-            background: rgba(5, 12, 26, 0.85);
-            border: 1px solid var(--border-line);
-            padding: 2.5rem;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-
-        .doc-card:hover {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 30px rgba(255, 158, 0, 0.15);
-        }
-
-        /* Operational Telemetry Terminal */
-        .terminal-box {
-            background: #02050b;
-            border: 1px solid var(--border-cyan);
-            border-radius: 4px;
-            padding: 1.5rem;
+        .theory-spec-tag {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
-            height: 250px;
-            overflow-y: auto;
-            margin-top: 2rem;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-        }
-
-        .terminal-line {
-            margin-bottom: 0.4rem;
-            display: flex;
-            gap: 12px;
-        }
-
-        .terminal-timestamp {
-            color: var(--text-dim);
+            font-size: 0.72rem;
+            color: var(--accent-gold);
+            margin-top: 1.2rem;
+            border-top: 1px dashed var(--border-line);
+            padding-top: 0.8rem;
+            letter-spacing: 1px;
         }
 
         /* Matrix & Table Styles */
@@ -764,13 +528,11 @@
             border: 1px solid var(--border-line);
             border-radius: 4px;
             transition: all 0.3s ease;
-            transform-style: preserve-3d;
         }
 
         .matrix-row-card:hover {
             border-color: var(--accent-cyan);
             box-shadow: 0 0 38px rgba(0, 240, 255, 0.2);
-            transform: translateY(-2px);
         }
 
         .matrix-cell {
@@ -814,78 +576,6 @@
             text-transform: uppercase;
         }
 
-        /* Theory Cards Grid */
-        .theory-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-        }
-
-        .theory-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .theory-image-slot {
-            position: relative;
-            width: 100%;
-            height: 290px;
-            background: #030712;
-            border: 1px dashed var(--border-cyan);
-            margin-bottom: 1.8rem;
-            overflow: hidden;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theory-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease, filter 0.6s ease;
-            filter: saturate(1.2) contrast(1.15);
-        }
-
-        .theory-card:hover .theory-img {
-            transform: scale(1.06);
-            filter: saturate(1.35) contrast(1.2);
-        }
-
-        .img-badge {
-            position: absolute;
-            top: 12px; left: 12px;
-            background: rgba(2, 4, 10, 0.9);
-            border: 1px solid var(--accent-cyan);
-            color: var(--accent-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            padding: 4px 10px;
-            letter-spacing: 2px;
-            box-shadow: 0 0 12px var(--accent-cyan-glow);
-        }
-
-        .theory-title {
-            font-family: var(--font-display);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            color: #fff;
-            letter-spacing: 1px;
-        }
-
-        .theory-spec-tag {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--accent-gold);
-            margin-top: 1.2rem;
-            border-top: 1px dashed var(--border-line);
-            padding-top: 0.8rem;
-            letter-spacing: 1px;
-        }
-
         /* Crew Dossier */
         .team-grid {
             display: grid;
@@ -900,8 +590,7 @@
             background: var(--bg-card);
             position: relative;
             border-radius: 4px;
-            transition: transform 0.2s ease-out, border-color 0.4s, box-shadow 0.4s;
-            transform-style: preserve-3d;
+            transition: border-color 0.4s, box-shadow 0.4s;
         }
 
         .team-card:hover {
@@ -920,11 +609,6 @@
             font-size: 2.2rem;
             background: rgba(255, 158, 0, 0.06);
             box-shadow: 0 0 22px rgba(255, 158, 0, 0.18);
-            transition: transform 0.4s ease;
-        }
-
-        .team-card:hover .team-avatar {
-            transform: scale(1.1) rotate(6deg);
         }
 
         .team-name {
@@ -978,21 +662,10 @@
             color: var(--text-muted);
             font-family: var(--font-mono);
             font-size: 1.4rem;
+            cursor: pointer;
             transition: color 0.3s;
         }
         .modal-close:hover { color: var(--accent-cyan); }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(45px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
 
         .inspect-btn {
             background: transparent;
@@ -1005,6 +678,7 @@
             transition: all 0.3s;
             border-radius: 2px;
             margin-top: 0.8rem;
+            cursor: pointer;
         }
 
         .inspect-btn:hover {
@@ -1027,12 +701,10 @@
         }
 
         @media (max-width: 1024px) {
-            .hero-section, .theory-grid, .team-grid, .sim-grid, .physics-lab, .analytics-grid, .doc-grid {
+            .hero-section, .theory-grid, .team-grid, .sim-grid {
                 grid-template-columns: 1fr;
             }
             .nav-links { display: none; }
-            * { cursor: auto !important; }
-            #reticle-dot, #reticle-ring, #reticle-label { display: none; }
             .matrix-table, .matrix-table tbody, .matrix-table tr, .matrix-table td {
                 display: block; width: 100%;
             }
@@ -1042,15 +714,7 @@
 </head>
 <body>
 
-    <div id="reticle-dot"></div>
-    <div id="reticle-ring"></div>
-    <div id="reticle-label">TARGET // 00.00, 00.00</div>
-
     <canvas id="particleCanvas"></canvas>
-    
-    <div class="scanlines"></div>
-    <div class="laser-sweep"></div>
-
     <div class="scroll-progress-line" id="progressLine"></div>
 
     <nav class="navbar">
@@ -1061,13 +725,9 @@
             <li><a href="#hero">01 // OVERVIEW</a></li>
             <li><a href="#challenge">02 // BRIEF</a></li>
             <li><a href="#sim">03 // SIMULATOR</a></li>
-            <li><a href="#physics">04 // LAB</a></li>
-            <li><a href="#analytics">05 // TELEMETRY</a></li>
-            <li><a href="#theory">06 // KINEMATICS</a></li>
-            <li><a href="#matrix">07 // REASONING</a></li>
-            <li><a href="#timeline">08 // TIMELINE</a></li>
-            <li><a href="#crew">09 // CREW</a></li>
-            <li><button class="audio-toggle" id="audioBtn">SYNTH AUDIO: OFF</button></li>
+            <li><a href="#theory">04 // KINEMATICS</a></li>
+            <li><a href="#matrix">05 // REASONING</a></li>
+            <li><a href="#crew">06 // CREW</a></li>
         </ul>
     </nav>
 
@@ -1100,7 +760,7 @@
             </div>
         </div>
 
-        <div class="photo-viewer-card tilt-card">
+        <div class="photo-viewer-card">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-tr"></div>
             <div class="corner-bracket cb-bl"></div>
@@ -1112,17 +772,12 @@
             </div>
 
             <div class="photo-viewport">
-                <div class="photo-hud-grid"></div>
-                <div class="photo-scan-beam"></div>
-                <div class="optical-aperture-overlay">MAG: 2.5X // SENSOR 01</div>
-                
                 <img id="heroImage" src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80" alt="Space Flight Hardware Prototype Photo" class="main-photo-img">
 
                 <div class="photo-nav-controls">
                     <button class="photo-btn active" onclick="switchHeroImage('https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 01: FOLDED</button>
                     <button class="photo-btn" onclick="switchHeroImage('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 02: DEPLOYED</button>
                     <button class="photo-btn" onclick="switchHeroImage('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 03: TESTING</button>
-                    <button class="photo-btn" onclick="switchHeroImage('https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 04: LAUNCH</button>
                 </div>
             </div>
 
@@ -1134,7 +789,7 @@
     </section>
 
     <!-- Section 02: Challenge Brief -->
-    <section id="challenge" class="content-section reveal">
+    <section id="challenge" class="content-section">
         <div class="section-header">
             <div>
                 <div class="section-tag">01 // MISSION CONSTRAINTS</div>
@@ -1143,7 +798,7 @@
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-COLUMBUS</div>
         </div>
 
-        <div class="glass-panel tilt-card">
+        <div class="glass-panel">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-br"></div>
             <div class="panel-quote">"In microgravity, standard static packaging becomes space waste. Kinetic origami transforms structural dead weight into functional payload."</div>
@@ -1151,19 +806,19 @@
                 Space logistics are severely constrained by launch fairing volume and payload envelope boundaries. Traditional cargo storage utilizes rigid metallic containers that offer zero volume adaptability post-unpacking, consuming critical habitable volume aboard the International Space Station. Our solution introduces a dynamic origami-inspired system that collapses down to 15.8% of its original size.
             </p>
             <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan); letter-spacing: 1px;">
-                > PRIMARY OBJECTIVE: STRUCTURAL INTEGRITY + ZERO PINCH POINTS + ZERO OFF-GASSING
+                &gt; PRIMARY OBJECTIVE: STRUCTURAL INTEGRITY + ZERO PINCH POINTS + ZERO OFF-GASSING
             </div>
         </div>
     </section>
 
-    <!-- Section 03: Interactive Deployment Simulator -->
-    <section id="sim" class="content-section reveal">
+    <!-- Section 03: Deployment Simulator -->
+    <section id="sim" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">02 // INTERACTIVE HARDWARE SIMULATION</div>
+                <div class="section-tag">02 // HARDWARE SIMULATION</div>
                 <h2 class="section-title">DEPLOYMENT DYNAMICS</h2>
             </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">REAL-TIME KINEMATICS</div>
+            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">KINEMATIC STATES</div>
         </div>
 
         <div class="sim-grid">
@@ -1171,7 +826,7 @@
                 <div class="sim-display">
                     <div id="simShape" class="sim-shape"></div>
                 </div>
-                <div style="display: flex; gap: 1rem; align-items: center;">
+                <div style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
                     <button class="inspect-btn" onclick="setSimState('stowed')">STOWED STATE</button>
                     <button class="inspect-btn" onclick="setSimState('deploying')">TRANSITIONING</button>
                     <button class="inspect-btn" onclick="setSimState('expanded')">FULLY EXPANDED</button>
@@ -1190,86 +845,18 @@
         </div>
     </section>
 
-    <!-- Section 04: Interactive Physics Lab -->
-    <section id="physics" class="content-section reveal">
+    <!-- Section 04: Kinematics & Origami Theory -->
+    <section id="theory" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">03 // VIRTUAL TEST BENCH</div>
-                <h2 class="section-title">PHYSICS & STRESS LAB</h2>
-            </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-purple);">SIMULATION ENGINE</div>
-        </div>
-
-        <div class="physics-lab">
-            <div class="physics-canvas-container">
-                <canvas id="physicsCanvas"></canvas>
-            </div>
-            <div class="physics-controls">
-                <div class="control-group">
-                    <label>FOLD TENSION (N): <span id="tensionVal">50</span></label>
-                    <input type="range" id="tensionSlider" min="10" max="100" value="50">
-                </div>
-                <div class="control-group">
-                    <label>THERMAL VARIATION (°C): <span id="tempVal">20</span></label>
-                    <input type="range" id="tempSlider" min="-100" max="120" value="20">
-                </div>
-                <div class="control-group">
-                    <label>VIBRATION FREQUENCY (Hz): <span id="vibVal">15</span></label>
-                    <input type="range" id="vibSlider" min="0" max="60" value="15">
-                </div>
-                <button class="inspect-btn" onclick="triggerStressTest()" style="margin-top: 1rem;">RUN STRESS TEST</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 05: Analytics & Telemetry -->
-    <section id="analytics" class="content-section reveal">
-        <div class="section-header">
-            <div>
-                <div class="section-tag">04 // FLIGHT TEST DATA</div>
-                <h2 class="section-title">ANALYTICAL DASHBOARD</h2>
-            </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-emerald);">VERIFIED METRICS</div>
-        </div>
-
-        <div class="analytics-grid">
-            <div class="analytics-card">
-                <div class="analytics-val">0.024s</div>
-                <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);">DEPOLYMENT LATCH TIME</div>
-                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">Electromagnetic pin release mechanism delay under microgravity conditions.</p>
-            </div>
-            <div class="analytics-card">
-                <div class="analytics-val">1200 N</div>
-                <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);">AXIAL LOAD CAPACITY</div>
-                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">Maximum compressive load supported in fully deployed lock position.</p>
-            </div>
-            <div class="analytics-card">
-                <div class="analytics-val"><0.001%</div>
-                <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);">TOTAL MASS LOSS (TML)</div>
-                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">Outgassing test standard achieved under NASA MSFC-SPEC-522 guidelines.</p>
-            </div>
-        </div>
-
-        <div class="terminal-box" id="terminalBox">
-            <div class="terminal-line"><span class="terminal-timestamp">[00:00:01]</span> INITIALIZING LIVE TELEMETRY FEED...</div>
-            <div class="terminal-line"><span class="terminal-timestamp">[00:00:02]</span> SENSOR 01 (STRAIN GAUGE): 0.12 MPa - NOMINAL</div>
-            <div class="terminal-line"><span class="terminal-timestamp">[00:00:03]</span> SENSOR 02 (THERMAL COUPLE): +21.4°C - STABLE</div>
-            <div class="terminal-line"><span class="terminal-timestamp">[00:00:04]</span> HINGE COMPLIANCE REGISTER: 100% INTEGRITY</div>
-        </div>
-    </section>
-
-    <!-- Section 06: Kinematics & Origami Theory -->
-    <section id="theory" class="content-section reveal">
-        <div class="section-header">
-            <div>
-                <div class="section-tag">05 // KINEMATICS & MATHEMATICS</div>
+                <div class="section-tag">03 // KINEMATICS & MATHEMATICS</div>
                 <h2 class="section-title">PROTOTYPE & ORIGAMI THEORY</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-cyan);">THEORETICAL FRAMEWORK</div>
         </div>
 
         <div class="theory-grid">
-            <div class="theory-card glass-panel tilt-card">
+            <div class="theory-card glass-panel">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 
@@ -1283,11 +870,11 @@
                     <p class="panel-text">
                         The mathematical model utilizes modified Miura-ori tessellations. By holding planar angles constant and optimizing boundary crease parameters, rigid panel surfaces rotate smoothly around compliant elastomer joints without introducing secondary bending stresses.
                     </p>
-                    <div class="theory-spec-tag">> VOLUMETRIC REDUCTION: HIGH-DENSITY COMPRESSION</div>
+                    <div class="theory-spec-tag">&gt; VOLUMETRIC REDUCTION: HIGH-DENSITY COMPRESSION</div>
                 </div>
             </div>
 
-            <div class="theory-card glass-panel tilt-card">
+            <div class="theory-card glass-panel">
                 <div class="corner-bracket cb-tr"></div>
                 <div class="corner-bracket cb-bl"></div>
                 
@@ -1301,17 +888,17 @@
                     <p class="panel-text">
                         Once deployed, the geometric over-center latch mechanism transforms flexible crease lines into rigid load paths. Force vectors from payload shift during maneuvers are dissipated across all 24 connected facet edges simultaneously.
                     </p>
-                    <div class="theory-spec-tag">> DEPLOYED INTEGRITY: EXPANDED MOMENT OF INERTIA</div>
+                    <div class="theory-spec-tag">&gt; DEPLOYED INTEGRITY: EXPANDED MOMENT OF INERTIA</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 07: Engineering Matrix -->
-    <section id="matrix" class="content-section reveal">
+    <!-- Section 05: Engineering Matrix -->
+    <section id="matrix" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">06 // PROTOTYPE EVALUATION</div>
+                <div class="section-tag">04 // PROTOTYPE EVALUATION</div>
                 <h2 class="section-title">ENGINEERING MATRIX & REASONING</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">VERIFIED BY NASA HUNCH</div>
@@ -1339,7 +926,7 @@
                         <td class="matrix-cell">
                             <div class="spec-tag-code">// SPEC_01 - VOLUMETRICS</div>
                             <div class="spec-header-title">Compact Stowing Ratio</div>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">Target: >80% volume reduction during launch transit.</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Target: &gt;80% volume reduction during launch transit.</p>
                         </td>
                         <td class="matrix-cell">
                             <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-cyan); font-size: 1rem; margin-bottom: 0.4rem;">Modified Miura-Ori Pattern</div>
@@ -1396,69 +983,18 @@
         </div>
     </section>
 
-    <!-- Section 08: Flight Timeline -->
-    <section id="timeline" class="content-section reveal">
+    <!-- Section 06: Crew Dossier -->
+    <section id="crew" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">07 // DEVELOPMENT MILESTONES</div>
-                <h2 class="section-title">FLIGHT DEVELOPMENT TIMELINE</h2>
-            </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">2025 - 2026 MISSION PHASE</div>
-        </div>
-
-        <div class="timeline-container">
-            <div class="timeline-event">
-                <div class="timeline-title">PHASE I: CONCEPT & KINEMATIC MODELING</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Mathematical formulation of Miura-ori tessellations and initial scale prototype fold trials.</p>
-            </div>
-            <div class="timeline-event">
-                <div class="timeline-title">PHASE II: MATERIAL EVALUATION & OUTGASSING</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Testing PEEK panel substrates under extreme vacuum thermal conditions at MSFC facilities.</p>
-            </div>
-            <div class="timeline-event">
-                <div class="timeline-title">PHASE III: HUMAN FACTORS & EMU TESTING</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Astronaut glove ergonomic evaluations in pressurized suit simulators with zero pinch point verifications.</p>
-            </div>
-            <div class="timeline-event">
-                <div class="timeline-title">PHASE IV: FINAL HUNCH CRITICAL DESIGN REVIEW</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Flight-ready hardware handoff for ISS locker integration and orbital payload flight manifest.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 09: Technical Documentation Deep Dive -->
-    <section class="content-section reveal">
-        <div class="section-header">
-            <div>
-                <div class="section-tag">08 // SYSTEM SPECS</div>
-                <h2 class="section-title">TECHNICAL ARCHITECTURE</h2>
-            </div>
-        </div>
-
-        <div class="doc-grid">
-            <div class="doc-card">
-                <h3 style="font-family: var(--font-display); color: var(--accent-gold); margin-bottom: 1rem;">STRUCTURAL FEA ANALYSIS</h3>
-                <p class="panel-text">Finite element analysis demonstrates structural safety margins of 4.2x under max Q acoustic vibration loads during launch phases.</p>
-            </div>
-            <div class="doc-card">
-                <h3 style="font-family: var(--font-display); color: var(--accent-cyan); margin-bottom: 1rem;">ELECTROMAGNETIC COMPATIBILITY</h3>
-                <p class="panel-text">Zero electromagnetic interference (EMI) with ISS onboard wireless telemetry arrays verified through RF chamber testing.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 10: Crew Dossier -->
-    <section id="crew" class="content-section reveal">
-        <div class="section-header">
-            <div>
-                <div class="section-tag">09 // FLIGHT CREW</div>
+                <div class="section-tag">05 // FLIGHT CREW</div>
                 <h2 class="section-title">PROJECT ENGINEERS</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">4-MEMBER DESIGN TEAM</div>
         </div>
 
         <div class="team-grid">
-            <div class="team-card tilt-card">
+            <div class="team-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍🚀</div>
@@ -1466,7 +1002,7 @@
                 <div class="team-role">LEAD ORIGAMI ARCHITECT</div>
             </div>
 
-            <div class="team-card tilt-card">
+            <div class="team-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👩‍🚀</div>
@@ -1474,7 +1010,7 @@
                 <div class="team-role">MATERIALS & MANUFACTURING</div>
             </div>
 
-            <div class="team-card tilt-card">
+            <div class="team-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">🧑‍🚀</div>
@@ -1482,7 +1018,7 @@
                 <div class="team-role">FLIGHT SPECS & TESTING</div>
             </div>
 
-            <div class="team-card tilt-card">
+            <div class="team-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍💻</div>
@@ -1511,50 +1047,14 @@
         </div>
     </div>
 
-    <!-- Interactive Scripting Engine -->
+    <!-- Scripting Engine -->
     <script>
-        /* 01. AUDIO SYNTHESIZER ENGINE */
-        class SoundEngine {
-            constructor() { this.ctx = null; this.enabled = false; }
-            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
-            playTone(freq, type = 'sine', duration = 0.08, vol = 0.05) {
-                if (!this.enabled || !this.ctx) return;
-                try {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = type;
-                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                    gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
-                    osc.connect(gain); gain.connect(this.ctx.destination);
-                    osc.start(); osc.stop(this.ctx.currentTime + duration);
-                } catch (e) {}
-            }
-            hoverSound() { this.playTone(880, 'sine', 0.04, 0.02); }
-            clickSound() { this.playTone(440, 'triangle', 0.1, 0.05); }
-            warpSound() { 
-                this.playTone(120, 'sawtooth', 0.25, 0.06); 
-                setTimeout(() => this.playTone(480, 'sine', 0.15, 0.04), 40);
-            }
-        }
-
-        const audio = new SoundEngine();
-        const audioBtn = document.getElementById('audioBtn');
-        audioBtn.addEventListener('click', () => {
-            audio.init();
-            audio.enabled = !audio.enabled;
-            audioBtn.innerText = `SYNTH AUDIO: ${audio.enabled ? 'ON' : 'OFF'}`;
-            audioBtn.style.borderColor = audio.enabled ? 'var(--accent-cyan)' : 'var(--border-line)';
-            if (audio.enabled) audio.warpSound();
-        });
-
-        /* 02. HERO PHOTO SWITCHER ENGINE */
+        /* 01. HERO PHOTO SWITCHER ENGINE */
         function switchHeroImage(src, btn) {
             const img = document.getElementById('heroImage');
             const caption = document.getElementById('imgCaptionText');
             
             img.style.opacity = '0.15';
-            audio.clickSound();
 
             setTimeout(() => {
                 img.src = src;
@@ -1565,42 +1065,11 @@
 
                 if(btn.innerText.includes('FOLDED')) caption.innerText = 'Folded Storage Geometry for ISS Columbus Rack Payload Transit';
                 else if(btn.innerText.includes('DEPLOYED')) caption.innerText = 'Fully Expanded Dynamic Frame Structure in Simulated Microgravity';
-                else if(btn.innerText.includes('TESTING')) caption.innerText = 'Pressurized Glove Ergonomic Evaluation in Thermal Vacuum Facility';
-                else caption.innerText = 'Orbital Insertion Envelope Mockup for Commercial Re-supply Mission';
+                else caption.innerText = 'Pressurized Glove Ergonomic Evaluation in Thermal Vacuum Facility';
             }, 220);
         }
 
-        /* 03. TACTICAL RETICLE & CURSOR */
-        const dot = document.getElementById('reticle-dot');
-        const ring = document.getElementById('reticle-ring');
-        const label = document.getElementById('reticle-label');
-
-        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX; mouseY = e.clientY;
-            dot.style.left = `${mouseX}px`;
-            dot.style.top = `${mouseY}px`;
-            label.style.left = `${mouseX}px`;
-            label.style.top = `${mouseY}px`;
-            label.innerText = `TARGET // ${mouseX.toFixed(0)}, ${mouseY.toFixed(0)}`;
-            ring.animate({ left: `${mouseX}px`, top: `${mouseY}px` }, { duration: 200, fill: "forwards" });
-        });
-
-        document.querySelectorAll('a, button, input, .glass-panel, .matrix-row-card, .team-card, .photo-viewer-card, .analytics-card, .doc-card').forEach(elem => {
-            elem.addEventListener('mouseenter', () => {
-                ring.style.width = '68px'; ring.style.height = '68px';
-                ring.style.borderColor = 'var(--accent-cyan)';
-                audio.hoverSound();
-            });
-            elem.addEventListener('mouseleave', () => {
-                ring.style.width = '52px'; ring.style.height = '52px';
-                ring.style.borderColor = 'rgba(0, 240, 255, 0.45)';
-            });
-            elem.addEventListener('click', () => audio.clickSound());
-        });
-
-        /* 04. DYNAMIC STARFIELD CANVAS */
+        /* 02. DYNAMIC STARFIELD CANVAS */
         const pCanvas = document.getElementById('particleCanvas');
         const pCtx = pCanvas.getContext('2d');
         let particles = [];
@@ -1631,7 +1100,7 @@
             }
         }
 
-        for (let i = 0; i < 110; i++) particles.push(new Particle());
+        for (let i = 0; i < 90; i++) particles.push(new Particle());
 
         function animateParticles() {
             pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
@@ -1641,11 +1110,11 @@
                 for (let j = idx + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if (dist < 110) {
+                    if (dist < 100) {
                         pCtx.beginPath();
                         pCtx.moveTo(p.x, p.y);
                         pCtx.lineTo(p2.x, p2.y);
-                        pCtx.strokeStyle = `rgba(0, 240, 255, ${0.12 - dist / 900})`;
+                        pCtx.strokeStyle = `rgba(0, 240, 255, ${0.1 - dist / 1000})`;
                         pCtx.stroke();
                     }
                 }
@@ -1656,7 +1125,7 @@
         window.addEventListener('resize', resizeParticles);
         resizeParticles(); animateParticles();
 
-        /* 05. INTERACTIVE SIMULATOR FUNCTIONALITY */
+        /* 03. INTERACTIVE SIMULATOR FUNCTIONALITY */
         function setSimState(state) {
             const shape = document.getElementById('simShape');
             const text = document.getElementById('simStatusText');
@@ -1680,78 +1149,11 @@
             }
         }
 
-        /* 06. PHYSICS LAB CANVAS SIMULATION */
-        const physCanvas = document.getElementById('physicsCanvas');
-        const physCtx = physCanvas.getContext('2d');
-        let tension = 50, temp = 20, vib = 15;
-
-        document.getElementById('tensionSlider').addEventListener('input', (e) => {
-            tension = e.target.value;
-            document.getElementById('tensionVal').innerText = tension;
-        });
-        document.getElementById('tempSlider').addEventListener('input', (e) => {
-            temp = e.target.value;
-            document.getElementById('tempVal').innerText = temp;
-        });
-        document.getElementById('vibSlider').addEventListener('input', (e) => {
-            vib = e.target.value;
-            document.getElementById('vibVal').innerText = vib;
-        });
-
-        function renderPhysicsLab() {
-            physCanvas.width = physCanvas.clientWidth;
-            physCanvas.height = physCanvas.clientHeight;
-            physCtx.clearRect(0, 0, physCanvas.width, physCanvas.height);
-
-            const cx = physCanvas.width / 2;
-            const cy = physCanvas.height / 2;
-            const offset = Math.sin(Date.now() * 0.005 * (vib / 10)) * (vib / 3);
-
-            physCtx.beginPath();
-            physCtx.strokeStyle = temp > 80 ? 'var(--accent-red)' : 'var(--accent-cyan)';
-            physCtx.lineWidth = 2;
-
-            const size = 60 + tension * 0.8;
-            physCtx.strokeRect(cx - size / 2 + offset, cy - size / 2 + offset, size, size);
-
-            physCtx.beginPath();
-            physCtx.moveTo(cx - size / 2 + offset, cy - size / 2 + offset);
-            physCtx.lineTo(cx + size / 2 + offset, cy + size / 2 + offset);
-            physCtx.strokeStyle = 'rgba(255,158,0,0.5)';
-            physCtx.stroke();
-
-            requestAnimationFrame(renderPhysicsLab);
-        }
-        renderPhysicsLab();
-
-        function triggerStressTest() {
-            audio.warpSound();
-            const term = document.getElementById('terminalBox');
-            const newLine = document.createElement('div');
-            newLine.className = 'terminal-line';
-            newLine.innerHTML = `<span class="terminal-timestamp">[${new Date().toLocaleTimeString()}]</span> STRESS TEST EXECUTED: TEN=${tension}N, TEMP=${temp}°C, VIB=${vib}Hz -> PASS`;
-            term.appendChild(newLine);
-            term.scrollTop = term.scrollHeight;
-        }
-
-        /* 07. GYROSCOPIC TILT & MODALS */
-        document.querySelectorAll('.tilt-card, .matrix-row-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) scale3d(1.01, 1.01, 1.01)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-            });
-        });
-
+        /* 04. MODALS & SCROLL PROGRESS */
         function openModal(title, text) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerText = text;
             document.getElementById('specModal').classList.add('active');
-            audio.warpSound();
         }
         function closeModal() { document.getElementById('specModal').classList.remove('active'); }
 
@@ -1761,11 +1163,6 @@
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             progressLine.style.width = `${(winScroll / height) * 100}%`;
         });
-
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     </script>
 </body>
 </html>
