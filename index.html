@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA HUNCH: Kinetic Origami Space Systems</title>
+    <title>NASA HUNCH: Kinetic Origami Flight Systems</title>
     
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,25 +15,25 @@
            01. ADVANCED TACTICAL DESIGN SYSTEM & SYSTEM VARIABLES
            ========================================================================== */
         :root {
-            --bg-dark: #020409;
-            --bg-card: rgba(8, 14, 28, 0.72);
-            --bg-card-hover: rgba(15, 25, 48, 0.9);
+            --bg-dark: #02040a;
+            --bg-card: rgba(8, 14, 28, 0.78);
+            --bg-card-hover: rgba(15, 25, 48, 0.92);
             
-            --accent-gold: #f59e0b;
-            --accent-gold-glow: rgba(245, 158, 11, 0.5);
+            --accent-gold: #ff9e00;
+            --accent-gold-glow: rgba(255, 158, 0, 0.55);
             --accent-cyan: #00f0ff;
-            --accent-cyan-glow: rgba(0, 240, 255, 0.45);
-            --accent-purple: #9333ea;
-            --accent-purple-glow: rgba(147, 51, 234, 0.4);
+            --accent-cyan-glow: rgba(0, 240, 255, 0.5);
+            --accent-purple: #a855f7;
+            --accent-purple-glow: rgba(168, 85, 247, 0.45);
             --accent-red: #ff2a5f;
             
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --text-dim: #475569;
             
-            --border-line: rgba(255, 255, 255, 0.08);
-            --border-cyan: rgba(0, 240, 255, 0.35);
-            --border-gold: rgba(245, 158, 11, 0.4);
+            --border-line: rgba(255, 255, 255, 0.09);
+            --border-cyan: rgba(0, 240, 255, 0.4);
+            --border-gold: rgba(255, 158, 0, 0.45);
             
             --font-display: 'Orbitron', sans-serif;
             --font-head: 'Syne', sans-serif;
@@ -76,8 +76,8 @@
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             background: 
-                radial-gradient(circle at center, transparent 30%, rgba(2, 4, 9, 0.9) 100%),
-                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+                radial-gradient(circle at center, transparent 30%, rgba(2, 4, 10, 0.92) 100%),
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
             background-size: 100% 100%, 100% 4px;
             z-index: 998;
             pointer-events: none;
@@ -90,8 +90,8 @@
             background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
             z-index: 999;
             pointer-events: none;
-            opacity: 0.3;
-            animation: sweep 8s infinite linear;
+            opacity: 0.35;
+            animation: sweep 7s infinite linear;
         }
 
         @keyframes sweep {
@@ -110,7 +110,7 @@
             pointer-events: none;
             z-index: 10000;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 12px var(--accent-cyan);
+            box-shadow: 0 0 14px var(--accent-cyan);
         }
 
         #reticle-ring {
@@ -132,8 +132,8 @@
             position: absolute;
             background: var(--accent-cyan);
         }
-        #reticle-ring::before { width: 150%; height: 1px; opacity: 0.2; }
-        #reticle-ring::after { width: 1px; height: 150%; opacity: 0.2; }
+        #reticle-ring::before { width: 150%; height: 1px; opacity: 0.25; }
+        #reticle-ring::after { width: 1px; height: 150%; opacity: 0.25; }
 
         #reticle-label {
             position: fixed;
@@ -167,7 +167,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 1.2rem 5%;
-            background: rgba(2, 4, 9, 0.82);
+            background: rgba(2, 4, 10, 0.85);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-line);
             z-index: 1000;
@@ -247,13 +247,13 @@
         }
 
         /* ==========================================================================
-           04. HERO SECTION & HOLOGRAPHIC IMAGE DISPLAY FRAME
+           04. HERO SECTION & HIGH-TECH OPTICAL PHOTO DISPLAY
            ========================================================================== */
         .hero-section {
             min-height: 100vh;
             padding: 140px 5% 60px 5%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1.1fr;
             align-items: center;
             gap: 4rem;
             position: relative;
@@ -281,7 +281,7 @@
 
         .hero-title {
             font-family: var(--font-display);
-            font-size: clamp(2.6rem, 4.8vw, 5rem);
+            font-size: clamp(2.6rem, 4.8vw, 4.8rem);
             font-weight: 900;
             text-transform: uppercase;
             line-height: 1.02;
@@ -301,117 +301,127 @@
             margin-bottom: 2rem;
         }
 
-        /* Interactive Image Display Frame */
-        .hero-image-card {
+        /* Cool High-Tech Optical Photo Frame (No CAD, Pure High-Impact Visual) */
+        .photo-viewer-card {
             width: 100%;
-            height: 560px;
+            height: 580px;
             background: var(--bg-card);
             border: 1px solid var(--border-cyan);
             position: relative;
-            backdrop-filter: blur(20px);
-            border-radius: 4px;
+            backdrop-filter: blur(25px);
+            border-radius: 6px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 1.5rem;
-            box-shadow: 0 0 45px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.15);
             transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s ease-out;
             transform-style: preserve-3d;
         }
 
-        .hero-image-card:hover {
+        .photo-viewer-card:hover {
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 65px rgba(0, 240, 255, 0.25);
+            box-shadow: 0 0 75px rgba(0, 240, 255, 0.3);
         }
 
-        .image-viewport {
+        .photo-viewport {
             position: relative;
             width: 100%;
-            height: 390px;
-            background: rgba(3, 7, 16, 0.95);
-            border: 1px dashed var(--border-cyan);
-            border-radius: 2px;
+            height: 420px;
+            background: #030712;
+            border: 1px solid var(--border-line);
+            border-radius: 4px;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .hero-display-img {
+        .main-photo-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: contrast(1.1) saturate(1.2);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s;
+            filter: contrast(1.15) saturate(1.25) brightness(0.95);
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s, opacity 0.4s;
         }
 
-        .hero-image-card:hover .hero-display-img {
-            transform: scale(1.04);
-            filter: contrast(1.15) saturate(1.3);
+        .photo-viewer-card:hover .main-photo-img {
+            transform: scale(1.05);
+            filter: contrast(1.2) saturate(1.35) brightness(1);
         }
 
-        /* Tactical HUD Overlay graphics on image */
-        .hud-overlay-grid {
+        /* Lens & HUD FX over Photo */
+        .photo-hud-grid {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: 
-                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+                radial-gradient(circle at 50% 50%, transparent 60%, rgba(2, 4, 10, 0.7) 100%),
+                linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 24px 24px, 24px 24px;
             pointer-events: none;
         }
 
-        .hud-scan-beam {
+        .photo-scan-beam {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
+            top: 0; left: 0; width: 100%; height: 3px;
             background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            box-shadow: 0 0 15px var(--accent-cyan);
-            animation: scanImage 4s infinite ease-in-out;
+            box-shadow: 0 0 18px var(--accent-cyan);
+            animation: scanPhoto 5s infinite ease-in-out;
             pointer-events: none;
         }
 
-        @keyframes scanImage {
-            0% { top: 0%; opacity: 0.8; }
-            50% { top: 96%; opacity: 0.8; }
-            100% { top: 0%; opacity: 0.8; }
+        @keyframes scanPhoto {
+            0% { top: 0%; opacity: 0.9; }
+            50% { top: 96%; opacity: 0.9; }
+            100% { top: 0%; opacity: 0.9; }
         }
 
-        .image-controls {
+        .optical-aperture-overlay {
             position: absolute;
-            bottom: 12px; right: 12px;
+            top: 15px; right: 15px;
+            background: rgba(2, 4, 10, 0.85);
+            border: 1px solid var(--accent-cyan);
+            padding: 6px 12px;
+            font-size: 0.62rem;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            border-radius: 2px;
+            box-shadow: 0 0 12px var(--accent-cyan-glow);
+            pointer-events: none;
+        }
+
+        .photo-nav-controls {
+            position: absolute;
+            bottom: 15px; right: 15px;
             display: flex;
             gap: 8px;
             z-index: 10;
         }
 
-        .img-control-btn {
-            background: rgba(2, 4, 9, 0.9);
+        .photo-btn {
+            background: rgba(2, 4, 10, 0.9);
             border: 1px solid var(--accent-cyan);
             color: var(--accent-cyan);
             font-family: var(--font-mono);
             font-size: 0.62rem;
-            padding: 6px 12px;
-            letter-spacing: 1px;
+            padding: 7px 14px;
+            letter-spacing: 1.5px;
             transition: all 0.3s;
             border-radius: 2px;
         }
 
-        .img-control-btn:hover {
+        .photo-btn:hover, .photo-btn.active {
             background: var(--accent-cyan);
             color: #000;
-            box-shadow: 0 0 15px var(--accent-cyan-glow);
-        }
-
-        .img-control-btn.active {
-            background: var(--accent-cyan);
-            color: #000;
+            box-shadow: 0 0 18px var(--accent-cyan-glow);
             font-weight: 700;
         }
 
         .corner-bracket {
             position: absolute;
-            width: 16px; height: 16px;
+            width: 18px; height: 18px;
             border-color: var(--accent-cyan);
             border-style: solid;
             pointer-events: none;
@@ -432,9 +442,7 @@
             border-top: 1px solid var(--border-line);
         }
 
-        .telemetry-item {
-            font-family: var(--font-mono);
-        }
+        .telemetry-item { font-family: var(--font-mono); }
 
         .telemetry-val {
             font-family: var(--font-display);
@@ -501,7 +509,7 @@
 
         .glass-panel:hover {
             border-color: var(--border-gold);
-            box-shadow: 0 0 40px rgba(245, 158, 11, 0.15);
+            box-shadow: 0 0 40px rgba(255, 158, 0, 0.15);
         }
 
         .panel-quote {
@@ -532,14 +540,14 @@
         }
 
         .matrix-intro-card {
-            background: rgba(147, 51, 234, 0.05);
+            background: rgba(168, 85, 247, 0.06);
             border: 1px solid var(--accent-purple);
             padding: 1.8rem 2.2rem;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 0 25px var(--accent-purple-glow);
+            box-shadow: 0 0 30px var(--accent-purple-glow);
         }
 
         .matrix-table {
@@ -569,7 +577,7 @@
 
         .matrix-row-card:hover {
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.18);
+            box-shadow: 0 0 38px rgba(0, 240, 255, 0.2);
             transform: translateY(-2px);
         }
 
@@ -595,7 +603,7 @@
         }
 
         .reasoning-box {
-            background: rgba(2, 4, 9, 0.8);
+            background: rgba(2, 4, 10, 0.85);
             border-left: 3px solid var(--accent-gold);
             padding: 1rem 1.2rem;
             border-radius: 0 4px 4px 0;
@@ -630,12 +638,12 @@
         .theory-image-slot {
             position: relative;
             width: 100%;
-            height: 280px;
-            background: rgba(3, 7, 16, 0.95);
+            height: 290px;
+            background: #030712;
             border: 1px dashed var(--border-cyan);
             margin-bottom: 1.8rem;
             overflow: hidden;
-            border-radius: 2px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -645,25 +653,26 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
-            filter: saturate(1.2) contrast(1.1);
+            transition: transform 0.6s ease, filter 0.6s ease;
+            filter: saturate(1.2) contrast(1.15);
         }
 
         .theory-card:hover .theory-img {
             transform: scale(1.06);
+            filter: saturate(1.35) contrast(1.2);
         }
 
         .img-badge {
             position: absolute;
             top: 12px; left: 12px;
-            background: rgba(2, 4, 9, 0.9);
+            background: rgba(2, 4, 10, 0.9);
             border: 1px solid var(--accent-cyan);
             color: var(--accent-cyan);
             font-family: var(--font-mono);
             font-size: 0.6rem;
             padding: 4px 10px;
             letter-spacing: 2px;
-            box-shadow: 0 0 10px var(--accent-cyan-glow);
+            box-shadow: 0 0 12px var(--accent-cyan-glow);
         }
 
         .theory-title {
@@ -707,11 +716,11 @@
 
         .team-card:hover {
             border-color: var(--border-gold);
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
+            box-shadow: 0 0 35px rgba(255, 158, 0, 0.18);
         }
 
         .team-avatar {
-            width: 85px; height: 85px;
+            width: 88px; height: 88px;
             border-radius: 50%;
             border: 1px solid var(--accent-gold);
             margin: 0 auto 1.5rem auto;
@@ -719,8 +728,8 @@
             align-items: center;
             justify-content: center;
             font-size: 2.2rem;
-            background: rgba(245, 158, 11, 0.05);
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+            background: rgba(255, 158, 0, 0.06);
+            box-shadow: 0 0 22px rgba(255, 158, 0, 0.18);
             transition: transform 0.4s ease;
         }
 
@@ -747,7 +756,7 @@
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(2, 4, 9, 0.92);
+            background: rgba(2, 4, 10, 0.94);
             backdrop-filter: blur(25px);
             z-index: 10000;
             display: flex;
@@ -768,7 +777,7 @@
             padding: 3.5rem;
             position: relative;
             border-radius: 4px;
-            box-shadow: 0 0 70px rgba(0, 240, 255, 0.25);
+            box-shadow: 0 0 75px rgba(0, 240, 255, 0.28);
         }
 
         .modal-close {
@@ -812,7 +821,7 @@
             border-color: var(--accent-cyan);
             background: var(--accent-cyan);
             color: #000;
-            box-shadow: 0 0 15px var(--accent-cyan-glow);
+            box-shadow: 0 0 18px var(--accent-cyan-glow);
         }
 
         /* Footer */
@@ -825,7 +834,7 @@
             font-family: var(--font-mono);
             font-size: 0.75rem;
             color: var(--text-muted);
-            background: #010205;
+            background: #010206;
         }
 
         @media (max-width: 1024px) {
@@ -862,7 +871,7 @@
     <!-- Navigation Header -->
     <nav class="navbar">
         <div class="brand-logo">
-            NASA HUNCH <span class="brand-badge">FLIGHT-SPEC</span>
+            NASA HUNCH <span class="brand-badge">FLIGHT-READY</span>
         </div>
         <ul class="nav-links">
             <li><a href="#hero">01 // OVERVIEW</a></li>
@@ -874,63 +883,64 @@
         </ul>
     </nav>
 
-    <!-- Hero Section with Image Display Frame -->
+    <!-- Hero Section with High-Tech Photo Display (NO CAD, High-Impact Visual) -->
     <section id="hero" class="hero-section">
         <div class="hero-content">
-            <div class="hero-tag">Taking Packaging to the Next Level</div>
-            <h1 class="hero-title">Origami Space Systems</h1>
+            <div class="hero-tag">Elevating Space Logistics</div>
+            <h1 class="hero-title">Kinetic Origami Space Systems</h1>
             <p class="hero-desc">
-                An innovative way of making packaging the most useful part of an entire flight. Transforming space mission logistics through self-deploying kinetic origami geometry and smart material fold dynamics.
+                Transforming space flight packaging into an essential, multifunctional mission asset. Powered by self-deploying kinetic origami mechanics and compliant folding technology designed for orbital payloads.
             </p>
 
             <div class="telemetry-bar">
                 <div class="telemetry-item">
                     <div class="telemetry-val">84.2%</div>
-                    <div class="telemetry-lbl">Volumetric Compression</div>
+                    <div class="telemetry-lbl">Stowage Compression</div>
                 </div>
                 <div class="telemetry-item">
                     <div class="telemetry-val">0.00</div>
-                    <div class="telemetry-lbl">Pinch Point Hazard Index</div>
+                    <div class="telemetry-lbl">Pinch Point Hazard</div>
                 </div>
                 <div class="telemetry-item">
                     <div class="telemetry-val">500+</div>
-                    <div class="telemetry-lbl">Tested Thermal Cycles</div>
+                    <div class="telemetry-lbl">Thermal Test Cycles</div>
                 </div>
                 <div class="telemetry-item">
                     <div class="telemetry-val">1.2 Nm</div>
-                    <div class="telemetry-lbl">EVA Actuation Force</div>
+                    <div class="telemetry-lbl">EVA Operability Torque</div>
                 </div>
             </div>
         </div>
 
-        <!-- High-Tech Image Display Frame (Replaces 3D CAD) -->
-        <div class="hero-image-card tilt-card">
+        <!-- Cool High-Impact Photo Visualizer Display -->
+        <div class="photo-viewer-card tilt-card">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-tr"></div>
             <div class="corner-bracket cb-bl"></div>
             <div class="corner-bracket cb-br"></div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-line); padding-bottom: 0.8rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent-cyan); letter-spacing: 2px;">
-                <div>PROTOTYPE OPTICAL HUD // MULTI-VIEW</div>
-                <div style="color: var(--accent-gold);">STATUS: RENDER ACTIVE</div>
+                <div>OPTICAL FLIGHT RECON // HIGH-RES PHOTOGRAPHY</div>
+                <div style="color: var(--accent-gold);">STATUS: LIVE RECON</div>
             </div>
 
-            <div class="image-viewport">
-                <div class="hud-overlay-grid"></div>
-                <div class="hud-scan-beam"></div>
+            <div class="photo-viewport">
+                <div class="photo-hud-grid"></div>
+                <div class="photo-scan-beam"></div>
+                <div class="optical-aperture-overlay">MAG: 2.5X // SENSOR 01</div>
                 
-                <img id="heroImage" src="https://via.placeholder.com/800x600/030710/00f0ff?text=Insert+Flight+Prototype+Photo+1" alt="Flight Prototype Image" class="hero-display-img">
+                <img id="heroImage" src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80" alt="Space Flight Hardware Prototype Photo" class="main-photo-img">
 
-                <div class="image-controls">
-                    <button class="img-control-btn active" onclick="switchHeroImage('https://via.placeholder.com/800x600/030710/00f0ff?text=Insert+Flight+Prototype+Photo+1', this)">VIEW 01: FOLDED</button>
-                    <button class="img-control-btn" onclick="switchHeroImage('https://via.placeholder.com/800x600/080e1c/f59e0b?text=Insert+Flight+Prototype+Photo+2', this)">VIEW 02: DEPLOYED</button>
-                    <button class="img-control-btn" onclick="switchHeroImage('https://via.placeholder.com/800x600/0f1930/9333ea?text=Insert+EVA+Glove+Test', this)">VIEW 03: TESTING</button>
+                <div class="photo-nav-controls">
+                    <button class="photo-btn active" onclick="switchHeroImage('https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 01: FOLDED</button>
+                    <button class="photo-btn" onclick="switchHeroImage('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 02: DEPLOYED</button>
+                    <button class="photo-btn" onclick="switchHeroImage('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 03: TESTING</button>
                 </div>
             </div>
 
-            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); border-top: 1px solid var(--border-line); padding-top: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
-                <span><strong>CAPTION:</strong> <span id="imgCaptionText">Folded Storage Geometry for ISS Columbus Rack Payload</span></span>
-                <span style="color: var(--accent-cyan);">RES: 4K HIGH-RES</span>
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); border-top: 1px solid var(--border-line); padding-top: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+                <span><strong>CAPTION:</strong> <span id="imgCaptionText">Folded Storage Geometry for ISS Columbus Rack Payload Transit</span></span>
+                <span style="color: var(--accent-cyan);">OPTICAL RECON 4K</span>
             </div>
         </div>
     </section>
@@ -975,7 +985,7 @@
                 <div class="corner-bracket cb-br"></div>
                 
                 <div class="theory-image-slot">
-                    <img src="https://via.placeholder.com/600x350/030710/00f0ff?text=Insert+Crease+Pattern+%2F+Folding+Diagram" alt="Crease Pattern Diagram" class="theory-img">
+                    <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=800&q=80" alt="Crease Pattern Folding Geometry" class="theory-img">
                     <span class="img-badge">FIG 2.1 - FOLD PATTERN GEOMETRY</span>
                 </div>
 
@@ -994,7 +1004,7 @@
                 <div class="corner-bracket cb-bl"></div>
                 
                 <div class="theory-image-slot">
-                    <img src="https://via.placeholder.com/600x350/080e1c/f59e0b?text=Insert+Physical+Prototype+Photo" alt="Physical Prototype Photo" class="theory-img">
+                    <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80" alt="Physical Prototype Testing Photo" class="theory-img">
                     <span class="img-badge">FIG 2.2 - PROTOTYPE BUILD & TESTING</span>
                 </div>
 
@@ -1206,26 +1216,26 @@
         });
 
         /* ==========================================================================
-           02. HERO IMAGE SWITCHER ENGINE
+           02. HERO PHOTO SWITCHER ENGINE
            ========================================================================== */
         function switchHeroImage(src, btn) {
             const img = document.getElementById('heroImage');
             const caption = document.getElementById('imgCaptionText');
             
-            img.style.opacity = '0.2';
+            img.style.opacity = '0.15';
             audio.clickSound();
 
             setTimeout(() => {
                 img.src = src;
                 img.style.opacity = '1';
                 
-                document.querySelectorAll('.img-control-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.photo-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                if(src.includes('Photo+1')) caption.innerText = 'Folded Storage Geometry for ISS Columbus Rack Payload';
-                else if(src.includes('Photo+2')) caption.innerText = 'Fully Deployed Structural Frame with Locking Hinges';
-                else caption.innerText = 'Zero-G Pressurized EMU Glove Ergonomic Evaluation';
-            }, 200);
+                if(btn.innerText.includes('FOLDED')) caption.innerText = 'Folded Storage Geometry for ISS Columbus Rack Payload Transit';
+                else if(btn.innerText.includes('DEPLOYED')) caption.innerText = 'Fully Expanded Dynamic Frame Structure in Simulated Microgravity';
+                else caption.innerText = 'Pressurized Glove Ergonomic Evaluation in Thermal Vacuum Facility';
+            }, 220);
         }
 
         /* ==========================================================================
@@ -1247,7 +1257,7 @@
             ring.animate({ left: `${mouseX}px`, top: `${mouseY}px` }, { duration: 200, fill: "forwards" });
         });
 
-        document.querySelectorAll('a, button, input, .glass-panel, .matrix-row-card, .team-card, .hero-image-card').forEach(elem => {
+        document.querySelectorAll('a, button, input, .glass-panel, .matrix-row-card, .team-card, .photo-viewer-card').forEach(elem => {
             elem.addEventListener('mouseenter', () => {
                 ring.style.width = '64px'; ring.style.height = '64px';
                 ring.style.borderColor = 'var(--accent-cyan)';
@@ -1255,7 +1265,7 @@
             });
             elem.addEventListener('mouseleave', () => {
                 ring.style.width = '48px'; ring.style.height = '48px';
-                ring.style.borderColor = 'rgba(0, 240, 255, 0.35)';
+                ring.style.borderColor = 'rgba(0, 240, 255, 0.4)';
             });
             elem.addEventListener('click', () => audio.clickSound());
         });
