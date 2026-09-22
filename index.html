@@ -132,67 +132,10 @@
             white-space: nowrap;
         }
 
-        /* ==========================================================================
-           03. TELEMETRY TICKER & TOP BAR
-           ========================================================================== */
-        .top-telemetry-bar {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            height: 32px;
-            background: rgba(3, 4, 7, 0.95);
-            border-bottom: 1px solid var(--border-line);
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 2rem;
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-
-        .ticker-wrap {
-            overflow: hidden;
-            white-space: nowrap;
-            width: 60%;
-        }
-
-        .ticker-move {
-            display: inline-block;
-            animation: ticker 30s linear infinite;
-        }
-
-        .ticker-item {
-            display: inline-block;
-            margin-right: 3rem;
-        }
-
-        .ticker-item span { color: var(--accent-gold); }
-
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); }
-        }
-
-        .audio-toggle {
-            background: transparent;
-            border: 1px solid var(--border-line);
-            color: var(--accent-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            padding: 2px 8px;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        .audio-toggle:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px var(--accent-cyan-glow);
-        }
-
         /* Progress Bar */
         .scroll-progress-line {
             position: fixed;
-            top: 32px; left: 0;
+            top: 0; left: 0;
             width: 0%; height: 2px;
             background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));
             z-index: 1002;
@@ -200,11 +143,11 @@
         }
 
         /* ==========================================================================
-           04. NAVIGATION BAR
+           03. NAVIGATION BAR
            ========================================================================== */
         .navbar {
             position: fixed;
-            top: 32px; width: 100%;
+            top: 0; width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -239,6 +182,7 @@
             display: flex;
             gap: 2rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
@@ -266,8 +210,23 @@
         }
         .nav-links a:hover::after { width: 100%; }
 
+        .audio-toggle {
+            background: transparent;
+            border: 1px solid var(--border-line);
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            padding: 4px 10px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .audio-toggle:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
+        }
+
         /* ==========================================================================
-           05. HERO SECTION & PROTOTYPE VISUAL DISPLAY
+           04. HERO SECTION & PROTOTYPE VISUAL DISPLAY
            ========================================================================== */
         .hero-section {
             min-height: 100vh;
@@ -320,35 +279,7 @@
             font-size: 1rem;
             font-weight: 300;
             max-width: 540px;
-            margin-bottom: 2.5rem;
             line-height: 1.7;
-        }
-
-        .hero-specs-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-line);
-        }
-
-        .hero-spec-item {
-            font-family: var(--font-mono);
-        }
-
-        .hero-spec-item .label {
-            color: var(--text-muted);
-            font-size: 0.65rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .hero-spec-item .value {
-            font-family: var(--font-head);
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-top: 0.2rem;
         }
 
         /* Hero Image Container Slot */
@@ -448,7 +379,7 @@
         .cb-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
 
         /* ==========================================================================
-           06. EDITORIAL CONTENT & THEORY SECTIONS
+           05. EDITORIAL CONTENT & THEORY SECTIONS
            ========================================================================== */
         .content-section {
             padding: 8rem 5%;
@@ -484,13 +415,6 @@
             margin-top: 0.5rem;
         }
 
-        .grid-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
         .glass-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-line);
@@ -521,22 +445,6 @@
             font-weight: 300;
             line-height: 1.8;
             margin-bottom: 1.5rem;
-        }
-
-        .chart-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-line);
-            padding: 2rem;
-            height: 380px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        #telemetryChart {
-            width: 100%;
-            height: 240px;
         }
 
         /* Theory & Prototype Image Grid */
@@ -677,7 +585,7 @@
         }
 
         /* ==========================================================================
-           07. INTERACTIVE TERMINAL SECTION
+           06. INTERACTIVE TERMINAL SECTION
            ========================================================================== */
         .terminal-box {
             background: rgba(2, 3, 5, 0.95);
@@ -741,7 +649,7 @@
         }
 
         /* ==========================================================================
-           08. CREW DOSSIER & 4-ENGINEER GRID
+           07. CREW DOSSIER & 4-ENGINEER GRID
            ========================================================================== */
         .team-grid {
             display: grid;
@@ -790,75 +698,6 @@
             margin-top: 0.4rem;
         }
 
-        /* ==========================================================================
-           09. ROCKET TAKEOFF LAUNCHPAD STAGE
-           ========================================================================== */
-        .launchpad-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border-cyan);
-            border-radius: 4px;
-            position: relative;
-            padding: 3rem;
-            text-align: center;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.08);
-        }
-
-        .rocket-stage-canvas-box {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            background: radial-gradient(circle at bottom, rgba(0, 240, 255, 0.05) 0%, rgba(3, 4, 7, 0.95) 70%);
-            border: 1px solid var(--border-line);
-            margin: 2rem 0;
-            overflow: hidden;
-        }
-
-        #rocketCanvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-        }
-
-        #rocketSprite {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 4.5rem;
-            z-index: 2;
-            transition: filter 0.3s;
-            user-select: none;
-        }
-
-        .launch-status-readout {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-        }
-
-        .launch-btn-main {
-            background: rgba(197, 160, 89, 0.1);
-            border: 1px solid var(--accent-gold);
-            color: var(--accent-gold);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            padding: 14px 36px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            transition: all 0.3s;
-            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
-        }
-
-        .launch-btn-main:hover {
-            background: var(--accent-gold);
-            color: #000;
-            box-shadow: 0 0 30px var(--accent-gold-glow);
-        }
-
         footer {
             padding: 5rem 5% 3rem 5%;
             border-top: 1px solid var(--border-line);
@@ -872,7 +711,7 @@
         }
 
         /* ==========================================================================
-           10. MODAL SPECIFICATION DIALOG
+           08. MODAL SPECIFICATION DIALOG
            ========================================================================== */
         .modal-overlay {
             position: fixed;
@@ -925,7 +764,7 @@
         }
 
         @media (max-width: 968px) {
-            .hero-section, .grid-2col, .theory-grid, .spec-grid, .team-grid {
+            .hero-section, .theory-grid, .spec-grid, .team-grid {
                 grid-template-columns: 1fr;
             }
             .nav-links { display: none; }
@@ -944,20 +783,6 @@
     <!-- HUD Grid Background Canvas -->
     <canvas id="hudCanvas"></canvas>
 
-    <!-- Top Telemetry Stream & Audio Toggle -->
-    <div class="top-telemetry-bar">
-        <div class="ticker-wrap">
-            <div class="ticker-move">
-                <div class="ticker-item">ORBIT: <span>ISS LOW-EARTH [408 KM]</span></div>
-                <div class="ticker-item">VELOCITY: <span>7.66 KM/S</span></div>
-                <div class="ticker-item">ATMOSPHERE: <span>0.00 PSI</span></div>
-                <div class="ticker-item">SYSTEM STATUS: <span>NOMINAL</span></div>
-                <div class="ticker-item">NASA HUNCH PROTOCOL: <span>ACTIVE</span></div>
-            </div>
-        </div>
-        <button class="audio-toggle" id="audioBtn">SYNTH AUDIO: OFF</button>
-    </div>
-
     <!-- Scroll Progress Line -->
     <div class="scroll-progress-line" id="progressLine"></div>
 
@@ -973,7 +798,7 @@
             <li><a href="#matrix">04 // SPECS</a></li>
             <li><a href="#terminal">05 // TERMINAL</a></li>
             <li><a href="#crew">06 // CREW</a></li>
-            <li><a href="#launch-stage">07 // LAUNCH</a></li>
+            <li><button class="audio-toggle" id="audioBtn">SYNTH AUDIO: OFF</button></li>
         </ul>
     </nav>
 
@@ -983,26 +808,11 @@
             <div class="hero-tag">Taking Packaging to the Next Level</div>
             <h1 class="hero-title">Origami Space Systems</h1>
             <p class="hero-desc">
-                An innovative way of making packaging the most useful part of an entire flight. 
+                An innovative way of making packaging the most useful part of an entire flight.
             </p>
-
-            <div class="hero-specs-grid">
-                <div class="hero-spec-item">
-                    <div class="label">MASS REDUCTION</div>
-                    <div class="value" style="color: var(--accent-gold);"><span class="counter" data-target="42.8">0</span>%</div>
-                </div>
-                <div class="hero-spec-item">
-                    <div class="label">LOAD RATING</div>
-                    <div class="value"><span class="counter" data-target="1250">0</span> N</div>
-                </div>
-                <div class="hero-spec-item">
-                    <div class="label">TOLERANCE</div>
-                    <div class="value">±<span class="counter" data-target="0.05">0</span>mm</div>
-                </div>
-            </div>
         </div>
 
-        <!-- Hero Prototype Image Box (Replaces 3D Canvas) -->
+        <!-- Hero Prototype Image Box -->
         <div class="hero-image-box">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-tr"></div>
@@ -1036,38 +846,20 @@
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-COLUMBUS</div>
         </div>
 
-        <div class="grid-2col">
-            <div class="glass-panel">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-br"></div>
-                <div class="panel-quote">"In microgravity, even microscopic tolerance errors cascade into orbital failures."</div>
-                <p class="panel-text">
-                    Summarize the specific challenge NASA provided for your project. Detail the exact payload, tool, or ergonomic limitation faced by astronauts during long-duration orbital operations.
-                </p>
-                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan);">
-                    > PRIMARY OBJECTIVE: STRUCTURAL INTEGRITY + ZERO PINCH POINTS
-                </div>
-            </div>
-
-            <div class="chart-box">
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem;">
-                    <span>LIVE STRUCTURAL HARMONIC SPECTRUM</span>
-                    <span style="color: var(--accent-gold);" id="chartHz">142 Hz</span>
-                </div>
-                
-                <canvas id="telemetryChart"></canvas>
-
-                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">
-                    <span>SENSOR ARRAY: ALPHA-01</span>
-                    <span>SAMPLE RATE: 1000 S/s</span>
-                </div>
+        <div class="glass-panel">
+            <div class="corner-bracket cb-tl"></div>
+            <div class="corner-bracket cb-br"></div>
+            <div class="panel-quote">"In microgravity, even microscopic tolerance errors cascade into orbital failures."</div>
+            <p class="panel-text">
+                Summarize the specific challenge NASA provided for your project. Detail the exact payload, tool, or ergonomic limitation faced by astronauts during long-duration orbital operations.
+            </p>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan);">
+                > PRIMARY OBJECTIVE: STRUCTURAL INTEGRITY + ZERO PINCH POINTS
             </div>
         </div>
     </section>
 
-    <!-- Theory & Prototype Breakdown (Replaces CAD Simulator) -->
+    <!-- Theory & Prototype Breakdown -->
     <section id="theory" class="content-section reveal">
         <div class="section-header">
             <div>
@@ -1135,21 +927,21 @@
                 <div class="spec-card-num">// MATRIX_SPEC_01</div>
                 <div class="spec-card-title">Zero-G Ergonomics</div>
                 <div class="spec-card-desc">Contoured actuation mechanisms designed for thick EVA pressure-glove operation without slip risks.</div>
-                <button class="inspect-btn" onclick="openModal('Zero-G Ergonomics', 'Full ergonomics testing carried out in neutral buoyancy simulators. Actuation torque optimized to 1.2 Nm.')">INSPECT TELEMETRY</button>
+                <button class="inspect-btn" onclick="openModal('Zero-G Ergonomics', 'Full ergonomics testing carried out in neutral buoyancy simulators. Actuation torque optimized to 1.2 Nm.')">INSPECT DETAILS</button>
             </div>
 
             <div class="spec-card">
                 <div class="spec-card-num">// MATRIX_SPEC_02</div>
                 <div class="spec-card-title">Thermal Resilience</div>
                 <div class="spec-card-desc">Material compound selected to maintain elasticity across orbital thermal swings (-120°C to +150°C).</div>
-                <button class="inspect-btn" onclick="openModal('Thermal Resilience', 'Vacuum thermal chamber testing verified zero fracture propagation over 500 thermal expansion cycles.')">INSPECT TELEMETRY</button>
+                <button class="inspect-btn" onclick="openModal('Thermal Resilience', 'Vacuum thermal chamber testing verified zero fracture propagation over 500 thermal expansion cycles.')">INSPECT DETAILS</button>
             </div>
 
             <div class="spec-card">
                 <div class="spec-card-num">// MATRIX_SPEC_03</div>
                 <div class="spec-card-title">Flight Safety Standard</div>
                 <div class="spec-card-desc">Fully compliant with NASA MSFC-SPEC-522 for off-gassing, toxicity, and edge-radius safety limits.</div>
-                <button class="inspect-btn" onclick="openModal('Flight Safety Standard', 'Radii on all exposed surfaces exceed 1.5mm minimal chamfer. Material toxicity index: 0.0.')">INSPECT TELEMETRY</button>
+                <button class="inspect-btn" onclick="openModal('Flight Safety Standard', 'Radii on all exposed surfaces exceed 1.5mm minimal chamfer. Material toxicity index: 0.0.')">INSPECT DETAILS</button>
             </div>
         </div>
     </section>
@@ -1170,8 +962,8 @@
                 <div style="color: var(--accent-gold);">LINK: ONLINE</div>
             </div>
             <div class="terminal-body" id="termBody">
-                <div class="terminal-line sys">INITIALIZING NASA HUNCH TELEMETRY SYSTEM DIRECT LINK...</div>
-                <div class="terminal-line sys">TYPE 'specs', 'crew', 'telemetry', OR 'clear' TO EXECUTE COMMANDS.</div>
+                <div class="terminal-line sys">INITIALIZING NASA HUNCH DIRECT LINK...</div>
+                <div class="terminal-line sys">TYPE 'specs', 'crew', OR 'clear' TO EXECUTE COMMANDS.</div>
             </div>
             <div class="terminal-input-row">
                 <span class="terminal-prompt">HUNCH-01></span>
@@ -1220,35 +1012,8 @@
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍💻</div>
                 <div class="team-name">[ Engineer 4 ]</div>
-                <div class="team-role">SYSTEMS & TELEMETRY</div>
+                <div class="team-role">SYSTEMS & ARCHITECTURE</div>
             </div>
-        </div>
-    </section>
-
-    <!-- Interactive Rocket Launch Stage Section -->
-    <section id="launch-stage" class="content-section reveal">
-        <div class="section-header">
-            <div>
-                <div class="section-tag">06 // ORBITAL DEPLOYMENT</div>
-                <h2 class="section-title">ROCKET TAKEOFF SIMULATION</h2>
-            </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-red);" id="launchStageText">T-MINUS READY</div>
-        </div>
-
-        <div class="launchpad-container">
-            <div class="corner-bracket cb-tl"></div>
-            <div class="corner-bracket cb-tr"></div>
-            <div class="corner-bracket cb-bl"></div>
-            <div class="corner-bracket cb-br"></div>
-
-            <div class="launch-status-readout" id="launchReadout">STANDBY FOR IGNITION SEQUENCE...</div>
-
-            <div class="rocket-stage-canvas-box" id="rocketContainer">
-                <canvas id="rocketCanvas"></canvas>
-                <div id="rocketSprite">🚀</div>
-            </div>
-
-            <button class="launch-btn-main" id="launchTriggerBtn">INITIATE LAUNCH SEQUENCE</button>
         </div>
     </section>
 
@@ -1266,7 +1031,7 @@
     <div class="modal-overlay" id="specModal">
         <div class="modal-container">
             <button class="modal-close" onclick="closeModal()">✕</button>
-            <div style="font-family: var(--font-mono); color: var(--accent-gold); font-size: 0.75rem; margin-bottom: 0.5rem;" id="modalTag">// TELEMETRY DEEP INSPECTION</div>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold); font-size: 0.75rem; margin-bottom: 0.5rem;" id="modalTag">// SYSTEM DEEP INSPECTION</div>
             <h2 style="font-family: var(--font-head); font-size: 2rem; margin-bottom: 1.5rem;" id="modalTitle">SPEC TITLE</h2>
             <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;" id="modalBody">Spec detail content goes here.</p>
         </div>
@@ -1353,30 +1118,7 @@
         window.addEventListener('resize', () => { resizeHud(); drawHudGrid(); });
         resizeHud(); drawHudGrid();
 
-        /* C. Telemetry Waveform Chart */
-        const chartCanvas = document.getElementById('telemetryChart');
-        const chartCtx = chartCanvas.getContext('2d');
-        let chartTime = 0;
-
-        function renderChart() {
-            chartCanvas.width = chartCanvas.parentElement.clientWidth - 60;
-            chartCanvas.height = 240;
-            chartCtx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
-            chartCtx.strokeStyle = '#c5a059'; chartCtx.lineWidth = 2;
-            chartCtx.beginPath();
-            let midY = chartCanvas.height / 2;
-            for (let x = 0; x < chartCanvas.width; x += 2) {
-                let y = midY + Math.sin(x * 0.03 + chartTime) * 35 + Math.cos(x * 0.08 - chartTime) * 15;
-                if (x === 0) chartCtx.moveTo(x, y); else chartCtx.lineTo(x, y);
-            }
-            chartCtx.stroke();
-            chartTime += 0.05;
-            document.getElementById('chartHz').innerText = `${(140 + Math.sin(chartTime)*12).toFixed(1)} Hz`;
-            requestAnimationFrame(renderChart);
-        }
-        renderChart();
-
-        /* D. Terminal Shell */
+        /* C. Terminal Shell */
         const termInput = document.getElementById('termInput');
         const termBody = document.getElementById('termBody');
 
@@ -1385,10 +1127,9 @@
                 let cmd = termInput.value.trim().toLowerCase();
                 termInput.value = '';
                 appendTermLine(`HUNCH-01> ${cmd}`, 'sys');
-                if (cmd === 'help') appendTermLine("COMMANDS: 'specs', 'crew', 'launch', 'clear'", 'out');
-                else if (cmd === 'specs') appendTermLine("MASS: 420g | TOLERANCE: ±0.05mm", 'out');
+                if (cmd === 'help') appendTermLine("COMMANDS: 'specs', 'crew', 'clear'", 'out');
+                else if (cmd === 'specs') appendTermLine("FLIGHT SAFETY: MSFC-SPEC-522 COMPLIANT", 'out');
                 else if (cmd === 'crew') appendTermLine("4 ENGINEERS ASSIGNED TO ISS MISSION PROGRAM", 'out');
-                else if (cmd === 'launch') { appendTermLine("INITIATING TAKEOFF...", 'sys'); triggerRocketLaunch(); }
                 else if (cmd === 'clear') termBody.innerHTML = '';
                 else appendTermLine(`UNKNOWN COMMAND: '${cmd}'`, 'err');
                 termBody.scrollTop = termBody.scrollHeight;
@@ -1402,135 +1143,7 @@
             termBody.appendChild(div);
         }
 
-        /* E. Rocket Takeoff Interactive Engine */
-        const rCanvas = document.getElementById('rocketCanvas');
-        const rCtx = rCanvas.getContext('2d');
-        const rocketSprite = document.getElementById('rocketSprite');
-        const rocketContainer = document.getElementById('rocketContainer');
-        const launchBtn = document.getElementById('launchTriggerBtn');
-        const launchReadout = document.getElementById('launchReadout');
-        const launchStageText = document.getElementById('launchStageText');
-
-        let particles = [];
-        let isLaunching = false;
-        let rocketPosY = 0;
-        let rocketVelocity = 0;
-
-        function resizeRocketCanvas() {
-            rCanvas.width = rocketContainer.clientWidth;
-            rCanvas.height = rocketContainer.clientHeight;
-        }
-        resizeRocketCanvas();
-        window.addEventListener('resize', resizeRocketCanvas);
-
-        class Particle {
-            constructor(x, y) {
-                this.x = x + (Math.random() - 0.5) * 20;
-                this.y = y;
-                this.vx = (Math.random() - 0.5) * 4;
-                this.vy = Math.random() * 8 + 3;
-                this.size = Math.random() * 10 + 4;
-                this.life = 1;
-                this.color = Math.random() > 0.4 ? '#c5a059' : (Math.random() > 0.5 ? '#ff2a2a' : '#00f0ff');
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.life -= 0.025;
-                this.size *= 0.96;
-            }
-            draw() {
-                rCtx.save();
-                rCtx.globalAlpha = Math.max(0, this.life);
-                rCtx.fillStyle = this.color;
-                rCtx.shadowColor = this.color;
-                rCtx.shadowBlur = 10;
-                rCtx.beginPath();
-                rCtx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
-                rCtx.fill();
-                rCtx.restore();
-            }
-        }
-
-        function triggerRocketLaunch() {
-            if (isLaunching) return;
-            isLaunching = true;
-            rocketPosY = 0;
-            rocketVelocity = 0.5;
-            launchBtn.disabled = true;
-            launchBtn.innerText = "LAUNCHING...";
-            launchStageText.style.color = "var(--accent-gold)";
-            launchStageText.innerText = "THRUST: MAXIMUM";
-
-            let countdown = 3;
-            let timer = setInterval(() => {
-                if (countdown > 0) {
-                    launchReadout.innerText = `COUNTDOWN: T-MINUS 00:0${countdown}`;
-                    audio.playTone(600, 'sine', 0.1, 0.05);
-                    countdown--;
-                } else {
-                    clearInterval(timer);
-                    launchReadout.innerText = "MAIN ENGINE IGNITION! LIFT OFF!";
-                    audio.warpSound();
-                }
-            }, 800);
-        }
-
-        launchBtn.addEventListener('click', triggerRocketLaunch);
-
-        function animRocketFrame() {
-            rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
-
-            let rocketBox = rocketSprite.getBoundingClientRect();
-            let containerBox = rocketContainer.getBoundingClientRect();
-            let currentRocketX = rCanvas.width / 2;
-            let currentRocketY = (rocketBox.top - containerBox.top) + rocketBox.height - 15;
-
-            if (isLaunching) {
-                rocketVelocity += 0.35;
-                rocketPosY += rocketVelocity;
-                rocketSprite.style.transform = `translate(-50%, -${rocketPosY}px)`;
-
-                // Thruster particle stream
-                for (let i = 0; i < 8; i++) {
-                    particles.push(new Particle(currentRocketX, currentRocketY));
-                }
-
-                // Camera Shake
-                if (rocketPosY < rCanvas.height) {
-                    let shake = (Math.random() - 0.5) * 6;
-                    rocketContainer.style.transform = `translate(${shake}px, ${shake}px)`;
-                } else {
-                    rocketContainer.style.transform = `translate(0, 0)`;
-                }
-
-                // Reset stage after launch completes
-                if (rocketPosY > rCanvas.height + 150) {
-                    setTimeout(() => {
-                        isLaunching = false;
-                        rocketPosY = 0;
-                        rocketVelocity = 0;
-                        rocketSprite.style.transform = `translate(-50%, 0px)`;
-                        launchBtn.disabled = false;
-                        launchBtn.innerText = "INITIATE LAUNCH SEQUENCE";
-                        launchReadout.innerText = "MISSION DEPLOYED TO ISS ORBIT. READY FOR RE-LAUNCH.";
-                        launchStageText.innerText = "T-MINUS READY";
-                        launchStageText.style.color = "var(--accent-red)";
-                    }, 1200);
-                }
-            }
-
-            particles.forEach((p, idx) => {
-                p.update();
-                p.draw();
-                if (p.life <= 0) particles.splice(idx, 1);
-            });
-
-            requestAnimationFrame(animRocketFrame);
-        }
-        animRocketFrame();
-
-        /* F. Modal & Scroll Observers */
+        /* D. Modal & Scroll Observers */
         function openModal(title, text) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerText = text;
@@ -1540,28 +1153,11 @@
         function closeModal() { document.getElementById('specModal').classList.remove('active'); }
 
         const progressLine = document.getElementById('progressLine');
-        const counters = document.querySelectorAll('.counter');
-        let animated = false;
 
         window.addEventListener('scroll', () => {
             let winScroll = document.documentElement.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             progressLine.style.width = `${(winScroll / height) * 100}%`;
-
-            if (winScroll > 80 && !animated) {
-                counters.forEach(counter => {
-                    let target = +counter.getAttribute('data-target');
-                    let current = 0;
-                    let step = target / 40;
-                    let update = () => {
-                        current += step;
-                        if (current < target) { counter.innerText = current.toFixed(1); requestAnimationFrame(update); }
-                        else { counter.innerText = target; }
-                    };
-                    update();
-                });
-                animated = true;
-            }
         });
 
         const revealObserver = new IntersectionObserver((entries) => {
