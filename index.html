@@ -8,29 +8,33 @@
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@200;300;400;600&family=JetBrains+Mono:ital,wght@0,200;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@200;400;700&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           01. DESIGN SYSTEM & CSS VARIABLES
+           01. ADVANCED DESIGN SYSTEM & NEON MATRIX VARIABLES
            ========================================================================== */
         :root {
-            --bg-dark: #030407;
-            --bg-card: rgba(10, 14, 23, 0.75);
-            --bg-card-hover: rgba(18, 26, 43, 0.85);
-            --accent-gold: #c5a059;
-            --accent-gold-glow: rgba(197, 160, 89, 0.4);
-            --accent-cyan: #00f0ff;
-            --accent-cyan-glow: rgba(0, 240, 255, 0.3);
-            --accent-red: #ff2a2a;
-            --text-main: #f0f4f8;
-            --text-muted: #64748b;
-            --border-line: rgba(255, 255, 255, 0.08);
-            --border-active: rgba(197, 160, 89, 0.5);
-            --border-cyan: rgba(0, 240, 255, 0.4);
+            --bg-dark: #020307;
+            --bg-card: rgba(8, 12, 22, 0.65);
+            --bg-card-hover: rgba(15, 23, 42, 0.85);
             
+            --accent-gold: #f59e0b;
+            --accent-gold-glow: rgba(245, 158, 11, 0.5);
+            --accent-cyan: #00f0ff;
+            --accent-cyan-glow: rgba(0, 240, 255, 0.4);
+            --accent-purple: #8b5cf6;
+            --accent-purple-glow: rgba(139, 92, 246, 0.4);
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --border-line: rgba(255, 255, 255, 0.08);
+            --border-cyan: rgba(0, 240, 255, 0.3);
+            --border-gold: rgba(245, 158, 11, 0.4);
+            
+            --font-display: 'Orbitron', sans-serif;
             --font-head: 'Syne', sans-serif;
-            --font-body: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
@@ -43,43 +47,21 @@
         }
 
         ::selection {
-            background: var(--accent-gold);
+            background: var(--accent-cyan);
             color: #000;
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
-            font-family: var(--font-body);
+            font-family: var(--font-mono);
             overflow-x: hidden;
-            line-height: 1.5;
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Scanline Overlay Effect */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.25) 50%
-            ), linear-gradient(
-                90deg,
-                rgba(255, 0, 0, 0.03),
-                rgba(0, 255, 0, 0.01),
-                rgba(0, 0, 255, 0.03)
-            );
-            background-size: 100% 4px, 6px 100%;
-            z-index: 999;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        /* ==========================================================================
-           02. HUD CANVAS & TARGET RETICLE CURSOR
-           ========================================================================== */
-        #hudCanvas {
+        /* Ambient Dynamic Background Canvas */
+        #particleCanvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
@@ -87,26 +69,41 @@
             pointer-events: none;
         }
 
+        /* Vignette & Holographic Scanline Layer */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: 
+                radial-gradient(circle at center, transparent 40%, rgba(2, 3, 7, 0.85) 100%),
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+            background-size: 100% 100%, 100% 4px;
+            z-index: 998;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           02. HUD RETICLE & TACTICAL CURSOR
+           ========================================================================== */
         #reticle-dot {
             position: fixed;
-            width: 4px; height: 4px;
+            width: 6px; height: 6px;
             background: var(--accent-cyan);
             border-radius: 50%;
             pointer-events: none;
             z-index: 10000;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px var(--accent-cyan);
+            box-shadow: 0 0 12px var(--accent-cyan);
         }
 
         #reticle-ring {
             position: fixed;
-            width: 40px; height: 40px;
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            width: 46px; height: 46px;
+            border: 1px solid var(--accent-cyan-glow);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, border-color 0.2s, transform 0.05s ease-out;
+            transition: width 0.25s ease-out, height 0.25s ease-out, border-color 0.25s, transform 0.05s ease-out;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -117,33 +114,33 @@
             position: absolute;
             background: var(--accent-cyan);
         }
-        #reticle-ring::before { width: 100%; height: 1px; opacity: 0.2; }
-        #reticle-ring::after { width: 1px; height: 100%; opacity: 0.2; }
+        #reticle-ring::before { width: 140%; height: 1px; opacity: 0.15; }
+        #reticle-ring::after { width: 1px; height: 140%; opacity: 0.15; }
 
         #reticle-label {
             position: fixed;
             font-family: var(--font-mono);
             font-size: 0.55rem;
             color: var(--accent-cyan);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(25px, 15px);
+            transform: translate(32px, 20px);
             white-space: nowrap;
+            text-shadow: 0 0 8px var(--accent-cyan-glow);
         }
 
-        /* Progress Bar */
         .scroll-progress-line {
             position: fixed;
             top: 0; left: 0;
-            width: 0%; height: 2px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));
+            width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-gold));
             z-index: 1002;
-            box-shadow: 0 0 8px var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
         }
 
         /* ==========================================================================
-           03. NAVIGATION BAR
+           03. HIGH-TECH NAVIGATION BAR
            ========================================================================== */
         .navbar {
             position: fixed;
@@ -152,35 +149,38 @@
             justify-content: space-between;
             align-items: center;
             padding: 1.5rem 5%;
-            background: linear-gradient(180deg, rgba(3,4,7,0.9) 0%, rgba(3,4,7,0) 100%);
-            backdrop-filter: blur(8px);
+            background: rgba(2, 3, 7, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-line);
             z-index: 1000;
         }
 
         .brand-logo {
-            font-family: var(--font-head);
-            font-weight: 800;
+            font-family: var(--font-display);
+            font-weight: 900;
             font-size: 1.1rem;
             letter-spacing: 4px;
             text-transform: uppercase;
             display: flex;
             align-items: center;
             gap: 12px;
+            color: #fff;
         }
 
         .brand-badge {
             font-family: var(--font-mono);
             font-size: 0.6rem;
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-            padding: 2px 6px;
-            letter-spacing: 1px;
-            background: rgba(197, 160, 89, 0.05);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            padding: 2px 8px;
+            letter-spacing: 2px;
+            background: rgba(0, 240, 255, 0.05);
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             list-style: none;
             align-items: center;
         }
@@ -192,41 +192,44 @@
             font-size: 0.7rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            transition: color 0.3s, text-shadow 0.3s;
+            transition: all 0.3s;
             position: relative;
         }
 
         .nav-links a:hover {
-            color: #fff;
-            text-shadow: 0 0 8px rgba(255,255,255,0.5);
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px var(--accent-cyan-glow);
         }
 
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -4px; left: 0; width: 0%; height: 1px;
-            background: var(--accent-gold);
+            bottom: -6px; left: 0; width: 0%; height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 8px var(--accent-cyan);
             transition: width 0.3s;
         }
         .nav-links a:hover::after { width: 100%; }
 
         .audio-toggle {
-            background: transparent;
-            border: 1px solid var(--border-line);
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--border-cyan);
             color: var(--accent-cyan);
             font-family: var(--font-mono);
-            font-size: 0.6rem;
-            padding: 4px 10px;
-            letter-spacing: 1px;
+            font-size: 0.65rem;
+            padding: 6px 14px;
+            letter-spacing: 2px;
             transition: all 0.3s;
+            border-radius: 2px;
         }
         .audio-toggle:hover {
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px var(--accent-cyan-glow);
+            background: rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 15px var(--accent-cyan-glow);
         }
 
         /* ==========================================================================
-           04. HERO SECTION & PROTOTYPE VISUAL DISPLAY
+           04. HERO SECTION & 3D INTERACTIVE ORIGAMI SIMULATOR
            ========================================================================== */
         .hero-section {
             min-height: 100vh;
@@ -234,12 +237,8 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            gap: 6rem;
+            gap: 4rem;
             position: relative;
-        }
-
-        .hero-content {
-            z-index: 2;
         }
 
         .hero-tag {
@@ -247,139 +246,148 @@
             color: var(--accent-gold);
             font-size: 0.75rem;
             letter-spacing: 4px;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            text-shadow: 0 0 10px var(--accent-gold-glow);
         }
 
         .hero-tag::before {
             content: '';
-            width: 8px; height: 8px;
+            width: 10px; height: 10px;
             background: var(--accent-gold);
-            display: inline-block;
-            box-shadow: 0 0 8px var(--accent-gold);
+            box-shadow: 0 0 12px var(--accent-gold);
+            transform: rotate(45deg);
         }
 
         .hero-title {
-            font-family: var(--font-head);
-            font-size: clamp(2.8rem, 5.5vw, 5.5rem);
-            font-weight: 800;
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 5vw, 5.2rem);
+            font-weight: 900;
             text-transform: uppercase;
-            line-height: 0.95;
-            letter-spacing: -2px;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(180deg, #ffffff 0%, #88a0c0 100%);
+            line-height: 1.02;
+            letter-spacing: -1px;
+            margin-bottom: 1.8rem;
+            background: linear-gradient(180deg, #ffffff 30%, #64748b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero-desc {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 300;
             max-width: 540px;
-            line-height: 1.7;
+            line-height: 1.8;
+            margin-bottom: 2rem;
         }
 
-        /* Hero Image Container Slot */
-        .hero-image-box {
+        /* Interactive 3D Canvas Box */
+        .hero-simulator-card {
             width: 100%;
-            height: 520px;
+            height: 540px;
             background: var(--bg-card);
-            border: 1px solid var(--border-line);
+            border: 1px solid var(--border-cyan);
             position: relative;
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            border-radius: 4px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 1.5rem;
-            transition: border-color 0.4s, box-shadow 0.4s;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.08);
+            transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s ease-out;
+            transform-style: preserve-3d;
         }
 
-        .hero-image-box:hover {
-            border-color: var(--border-cyan);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        .hero-simulator-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.25);
         }
 
-        .hud-image-header {
+        .sim-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-family: var(--font-mono);
             font-size: 0.65rem;
             color: var(--accent-cyan);
-            letter-spacing: 1.5px;
-            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
             z-index: 2;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 0.8rem;
         }
 
-        .image-placeholder-wrapper {
+        .sim-canvas-wrapper {
             position: relative;
             width: 100%;
-            height: 360px;
-            background: rgba(3, 4, 7, 0.8);
-            border: 1px dashed var(--border-active);
+            height: 380px;
+            background: radial-gradient(circle at center, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
 
-        .prototype-img {
+        #origamiCanvas {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            filter: brightness(0.9) contrast(1.1);
-            transition: transform 0.5s ease;
         }
 
-        .hero-image-box:hover .prototype-img {
-            transform: scale(1.03);
-        }
-
-        .upload-hint {
+        .sim-controls {
             position: absolute;
-            bottom: 12px;
-            background: rgba(3, 4, 7, 0.85);
-            padding: 4px 10px;
-            border: 1px solid var(--accent-gold);
-            color: var(--accent-gold);
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            letter-spacing: 1px;
-            pointer-events: none;
+            bottom: 10px; right: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 5;
         }
 
-        .hero-image-caption {
+        .sim-btn {
+            background: rgba(3, 4, 7, 0.85);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 6px 12px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .sim-btn:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-cyan-glow);
+        }
+
+        .sim-caption {
             font-family: var(--font-mono);
             font-size: 0.7rem;
             color: var(--text-muted);
             border-top: 1px solid var(--border-line);
             padding-top: 0.8rem;
-            line-height: 1.4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 2;
-        }
-
-        .hero-image-caption strong {
-            color: var(--accent-gold);
         }
 
         .corner-bracket {
             position: absolute;
-            width: 12px; height: 12px;
-            border-color: var(--accent-gold);
+            width: 14px; height: 14px;
+            border-color: var(--accent-cyan);
             border-style: solid;
             pointer-events: none;
             z-index: 3;
         }
-        .cb-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-        .cb-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-        .cb-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-        .cb-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+        .cb-tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .cb-tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+        .cb-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+        .cb-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
 
         /* ==========================================================================
-           05. EDITORIAL CONTENT & THEORY SECTIONS
+           05. EDITORIAL SECTIONS & GLASS CARDS
            ========================================================================== */
         .content-section {
             padding: 8rem 5%;
@@ -403,12 +411,12 @@
             font-family: var(--font-mono);
             color: var(--accent-gold);
             font-size: 0.75rem;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
         }
 
         .section-title {
-            font-family: var(--font-head);
-            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 3.5vw, 3rem);
             text-transform: uppercase;
             font-weight: 800;
             letter-spacing: -1px;
@@ -418,20 +426,22 @@
         .glass-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-line);
-            padding: 3rem;
-            backdrop-filter: blur(16px);
+            padding: 3.5rem;
+            backdrop-filter: blur(20px);
             position: relative;
-            transition: all 0.4s;
+            border-radius: 4px;
+            transition: transform 0.2s ease-out, border-color 0.4s, box-shadow 0.4s;
+            transform-style: preserve-3d;
         }
 
         .glass-panel:hover {
-            border-color: var(--border-active);
-            background: var(--bg-card-hover);
+            border-color: var(--border-gold);
+            box-shadow: 0 0 40px rgba(245, 158, 11, 0.15);
         }
 
         .panel-quote {
             font-family: var(--font-head);
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             line-height: 1.3;
             letter-spacing: -0.5px;
@@ -441,17 +451,17 @@
 
         .panel-text {
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 300;
             line-height: 1.8;
             margin-bottom: 1.5rem;
         }
 
-        /* Theory & Prototype Image Grid */
+        /* Theory Grid Cards */
         .theory-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
+            gap: 3rem;
         }
 
         .theory-card {
@@ -463,11 +473,12 @@
         .theory-image-slot {
             position: relative;
             width: 100%;
-            height: 250px;
-            background: rgba(3, 4, 7, 0.8);
+            height: 260px;
+            background: rgba(2, 3, 7, 0.9);
             border: 1px dashed var(--border-cyan);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
             overflow: hidden;
+            border-radius: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -477,43 +488,47 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.6s ease;
+            filter: saturate(1.2) contrast(1.1);
         }
 
         .theory-card:hover .theory-img {
-            transform: scale(1.04);
+            transform: scale(1.06);
         }
 
         .img-badge {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(3, 4, 7, 0.9);
+            top: 12px; left: 12px;
+            background: rgba(2, 3, 7, 0.9);
             border: 1px solid var(--accent-cyan);
             color: var(--accent-cyan);
             font-family: var(--font-mono);
             font-size: 0.6rem;
-            padding: 3px 8px;
-            letter-spacing: 1px;
+            padding: 4px 10px;
+            letter-spacing: 2px;
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
         }
 
         .theory-title {
-            font-family: var(--font-head);
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
             text-transform: uppercase;
             color: #fff;
+            letter-spacing: 1px;
         }
 
         .theory-spec-tag {
             font-family: var(--font-mono);
             font-size: 0.72rem;
             color: var(--accent-gold);
-            margin-top: 1rem;
+            margin-top: 1.2rem;
             border-top: 1px dashed var(--border-line);
-            padding-top: 0.6rem;
+            padding-top: 0.8rem;
+            letter-spacing: 1px;
         }
 
+        /* Specs Grid */
         .spec-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -522,10 +537,12 @@
 
         .spec-card {
             border: 1px solid var(--border-line);
-            padding: 2.5rem 2rem;
+            padding: 2.8rem 2rem;
             background: var(--bg-card);
             position: relative;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 4px;
+            transition: transform 0.2s ease-out, border-color 0.4s, box-shadow 0.4s;
+            transform-style: preserve-3d;
             overflow: hidden;
         }
 
@@ -533,14 +550,14 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 3px; height: 0%;
-            background: var(--accent-gold);
+            background: var(--accent-cyan);
+            box-shadow: 0 0 12px var(--accent-cyan);
             transition: height 0.4s;
         }
 
         .spec-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--border-active);
-            background: var(--bg-card-hover);
+            border-color: var(--border-cyan);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.15);
         }
 
         .spec-card:hover::before { height: 100%; }
@@ -548,156 +565,105 @@
         .spec-card-num {
             font-family: var(--font-mono);
             font-size: 0.7rem;
-            color: var(--accent-gold);
+            color: var(--accent-cyan);
             margin-bottom: 1.2rem;
+            letter-spacing: 2px;
         }
 
         .spec-card-title {
-            font-family: var(--font-head);
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .spec-card-desc {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 300;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .inspect-btn {
-            margin-top: 1.5rem;
+            margin-top: 1.8rem;
             background: transparent;
-            border: 1px solid var(--border-line);
+            border: 1px solid var(--border-cyan);
             color: var(--accent-cyan);
             font-family: var(--font-mono);
             font-size: 0.65rem;
-            padding: 6px 12px;
-            letter-spacing: 1px;
+            padding: 8px 16px;
+            letter-spacing: 2px;
             transition: all 0.3s;
+            border-radius: 2px;
         }
 
         .inspect-btn:hover {
             border-color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.1);
-            box-shadow: 0 0 12px var(--accent-cyan-glow);
+            background: var(--accent-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-cyan-glow);
         }
 
         /* ==========================================================================
-           06. INTERACTIVE TERMINAL SECTION
-           ========================================================================== */
-        .terminal-box {
-            background: rgba(2, 3, 5, 0.95);
-            border: 1px solid var(--border-cyan);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-        }
-
-        .terminal-header {
-            background: rgba(10, 15, 25, 0.9);
-            padding: 10px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-line);
-        }
-
-        .terminal-title {
-            color: var(--accent-cyan);
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-        }
-
-        .terminal-body {
-            padding: 1.5rem;
-            height: 320px;
-            overflow-y: auto;
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .terminal-line { line-height: 1.4; }
-        .terminal-line.sys { color: var(--accent-gold); }
-        .terminal-line.err { color: var(--accent-red); }
-        .terminal-line.out { color: var(--text-muted); }
-
-        .terminal-input-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 1.5rem;
-            background: rgba(5, 8, 15, 0.9);
-            border-top: 1px solid var(--border-line);
-        }
-
-        .terminal-prompt { color: var(--accent-cyan); }
-
-        #termInput {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: var(--text-main);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            width: 100%;
-        }
-
-        /* ==========================================================================
-           07. CREW DOSSIER & 4-ENGINEER GRID
+           06. CREW DOSSIER & 4-ENGINEER GRID
            ========================================================================== */
         .team-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
+            gap: 1.8rem;
         }
 
         .team-card {
             border: 1px solid var(--border-line);
-            padding: 2.5rem 1.5rem;
+            padding: 3rem 1.5rem;
             text-align: center;
             background: var(--bg-card);
             position: relative;
-            transition: transform 0.3s;
+            border-radius: 4px;
+            transition: transform 0.2s ease-out, border-color 0.4s, box-shadow 0.4s;
+            transform-style: preserve-3d;
         }
 
         .team-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--border-active);
+            border-color: var(--border-gold);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
         }
 
         .team-avatar {
-            width: 70px; height: 70px;
+            width: 80px; height: 80px;
             border-radius: 50%;
             border: 1px solid var(--accent-gold);
             margin: 0 auto 1.5rem auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            background: rgba(197, 160, 89, 0.05);
-            box-shadow: 0 0 15px rgba(197, 160, 89, 0.15);
+            font-size: 2rem;
+            background: rgba(245, 158, 11, 0.05);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+            transition: transform 0.4s ease;
+        }
+
+        .team-card:hover .team-avatar {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .team-name {
-            font-family: var(--font-head);
-            font-size: 1.1rem;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .team-role {
             font-family: var(--font-mono);
             color: var(--accent-gold);
             font-size: 0.65rem;
-            letter-spacing: 1px;
-            margin-top: 0.4rem;
+            letter-spacing: 1.5px;
+            margin-top: 0.5rem;
         }
 
+        /* Footer */
         footer {
             padding: 5rem 5% 3rem 5%;
             border-top: 1px solid var(--border-line);
@@ -710,14 +676,12 @@
             background: #010204;
         }
 
-        /* ==========================================================================
-           08. MODAL SPECIFICATION DIALOG
-           ========================================================================== */
+        /* Modal Dialog */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(2, 3, 6, 0.85);
-            backdrop-filter: blur(20px);
+            background: rgba(2, 3, 7, 0.9);
+            backdrop-filter: blur(25px);
             z-index: 10000;
             display: flex;
             align-items: center;
@@ -731,36 +695,37 @@
         }
 
         .modal-container {
-            width: 90%; max-width: 700px;
+            width: 90%; max-width: 650px;
             background: var(--bg-card);
-            border: 1px solid var(--accent-gold);
-            padding: 3rem;
+            border: 1px solid var(--accent-cyan);
+            padding: 3.5rem;
             position: relative;
-            box-shadow: 0 0 50px rgba(197, 160, 89, 0.2);
+            border-radius: 4px;
+            box-shadow: 0 0 60px rgba(0, 240, 255, 0.2);
         }
 
         .modal-close {
             position: absolute;
-            top: 20px; right: 20px;
+            top: 24px; right: 24px;
             background: transparent;
             border: none;
             color: var(--text-muted);
             font-family: var(--font-mono);
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             transition: color 0.3s;
         }
-        .modal-close:hover { color: var(--accent-gold); }
+        .modal-close:hover { color: var(--accent-cyan); }
 
         .reveal {
             opacity: 0;
-            transform: translateY(60px) scale(0.98);
-            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(50px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
 
         .reveal.active {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
         }
 
         @media (max-width: 968px) {
@@ -780,8 +745,11 @@
     <div id="reticle-ring"></div>
     <div id="reticle-label">TARGET // 00.00, 00.00</div>
 
-    <!-- HUD Grid Background Canvas -->
-    <canvas id="hudCanvas"></canvas>
+    <!-- Interactive Particle Background Canvas -->
+    <canvas id="particleCanvas"></canvas>
+    
+    <!-- Holographic Scanline Overlay -->
+    <div class="scanlines"></div>
 
     <!-- Scroll Progress Line -->
     <div class="scroll-progress-line" id="progressLine"></div>
@@ -794,10 +762,9 @@
         <ul class="nav-links">
             <li><a href="#hero">01 // OVERVIEW</a></li>
             <li><a href="#challenge">02 // BRIEF</a></li>
-            <li><a href="#theory">03 // PROTOTYPE THEORY</a></li>
+            <li><a href="#theory">03 // KINEMATICS</a></li>
             <li><a href="#matrix">04 // SPECS</a></li>
-            <li><a href="#terminal">05 // TERMINAL</a></li>
-            <li><a href="#crew">06 // CREW</a></li>
+            <li><a href="#crew">05 // CREW</a></li>
             <li><button class="audio-toggle" id="audioBtn">SYNTH AUDIO: OFF</button></li>
         </ul>
     </nav>
@@ -808,30 +775,33 @@
             <div class="hero-tag">Taking Packaging to the Next Level</div>
             <h1 class="hero-title">Origami Space Systems</h1>
             <p class="hero-desc">
-                An innovative way of making packaging the most useful part of an entire flight.
+                An innovative way of making packaging the most useful part of an entire flight. Transforming space mission logistics through self-deploying kinetic origami geometry.
             </p>
         </div>
 
-        <!-- Hero Prototype Image Box -->
-        <div class="hero-image-box">
+        <!-- Hero Interactive 3D Origami Simulator Box -->
+        <div class="hero-simulator-card tilt-card">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-tr"></div>
             <div class="corner-bracket cb-bl"></div>
             <div class="corner-bracket cb-br"></div>
 
-            <div class="hud-image-header">
-                <div>PROTOTYPE VISUAL // STAGE 01</div>
-                <div>FIG 1.0</div>
+            <div class="sim-header">
+                <div>REAL-TIME KINEMATIC SIMULATOR // REV 3.0</div>
+                <div style="color: var(--accent-gold);">STATUS: ACTIVE</div>
             </div>
 
-            <div class="image-placeholder-wrapper">
-                <!-- Replace 'src' with your main prototype photo file path -->
-                <img src="https://via.placeholder.com/600x400/0a0e17/00f0ff?text=Insert+Hero+Prototype+Photo+Here" alt="Origami Prototype" class="prototype-img" id="heroImg">
-                <div class="upload-hint">[ REPLACE 'src' IN HTML WITH YOUR MAIN PROTOTYPE PHOTO ]</div>
+            <div class="sim-canvas-wrapper">
+                <canvas id="origamiCanvas"></canvas>
+                <div class="sim-controls">
+                    <button class="sim-btn" id="toggleFoldBtn">TOGGLE DEPLOY / FOLD</button>
+                    <button class="sim-btn" id="resetCamBtn">RESET</button>
+                </div>
             </div>
 
-            <div class="hero-image-caption">
-                <strong>THEORY SNAPSHOT:</strong> Fold-line kinematics allow high-density packing with zero mechanical joints, reducing structural failure points in microgravity.
+            <div class="sim-caption">
+                <span><strong>INTERACTIVE MODEL:</strong> Miura-ori Kinetic Lattice</span>
+                <span id="foldPercentage">FOLDED: 0%</span>
             </div>
         </div>
     </section>
@@ -846,14 +816,14 @@
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-COLUMBUS</div>
         </div>
 
-        <div class="glass-panel">
+        <div class="glass-panel tilt-card">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-br"></div>
-            <div class="panel-quote">"In microgravity, even microscopic tolerance errors cascade into orbital failures."</div>
+            <div class="panel-quote">"In microgravity, standard static packaging becomes space waste. Kinetic origami transforms structural dead weight into functional payload."</div>
             <p class="panel-text">
-                Summarize the specific challenge NASA provided for your project. Detail the exact payload, tool, or ergonomic limitation faced by astronauts during long-duration orbital operations.
+                Summarize the specific challenge NASA provided for your project. Detail the exact payload, tool, or ergonomic limitation faced by astronauts during long-duration orbital operations and how flexible folding dynamics eliminate unnecessary volume during transport.
             </p>
-            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan);">
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan); letter-spacing: 1px;">
                 > PRIMARY OBJECTIVE: STRUCTURAL INTEGRITY + ZERO PINCH POINTS
             </div>
         </div>
@@ -871,14 +841,13 @@
 
         <div class="theory-grid">
             <!-- Theory Card 1 -->
-            <div class="theory-card glass-panel">
+            <div class="theory-card glass-panel tilt-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 
                 <div class="theory-image-slot">
-                    <!-- Replace 'src' with your crease pattern / diagram photo -->
-                    <img src="https://via.placeholder.com/500x300/0a0e17/c5a059?text=Insert+Crease+Pattern+%2F+Folding+Diagram" alt="Crease Pattern Diagram" class="theory-img">
-                    <span class="img-badge">FIG 2.1 - FOLD PATTERN & GEOMETRY</span>
+                    <img src="https://via.placeholder.com/600x350/080c16/00f0ff?text=Insert+Crease+Pattern+%2F+Folding+Diagram" alt="Crease Pattern Diagram" class="theory-img">
+                    <span class="img-badge">FIG 2.1 - FOLD PATTERN GEOMETRY</span>
                 </div>
 
                 <div>
@@ -891,13 +860,12 @@
             </div>
 
             <!-- Theory Card 2 -->
-            <div class="theory-card glass-panel">
+            <div class="theory-card glass-panel tilt-card">
                 <div class="corner-bracket cb-tr"></div>
                 <div class="corner-bracket cb-bl"></div>
                 
                 <div class="theory-image-slot">
-                    <!-- Replace 'src' with your physical prototype build photo -->
-                    <img src="https://via.placeholder.com/500x300/0a0e17/00f0ff?text=Insert+Physical+Prototype+Photo" alt="Physical Prototype Photo" class="theory-img">
+                    <img src="https://via.placeholder.com/600x350/080c16/f59e0b?text=Insert+Physical+Prototype+Photo" alt="Physical Prototype Photo" class="theory-img">
                     <span class="img-badge">FIG 2.2 - PROTOTYPE BUILD & TESTING</span>
                 </div>
 
@@ -923,51 +891,25 @@
         </div>
 
         <div class="spec-grid">
-            <div class="spec-card">
+            <div class="spec-card tilt-card">
                 <div class="spec-card-num">// MATRIX_SPEC_01</div>
                 <div class="spec-card-title">Zero-G Ergonomics</div>
-                <div class="spec-card-desc">Contoured actuation mechanisms designed for thick EVA pressure-glove operation without slip risks.</div>
-                <button class="inspect-btn" onclick="openModal('Zero-G Ergonomics', 'Full ergonomics testing carried out in neutral buoyancy simulators. Actuation torque optimized to 1.2 Nm.')">INSPECT DETAILS</button>
+                <div class="spec-card-desc">Contoured actuation mechanisms designed for thick EVA pressure-glove operation without slip risks or pinch hazards.</div>
+                <button class="inspect-btn" onclick="openModal('Zero-G Ergonomics', 'Full ergonomics testing carried out in neutral buoyancy simulators. Actuation torque optimized to 1.2 Nm with tactile glove feedback.')">INSPECT DETAILS</button>
             </div>
 
-            <div class="spec-card">
+            <div class="spec-card tilt-card">
                 <div class="spec-card-num">// MATRIX_SPEC_02</div>
                 <div class="spec-card-title">Thermal Resilience</div>
-                <div class="spec-card-desc">Material compound selected to maintain elasticity across orbital thermal swings (-120°C to +150°C).</div>
-                <button class="inspect-btn" onclick="openModal('Thermal Resilience', 'Vacuum thermal chamber testing verified zero fracture propagation over 500 thermal expansion cycles.')">INSPECT DETAILS</button>
+                <div class="spec-card-desc">Material compound selected to maintain elasticity across extreme orbital thermal swings (-120°C to +150°C).</div>
+                <button class="inspect-btn" onclick="openModal('Thermal Resilience', 'Vacuum thermal chamber testing verified zero fracture propagation over 500 thermal expansion and compression cycles.')">INSPECT DETAILS</button>
             </div>
 
-            <div class="spec-card">
+            <div class="spec-card tilt-card">
                 <div class="spec-card-num">// MATRIX_SPEC_03</div>
                 <div class="spec-card-title">Flight Safety Standard</div>
-                <div class="spec-card-desc">Fully compliant with NASA MSFC-SPEC-522 for off-gassing, toxicity, and edge-radius safety limits.</div>
-                <button class="inspect-btn" onclick="openModal('Flight Safety Standard', 'Radii on all exposed surfaces exceed 1.5mm minimal chamfer. Material toxicity index: 0.0.')">INSPECT DETAILS</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Command Terminal -->
-    <section id="terminal" class="content-section reveal">
-        <div class="section-header">
-            <div>
-                <div class="section-tag">04 // ORBITAL INTERFACE</div>
-                <h2 class="section-title">COMMAND TERMINAL</h2>
-            </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">TYPE 'HELP' FOR COMMANDS</div>
-        </div>
-
-        <div class="terminal-box">
-            <div class="terminal-header">
-                <div class="terminal-title">NASA_HUNCH_DIAGNOSTICS_SHELL v4.2</div>
-                <div style="color: var(--accent-gold);">LINK: ONLINE</div>
-            </div>
-            <div class="terminal-body" id="termBody">
-                <div class="terminal-line sys">INITIALIZING NASA HUNCH DIRECT LINK...</div>
-                <div class="terminal-line sys">TYPE 'specs', 'crew', OR 'clear' TO EXECUTE COMMANDS.</div>
-            </div>
-            <div class="terminal-input-row">
-                <span class="terminal-prompt">HUNCH-01></span>
-                <input type="text" id="termInput" placeholder="Enter command..." autocomplete="off">
+                <div class="spec-card-desc">Fully compliant with NASA MSFC-SPEC-522 for off-gassing, non-toxicity, and strict edge-radius safety limits.</div>
+                <button class="inspect-btn" onclick="openModal('Flight Safety Standard', 'Radii on all exposed surfaces exceed 1.5mm minimal chamfer. Material toxicity index verified at 0.0.')">INSPECT DETAILS</button>
             </div>
         </div>
     </section>
@@ -976,14 +918,14 @@
     <section id="crew" class="content-section reveal">
         <div class="section-header">
             <div>
-                <div class="section-tag">05 // FLIGHT CREW</div>
+                <div class="section-tag">04 // FLIGHT CREW</div>
                 <h2 class="section-title">PROJECT ENGINEERS</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">4-MEMBER DESIGN TEAM</div>
         </div>
 
         <div class="team-grid">
-            <div class="team-card">
+            <div class="team-card tilt-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍🚀</div>
@@ -991,7 +933,7 @@
                 <div class="team-role">LEAD ORIGAMI ARCHITECT</div>
             </div>
 
-            <div class="team-card">
+            <div class="team-card tilt-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👩‍🚀</div>
@@ -999,7 +941,7 @@
                 <div class="team-role">MATERIALS & MANUFACTURING</div>
             </div>
 
-            <div class="team-card">
+            <div class="team-card tilt-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">🧑‍🚀</div>
@@ -1007,7 +949,7 @@
                 <div class="team-role">FLIGHT SPECS & TESTING</div>
             </div>
 
-            <div class="team-card">
+            <div class="team-card tilt-card">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍💻</div>
@@ -1032,14 +974,16 @@
         <div class="modal-container">
             <button class="modal-close" onclick="closeModal()">✕</button>
             <div style="font-family: var(--font-mono); color: var(--accent-gold); font-size: 0.75rem; margin-bottom: 0.5rem;" id="modalTag">// SYSTEM DEEP INSPECTION</div>
-            <h2 style="font-family: var(--font-head); font-size: 2rem; margin-bottom: 1.5rem;" id="modalTitle">SPEC TITLE</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;" id="modalBody">Spec detail content goes here.</p>
+            <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1.5rem;" id="modalTitle">SPEC TITLE</h2>
+            <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8;" id="modalBody">Spec detail content goes here.</p>
         </div>
     </div>
 
     <!-- Scripting Engine -->
     <script>
-        /* A. Sound Engine */
+        /* ==========================================================================
+           01. AUDIO SYNTHESIZER ENGINE (Web Audio API)
+           ========================================================================== */
         class SoundEngine {
             constructor() { this.ctx = null; this.enabled = false; }
             init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -1059,8 +1003,8 @@
             hoverSound() { this.playTone(880, 'sine', 0.04, 0.02); }
             clickSound() { this.playTone(440, 'triangle', 0.1, 0.05); }
             warpSound() { 
-                this.playTone(120, 'sawtooth', 0.3, 0.08); 
-                setTimeout(() => this.playTone(320, 'sine', 0.2, 0.05), 50);
+                this.playTone(120, 'sawtooth', 0.25, 0.06); 
+                setTimeout(() => this.playTone(480, 'sine', 0.15, 0.04), 40);
             }
         }
 
@@ -1070,80 +1014,216 @@
             audio.init();
             audio.enabled = !audio.enabled;
             audioBtn.innerText = `SYNTH AUDIO: ${audio.enabled ? 'ON' : 'OFF'}`;
-            audioBtn.style.borderColor = audio.enabled ? 'var(--accent-gold)' : 'var(--border-line)';
+            audioBtn.style.borderColor = audio.enabled ? 'var(--accent-cyan)' : 'var(--border-line)';
             if (audio.enabled) audio.warpSound();
         });
 
-        /* B. Reticle & HUD Canvas */
+        /* ==========================================================================
+           02. TACTICAL RETICLE & CURSOR ENGINE
+           ========================================================================== */
         const dot = document.getElementById('reticle-dot');
         const ring = document.getElementById('reticle-ring');
         const label = document.getElementById('reticle-label');
 
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+
         window.addEventListener('mousemove', (e) => {
-            dot.style.left = `${e.clientX}px`;
-            dot.style.top = `${e.clientY}px`;
-            label.style.left = `${e.clientX}px`;
-            label.style.top = `${e.clientY}px`;
-            label.innerText = `TARGET // ${e.clientX.toFixed(0)}, ${e.clientY.toFixed(0)}`;
-            ring.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 250, fill: "forwards" });
+            mouseX = e.clientX; mouseY = e.clientY;
+            dot.style.left = `${mouseX}px`;
+            dot.style.top = `${mouseY}px`;
+            label.style.left = `${mouseX}px`;
+            label.style.top = `${mouseY}px`;
+            label.innerText = `TARGET // ${mouseX.toFixed(0)}, ${mouseY.toFixed(0)}`;
+            ring.animate({ left: `${mouseX}px`, top: `${mouseY}px` }, { duration: 200, fill: "forwards" });
         });
 
-        document.querySelectorAll('a, button, input, .glass-panel, .spec-card, .team-card, .hero-image-box').forEach(elem => {
+        document.querySelectorAll('a, button, input, .glass-panel, .spec-card, .team-card, .hero-simulator-card').forEach(elem => {
             elem.addEventListener('mouseenter', () => {
-                ring.style.width = '60px'; ring.style.height = '60px';
-                ring.style.borderColor = 'var(--accent-gold)';
+                ring.style.width = '64px'; ring.style.height = '64px';
+                ring.style.borderColor = 'var(--accent-cyan)';
                 audio.hoverSound();
             });
             elem.addEventListener('mouseleave', () => {
-                ring.style.width = '40px'; ring.style.height = '40px';
+                ring.style.width = '46px'; ring.style.height = '46px';
                 ring.style.borderColor = 'rgba(0, 240, 255, 0.3)';
             });
             elem.addEventListener('click', () => audio.clickSound());
         });
 
-        const hudCanvas = document.getElementById('hudCanvas');
-        const hudCtx = hudCanvas.getContext('2d');
-        function resizeHud() { hudCanvas.width = window.innerWidth; hudCanvas.height = window.innerHeight; }
-        function drawHudGrid() {
-            hudCtx.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
-            hudCtx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
-            hudCtx.lineWidth = 1;
-            for (let x = 0; x < hudCanvas.width; x += 90) {
-                hudCtx.beginPath(); hudCtx.moveTo(x, 0); hudCtx.lineTo(x, hudCanvas.height); hudCtx.stroke();
+        /* ==========================================================================
+           03. DYNAMIC PARTICLE STARFIELD CANVAS
+           ========================================================================== */
+        const pCanvas = document.getElementById('particleCanvas');
+        const pCtx = pCanvas.getContext('2d');
+        let particles = [];
+
+        function resizeParticles() {
+            pCanvas.width = window.innerWidth;
+            pCanvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * pCanvas.width;
+                this.y = Math.random() * pCanvas.height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 1.5 + 0.5;
             }
-            for (let y = 0; y < hudCanvas.height; y += 90) {
-                hudCtx.beginPath(); hudCtx.moveTo(0, y); hudCtx.lineTo(hudCanvas.width, y); hudCtx.stroke();
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > pCanvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > pCanvas.height) this.vy *= -1;
+            }
+            draw() {
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                pCtx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+                pCtx.fill();
             }
         }
-        window.addEventListener('resize', () => { resizeHud(); drawHudGrid(); });
-        resizeHud(); drawHudGrid();
 
-        /* C. Terminal Shell */
-        const termInput = document.getElementById('termInput');
-        const termBody = document.getElementById('termBody');
+        for (let i = 0; i < 70; i++) particles.push(new Particle());
 
-        termInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                let cmd = termInput.value.trim().toLowerCase();
-                termInput.value = '';
-                appendTermLine(`HUNCH-01> ${cmd}`, 'sys');
-                if (cmd === 'help') appendTermLine("COMMANDS: 'specs', 'crew', 'clear'", 'out');
-                else if (cmd === 'specs') appendTermLine("FLIGHT SAFETY: MSFC-SPEC-522 COMPLIANT", 'out');
-                else if (cmd === 'crew') appendTermLine("4 ENGINEERS ASSIGNED TO ISS MISSION PROGRAM", 'out');
-                else if (cmd === 'clear') termBody.innerHTML = '';
-                else appendTermLine(`UNKNOWN COMMAND: '${cmd}'`, 'err');
-                termBody.scrollTop = termBody.scrollHeight;
+        function animateParticles() {
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            particles.forEach((p, idx) => {
+                p.update();
+                p.draw();
+                for (let j = idx + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 120) {
+                        pCtx.beginPath();
+                        pCtx.moveTo(p.x, p.y);
+                        pCtx.lineTo(p2.x, p2.y);
+                        pCtx.strokeStyle = `rgba(0, 240, 255, ${0.12 - dist / 1000})`;
+                        pCtx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', resizeParticles);
+        resizeParticles(); animateParticles();
+
+        /* ==========================================================================
+           04. REAL-TIME 3D ORIGAMI KINEMATIC SIMULATOR (CANVAS Vector engine)
+           ========================================================================== */
+        const oCanvas = document.getElementById('origamiCanvas');
+        const oCtx = oCanvas.getContext('2d');
+
+        let foldProgress = 0; // 0 = Deployed, 1 = Fully Folded
+        let targetFold = 0;
+        let angleX = 0.4, angleY = 0.6;
+
+        function resizeOrigami() {
+            oCanvas.width = oCanvas.parentElement.clientWidth;
+            oCanvas.height = oCanvas.parentElement.clientHeight;
+        }
+
+        function project3D(x, y, z) {
+            const scale = 220 / (220 + z);
+            const radX = angleX, radY = angleY;
+            
+            let rotY_x = x * Math.cos(radY) + z * Math.sin(radY);
+            let rotY_z = -x * Math.sin(radY) + z * Math.cos(radY);
+            
+            let rotX_y = y * Math.cos(radX) - rotY_z * Math.sin(radX);
+            let rotX_z = y * Math.sin(radX) + rotY_z * Math.cos(radX);
+
+            return {
+                x: oCanvas.width / 2 + rotY_x * (300 / (300 + rotX_z)),
+                y: oCanvas.height / 2 + rotX_y * (300 / (300 + rotX_z))
+            };
+        }
+
+        function drawOrigamiMesh() {
+            oCtx.clearRect(0, 0, oCanvas.width, oCanvas.height);
+
+            // Interpolate fold
+            foldProgress += (targetFold - foldProgress) * 0.05;
+            document.getElementById('foldPercentage').innerText = `FOLDED: ${(foldProgress * 100).toFixed(0)}%`;
+
+            const rows = 4, cols = 6;
+            const w = 35 - foldProgress * 18;
+            const h = 35;
+            const depth = Math.sin(foldProgress * Math.PI) * 45;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const x0 = (c - cols/2) * w;
+                    const y0 = (r - rows/2) * h;
+                    const z0 = ((r + c) % 2 === 0 ? 1 : -1) * depth;
+
+                    const x1 = x0 + w;
+                    const y1 = y0;
+                    const z1 = -z0;
+
+                    const x2 = x0 + w;
+                    const y2 = y0 + h;
+                    const z2 = z0;
+
+                    const x3 = x0;
+                    const y3 = y0 + h;
+                    const z3 = -z0;
+
+                    const p0 = project3D(x0, y0, z0);
+                    const p1 = project3D(x1, y1, z1);
+                    const p2 = project3D(x2, y2, z2);
+                    const p3 = project3D(x3, y3, z3);
+
+                    // Draw Polygon Wireframe
+                    oCtx.beginPath();
+                    oCtx.moveTo(p0.x, p0.y);
+                    oCtx.lineTo(p1.x, p1.y);
+                    oCtx.lineTo(p2.x, p2.y);
+                    oCtx.lineTo(p3.x, p3.y);
+                    oCtx.closePath();
+
+                    oCtx.fillStyle = (r + c) % 2 === 0 ? 'rgba(0, 240, 255, 0.08)' : 'rgba(245, 158, 11, 0.08)';
+                    oCtx.strokeStyle = (r + c) % 2 === 0 ? 'rgba(0, 240, 255, 0.6)' : 'rgba(245, 158, 11, 0.6)';
+                    oCtx.lineWidth = 1.2;
+
+                    oCtx.fill();
+                    oCtx.stroke();
+                }
             }
+            requestAnimationFrame(drawOrigamiMesh);
+        }
+
+        document.getElementById('toggleFoldBtn').addEventListener('click', () => {
+            targetFold = targetFold === 0 ? 1 : 0;
+            audio.warpSound();
         });
 
-        function appendTermLine(text, type) {
-            let div = document.createElement('div');
-            div.className = `terminal-line ${type}`;
-            div.innerText = text;
-            termBody.appendChild(div);
-        }
+        document.getElementById('resetCamBtn').addEventListener('click', () => {
+            angleX = 0.4; angleY = 0.6; targetFold = 0;
+            audio.clickSound();
+        });
 
-        /* D. Modal & Scroll Observers */
+        window.addEventListener('resize', resizeOrigami);
+        resizeOrigami(); drawOrigamiMesh();
+
+        /* ==========================================================================
+           05. 3D GYROSCOPIC TILT EFFECT FOR CARDS
+           ========================================================================== */
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `perspective(1000px) rotateX(${-y / 18}deg) rotateY(${x / 18}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+
+        /* ==========================================================================
+           06. MODAL & SCROLL REVEAL OBSERVERS
+           ========================================================================== */
         function openModal(title, text) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerText = text;
@@ -1153,7 +1233,6 @@
         function closeModal() { document.getElementById('specModal').classList.remove('active'); }
 
         const progressLine = document.getElementById('progressLine');
-
         window.addEventListener('scroll', () => {
             let winScroll = document.documentElement.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
