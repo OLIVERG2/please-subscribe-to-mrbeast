@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA HUNCH:Oragami Space Systems </title>
+    <title>NASA HUNCH: Origami Space Systems</title>
     
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -267,7 +267,7 @@
         .nav-links a:hover::after { width: 100%; }
 
         /* ==========================================================================
-           05. HERO SECTION & 3D INTERACTIVE CANVAS
+           05. HERO SECTION & PROTOTYPE VISUAL DISPLAY
            ========================================================================== */
         .hero-section {
             min-height: 100vh;
@@ -275,7 +275,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            gap: 8rem;
+            gap: 6rem;
             position: relative;
         }
 
@@ -351,7 +351,8 @@
             margin-top: 0.2rem;
         }
 
-        .canvas-3d-container {
+        /* Hero Image Container Slot */
+        .hero-image-box {
             width: 100%;
             height: 520px;
             background: var(--bg-card);
@@ -363,58 +364,74 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 1.5rem;
-            transition: border-color 0.4s;
+            transition: border-color 0.4s, box-shadow 0.4s;
         }
 
-        .canvas-3d-container:hover {
+        .hero-image-box:hover {
             border-color: var(--border-cyan);
             box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
         }
 
-        #cad3d {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-        }
-
-        .cad-overlay-ui {
-            position: relative;
-            z-index: 2;
-            pointer-events: none;
+        .hud-image-header {
             display: flex;
             justify-content: space-between;
             font-family: var(--font-mono);
             font-size: 0.65rem;
             color: var(--accent-cyan);
-        }
-
-        .cad-controls {
-            position: relative;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
             z-index: 2;
-            display: flex;
-            gap: 10px;
-            align-items: center;
+        }
+
+        .image-placeholder-wrapper {
+            position: relative;
+            width: 100%;
+            height: 360px;
             background: rgba(3, 4, 7, 0.8);
-            padding: 8px 12px;
-            border: 1px solid var(--border-line);
-            width: fit-content;
+            border: 1px dashed var(--border-active);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        .cad-btn {
-            background: transparent;
-            border: 1px solid var(--border-line);
-            color: var(--text-main);
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
+        .prototype-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9) contrast(1.1);
+            transition: transform 0.5s ease;
+        }
+
+        .hero-image-box:hover .prototype-img {
+            transform: scale(1.03);
+        }
+
+        .upload-hint {
+            position: absolute;
+            bottom: 12px;
+            background: rgba(3, 4, 7, 0.85);
             padding: 4px 10px;
-            transition: all 0.2s;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            pointer-events: none;
         }
 
-        .cad-btn:hover, .cad-btn.active {
-            border-color: var(--accent-gold);
+        .hero-image-caption {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-line);
+            padding-top: 0.8rem;
+            line-height: 1.4;
+            z-index: 2;
+        }
+
+        .hero-image-caption strong {
             color: var(--accent-gold);
-            background: rgba(197, 160, 89, 0.1);
         }
 
         .corner-bracket {
@@ -423,6 +440,7 @@
             border-color: var(--accent-gold);
             border-style: solid;
             pointer-events: none;
+            z-index: 3;
         }
         .cb-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
         .cb-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
@@ -430,7 +448,7 @@
         .cb-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
 
         /* ==========================================================================
-           06. EDITORIAL CONTENT SECTIONS
+           06. EDITORIAL CONTENT & THEORY SECTIONS
            ========================================================================== */
         .content-section {
             padding: 8rem 5%;
@@ -521,43 +539,71 @@
             height: 240px;
         }
 
-        .exploded-simulator {
-            background: var(--bg-card);
-            border: 1px solid var(--border-line);
-            padding: 3rem;
+        /* Theory & Prototype Image Grid */
+        .theory-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 3rem;
-            position: relative;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
         }
 
-        .slider-control-group {
-            margin-top: 2rem;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-        }
-
-        .slider-control-group label {
+        .theory-card {
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            color: var(--accent-gold);
-            margin-bottom: 8px;
         }
 
-        .custom-slider {
+        .theory-image-slot {
+            position: relative;
             width: 100%;
-            height: 4px;
-            background: var(--border-line);
-            outline: none;
-            -webkit-appearance: none;
+            height: 250px;
+            background: rgba(3, 4, 7, 0.8);
+            border: 1px dashed var(--border-cyan);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .custom-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px; height: 16px;
-            background: var(--accent-gold);
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--accent-gold);
+        .theory-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .theory-card:hover .theory-img {
+            transform: scale(1.04);
+        }
+
+        .img-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(3, 4, 7, 0.9);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            letter-spacing: 1px;
+        }
+
+        .theory-title {
+            font-family: var(--font-head);
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .theory-spec-tag {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--accent-gold);
+            margin-top: 1rem;
+            border-top: 1px dashed var(--border-line);
+            padding-top: 0.6rem;
         }
 
         .spec-grid {
@@ -879,7 +925,7 @@
         }
 
         @media (max-width: 968px) {
-            .hero-section, .grid-2col, .exploded-simulator, .spec-grid, .team-grid {
+            .hero-section, .grid-2col, .theory-grid, .spec-grid, .team-grid {
                 grid-template-columns: 1fr;
             }
             .nav-links { display: none; }
@@ -923,7 +969,7 @@
         <ul class="nav-links">
             <li><a href="#hero">01 // OVERVIEW</a></li>
             <li><a href="#challenge">02 // BRIEF</a></li>
-            <li><a href="#cad-engine">03 // CAD SIMULATOR</a></li>
+            <li><a href="#theory">03 // PROTOTYPE THEORY</a></li>
             <li><a href="#matrix">04 // SPECS</a></li>
             <li><a href="#terminal">05 // TERMINAL</a></li>
             <li><a href="#crew">06 // CREW</a></li>
@@ -935,7 +981,7 @@
     <section id="hero" class="hero-section">
         <div class="hero-content">
             <div class="hero-tag">Taking Packaging to the Next Level</div>
-            <h1 class="hero-title">Oragami Space Systems</h1>
+            <h1 class="hero-title">Origami Space Systems</h1>
             <p class="hero-desc">
                 An innovative way of making packaging the most useful part of an entire flight. 
             </p>
@@ -956,24 +1002,26 @@
             </div>
         </div>
 
-        <div class="canvas-3d-container">
+        <!-- Hero Prototype Image Box (Replaces 3D Canvas) -->
+        <div class="hero-image-box">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-tr"></div>
             <div class="corner-bracket cb-bl"></div>
             <div class="corner-bracket cb-br"></div>
 
-            <div class="cad-overlay-ui">
-                <div>MODEL: HUNCH-FLIGHT-CONTAINER</div>
-                <div id="rotReadout">ROT: 0° X / 0° Y</div>
+            <div class="hud-image-header">
+                <div>PROTOTYPE VISUAL // STAGE 01</div>
+                <div>FIG 1.0</div>
             </div>
 
-            <canvas id="cad3d"></canvas>
+            <div class="image-placeholder-wrapper">
+                <!-- Replace 'src' with your main prototype photo file path -->
+                <img src="https://via.placeholder.com/600x400/0a0e17/00f0ff?text=Insert+Hero+Prototype+Photo+Here" alt="Origami Prototype" class="prototype-img" id="heroImg">
+                <div class="upload-hint">[ REPLACE 'src' IN HTML WITH YOUR MAIN PROTOTYPE PHOTO ]</div>
+            </div>
 
-            <div class="cad-controls">
-                <span style="font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted);">VIEW MODE:</span>
-                <button class="cad-btn active" id="btnWireframe">WIREFRAME</button>
-                <button class="cad-btn" id="btnVertices">NODES</button>
-                <button class="cad-btn" id="btnSolid">SOLID</button>
+            <div class="hero-image-caption">
+                <strong>THEORY SNAPSHOT:</strong> Fold-line kinematics allow high-density packing with zero mechanical joints, reducing structural failure points in microgravity.
             </div>
         </div>
     </section>
@@ -1019,45 +1067,55 @@
         </div>
     </section>
 
-    <!-- Interactive CAD Simulator -->
-    <section id="cad-engine" class="content-section reveal">
+    <!-- Theory & Prototype Breakdown (Replaces CAD Simulator) -->
+    <section id="theory" class="content-section reveal">
         <div class="section-header">
             <div>
-                <div class="section-tag">02 // KINEMATICS & PROTOTYPING</div>
-                <h2 class="section-title">EXPLODED ASSEMBLY ENGINE</h2>
+                <div class="section-tag">02 // KINEMATICS & MATHEMATICS</div>
+                <h2 class="section-title">PROTOTYPE & ORIGAMI THEORY</h2>
             </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">TOLERANCE MATCHING</div>
+            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">THEORETICAL FRAMEWORK</div>
         </div>
 
-        <div class="exploded-simulator">
-            <div class="corner-bracket cb-tl"></div>
-            <div class="corner-bracket cb-tr"></div>
-            <div class="corner-bracket cb-bl"></div>
-            <div class="corner-bracket cb-br"></div>
-
-            <div>
-                <div style="font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 1rem;">
-                    HARDWARE COMPONENT DISSECTION
+        <div class="theory-grid">
+            <!-- Theory Card 1 -->
+            <div class="theory-card glass-panel">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-br"></div>
+                
+                <div class="theory-image-slot">
+                    <!-- Replace 'src' with your crease pattern / diagram photo -->
+                    <img src="https://via.placeholder.com/500x300/0a0e17/c5a059?text=Insert+Crease+Pattern+%2F+Folding+Diagram" alt="Crease Pattern Diagram" class="theory-img">
+                    <span class="img-badge">FIG 2.1 - FOLD PATTERN & GEOMETRY</span>
                 </div>
-                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 300;">
-                    Use the interactive expansion slider to dynamically explode the multi-stage assembly. Each sub-component has been engineered for modular replacement during orbital EVA procedures.
-                </p>
 
-                <div class="slider-control-group">
-                    <label>
-                        <span>EXPLOSION STAGE DISTANCE</span>
-                        <span id="explodeVal">0 mm</span>
-                    </label>
-                    <input type="range" min="0" max="100" value="0" class="custom-slider" id="explodeSlider">
+                <div>
+                    <h3 class="theory-title">01 // Origami Tessellation Kinematics</h3>
+                    <p class="panel-text">
+                        Explain the mathematical principles governing your fold patterns (e.g., Miura-ori, Yoshimura, or custom tessellations). Detail how rigid origami principles allow rigid panel faces to articulate smoothly around compliant hinges without stretching or distorting material.
+                    </p>
+                    <div class="theory-spec-tag">> VOLUMETRIC REDUCTION: HIGH-DENSITY COMPRESSION</div>
                 </div>
             </div>
 
-            <div style="border-left: 1px solid var(--border-line); padding-left: 2rem; font-family: var(--font-mono); font-size: 0.75rem;">
-                <div style="color: var(--accent-gold); margin-bottom: 1rem;">[ SUB-ASSEMBLY INDEX ]</div>
-                <div style="margin-bottom: 0.8rem;">01. OUTER EXOSKELETON</div>
-                <div style="margin-bottom: 0.8rem;">02. CORE DAMPENING MATRIX</div>
-                <div style="margin-bottom: 0.8rem;">03. QUICK-RELEASE LATCH</div>
-                <div style="color: var(--accent-cyan);">04. ISS MOUNTING BUSHING</div>
+            <!-- Theory Card 2 -->
+            <div class="theory-card glass-panel">
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                
+                <div class="theory-image-slot">
+                    <!-- Replace 'src' with your physical prototype build photo -->
+                    <img src="https://via.placeholder.com/500x300/0a0e17/00f0ff?text=Insert+Physical+Prototype+Photo" alt="Physical Prototype Photo" class="theory-img">
+                    <span class="img-badge">FIG 2.2 - PROTOTYPE BUILD & TESTING</span>
+                </div>
+
+                <div>
+                    <h3 class="theory-title">02 // Load Distribution & Rigidity</h3>
+                    <p class="panel-text">
+                        Detail how the folded structure maintains structural rigidity once fully deployed in microgravity. Describe the force distribution along mountain and valley folds, energy absorption during payload transport, and material memory under thermal strain.
+                    </p>
+                    <div class="theory-spec-tag">> DEPLOYED INTEGRITY: EXPANDED MOMENT OF INERTIA</div>
+                </div>
             </div>
         </div>
     </section>
@@ -1122,7 +1180,7 @@
         </div>
     </section>
 
-    <!-- Crew Dossier Section (Updated with 4th Engineer) -->
+    <!-- Crew Dossier Section -->
     <section id="crew" class="content-section reveal">
         <div class="section-header">
             <div>
@@ -1138,7 +1196,7 @@
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍🚀</div>
                 <div class="team-name">[ Engineer 1 ]</div>
-                <div class="team-role">LEAD CAD ARCHITECT</div>
+                <div class="team-role">LEAD ORIGAMI ARCHITECT</div>
             </div>
 
             <div class="team-card">
@@ -1167,7 +1225,7 @@
         </div>
     </section>
 
-    <!-- NEW: Interactive Rocket Launch Stage Section -->
+    <!-- Interactive Rocket Launch Stage Section -->
     <section id="launch-stage" class="content-section reveal">
         <div class="section-header">
             <div>
@@ -1265,7 +1323,7 @@
             ring.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 250, fill: "forwards" });
         });
 
-        document.querySelectorAll('a, button, input, .glass-panel, .spec-card, .team-card').forEach(elem => {
+        document.querySelectorAll('a, button, input, .glass-panel, .spec-card, .team-card, .hero-image-box').forEach(elem => {
             elem.addEventListener('mouseenter', () => {
                 ring.style.width = '60px'; ring.style.height = '60px';
                 ring.style.borderColor = 'var(--accent-gold)';
@@ -1295,86 +1353,7 @@
         window.addEventListener('resize', () => { resizeHud(); drawHudGrid(); });
         resizeHud(); drawHudGrid();
 
-        /* C. 3D Renderer Engine */
-        const cadCanvas = document.getElementById('cad3d');
-        const cadCtx = cadCanvas.getContext('2d');
-        function resizeCad() {
-            cadCanvas.width = cadCanvas.parentElement.clientWidth;
-            cadCanvas.height = cadCanvas.parentElement.clientHeight;
-        }
-        resizeCad(); window.addEventListener('resize', resizeCad);
-
-        let nodes = [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
-        let edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-        let rotX = 0.5, rotY = 0.5, viewMode = 'wireframe', explodeFactor = 0;
-
-        document.getElementById('btnWireframe').addEventListener('click', (e) => setMode('wireframe', e.target));
-        document.getElementById('btnVertices').addEventListener('click', (e) => setMode('nodes', e.target));
-        document.getElementById('btnSolid').addEventListener('click', (e) => setMode('solid', e.target));
-
-        function setMode(mode, btn) {
-            viewMode = mode;
-            document.querySelectorAll('.cad-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        let isDragging = false, prevMouseX = 0, prevMouseY = 0;
-        cadCanvas.parentElement.addEventListener('mousedown', (e) => { isDragging = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
-        window.addEventListener('mouseup', () => isDragging = false);
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            rotY += (e.clientX - prevMouseX) * 0.01;
-            rotX += (e.clientY - prevMouseY) * 0.01;
-            prevMouseX = e.clientX; prevMouseY = e.clientY;
-            document.getElementById('rotReadout').innerText = `ROT: ${(rotX*180/Math.PI).toFixed(0)}° X / ${(rotY*180/Math.PI).toFixed(0)}° Y`;
-        });
-
-        function render3D() {
-            cadCtx.clearRect(0, 0, cadCanvas.width, cadCanvas.height);
-            let cx = cadCanvas.width / 2, cy = cadCanvas.height / 2;
-            if (!isDragging) rotY += 0.005;
-
-            let projected = nodes.map(node => {
-                let x = node[0] * (1 + explodeFactor * 0.008);
-                let y = node[1] * (1 + explodeFactor * 0.008);
-                let z = node[2] * (1 + explodeFactor * 0.008);
-
-                let x1 = x * Math.cos(rotY) + z * Math.sin(rotY);
-                let z1 = -x * Math.sin(rotY) + z * Math.cos(rotY);
-                let y2 = y * Math.cos(rotX) - z1 * Math.sin(rotX);
-                let z2 = y * Math.sin(rotX) + z1 * Math.cos(rotX);
-
-                let px = (x1 * 300) / (z2 + 5) + cx;
-                let py = (y2 * 300) / (z2 + 5) + cy;
-                return [px, py, z2];
-            });
-
-            if (viewMode === 'wireframe' || viewMode === 'solid') {
-                cadCtx.strokeStyle = 'rgba(0, 240, 255, 0.8)';
-                cadCtx.lineWidth = 1.5;
-                edges.forEach(edge => {
-                    let p1 = projected[edge[0]], p2 = projected[edge[1]];
-                    cadCtx.beginPath(); cadCtx.moveTo(p1[0], p1[1]); cadCtx.lineTo(p2[0], p2[1]); cadCtx.stroke();
-                });
-            }
-            if (viewMode === 'nodes' || viewMode === 'wireframe') {
-                projected.forEach(p => {
-                    cadCtx.fillStyle = '#c5a059';
-                    cadCtx.beginPath(); cadCtx.arc(p[0], p[1], 4, 0, Math.PI * 2); cadCtx.fill();
-                });
-            }
-            requestAnimationFrame(render3D);
-        }
-        render3D();
-
-        const explodeSlider = document.getElementById('explodeSlider');
-        const explodeVal = document.getElementById('explodeVal');
-        explodeSlider.addEventListener('input', (e) => {
-            explodeFactor = e.target.value;
-            explodeVal.innerText = `${explodeFactor} mm`;
-        });
-
-        /* D. Telemetry Waveform Chart */
+        /* C. Telemetry Waveform Chart */
         const chartCanvas = document.getElementById('telemetryChart');
         const chartCtx = chartCanvas.getContext('2d');
         let chartTime = 0;
@@ -1397,7 +1376,7 @@
         }
         renderChart();
 
-        /* E. Terminal Shell */
+        /* D. Terminal Shell */
         const termInput = document.getElementById('termInput');
         const termBody = document.getElementById('termBody');
 
@@ -1423,7 +1402,7 @@
             termBody.appendChild(div);
         }
 
-        /* F. Rocket Takeoff Interactive Engine */
+        /* E. Rocket Takeoff Interactive Engine */
         const rCanvas = document.getElementById('rocketCanvas');
         const rCtx = rCanvas.getContext('2d');
         const rocketSprite = document.getElementById('rocketSprite');
@@ -1551,7 +1530,7 @@
         }
         animRocketFrame();
 
-        /* G. Modal & Scroll Observers */
+        /* F. Modal & Scroll Observers */
         function openModal(title, text) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerText = text;
