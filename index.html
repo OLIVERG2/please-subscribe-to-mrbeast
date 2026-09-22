@@ -8,90 +8,204 @@
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Syne:wght@400;700;800&family=JetBrains+Mono:ital,wght@0,200;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           01. ADVANCED TACTICAL DESIGN SYSTEM & SYSTEM VARIABLES
+           01. SYSTEM ARCHITECTURE & CORE COLOR VARIABLES
            ========================================================================== */
         :root {
+            /* Primary Colors */
             --bg-dark: #010206;
+            --bg-dark-rgb: 1, 2, 6;
             --bg-card: rgba(6, 11, 24, 0.85);
+            --bg-card-rgb: 6, 11, 24;
             --bg-card-hover: rgba(12, 22, 45, 0.95);
+            --bg-card-hover-rgb: 12, 22, 45;
             
+            /* Accent Palettes */
             --accent-gold: #ff9e00;
+            --accent-gold-rgb: 255, 158, 0;
             --accent-gold-glow: rgba(255, 158, 0, 0.6);
-            --accent-cyan: #00f0ff;
-            --accent-cyan-glow: rgba(0, 240, 255, 0.55);
-            --accent-purple: #a855f7;
-            --accent-purple-glow: rgba(168, 85, 247, 0.5);
-            --accent-emerald: #10b981;
+            --accent-gold-dim: rgba(255, 158, 0, 0.15);
             
+            --accent-cyan: #00f0ff;
+            --accent-cyan-rgb: 0, 240, 255;
+            --accent-cyan-glow: rgba(0, 240, 255, 0.55);
+            --accent-cyan-dim: rgba(0, 240, 255, 0.12);
+            
+            --accent-purple: #a855f7;
+            --accent-purple-rgb: 168, 85, 247;
+            --accent-purple-glow: rgba(168, 85, 247, 0.5);
+            --accent-purple-dim: rgba(168, 85, 247, 0.12);
+            
+            --accent-emerald: #10b981;
+            --accent-emerald-rgb: 16, 185, 129;
+            --accent-emerald-glow: rgba(16, 185, 129, 0.5);
+            
+            --accent-rose: #f43f5e;
+            --accent-rose-rgb: 244, 63, 94;
+            
+            /* Structural Text & Line Elements */
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --text-dim: #475569;
+            --text-bright: #ffffff;
             
             --border-line: rgba(255, 255, 255, 0.1);
+            --border-line-heavy: rgba(255, 255, 255, 0.25);
             --border-cyan: rgba(0, 240, 255, 0.45);
+            --border-cyan-strong: rgba(0, 240, 255, 0.85);
             --border-gold: rgba(255, 158, 0, 0.5);
+            --border-gold-strong: rgba(255, 158, 0, 0.9);
+            --border-purple: rgba(168, 85, 247, 0.45);
             
+            /* Typography Variables */
             --font-display: 'Orbitron', sans-serif;
             --font-head: 'Syne', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
+            
+            /* Animation Curve Definitions */
+            --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+            --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+            --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            
+            /* Universal Box Shadows */
+            --shadow-glow-cyan: 0 0 25px rgba(0, 240, 255, 0.25);
+            --shadow-glow-gold: 0 0 25px rgba(255, 158, 0, 0.25);
+            --shadow-glow-purple: 0 0 25px rgba(168, 85, 247, 0.25);
+            --shadow-card-depth: 0 20px 50px rgba(0, 0, 0, 0.8);
         }
 
-        * {
+        /* ==========================================================================
+           02. GLOBAL RESET & BASE DOM STYLES
+           ========================================================================== */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        html {
+            font-size: 16px;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
         }
 
         ::selection {
             background: var(--accent-cyan);
-            color: #000;
+            color: #000000;
+            text-shadow: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-left: 1px solid var(--border-line);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 240, 255, 0.3);
+            border-radius: 0px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: var(--font-mono);
-            overflow-x: hidden;
+            font-weight: 400;
             line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
         }
 
+        /* Background Particle System Layer */
         #particleCanvas {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
             pointer-events: none;
+            opacity: 0.85;
         }
 
+        /* Decorative Grid Overlay */
+        .body-grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Top Progress Line Indicator */
         .scroll-progress-line {
             position: fixed;
-            top: 0; left: 0;
-            width: 0%; height: 3px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-gold), var(--accent-emerald));
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(
+                90deg, 
+                var(--accent-cyan) 0%, 
+                var(--accent-purple) 33%, 
+                var(--accent-gold) 66%, 
+                var(--accent-emerald) 100%
+            );
             z-index: 1002;
-            box-shadow: 0 0 12px var(--accent-cyan);
+            box-shadow: 0 0 15px var(--accent-cyan);
+            transition: width 0.1s linear;
         }
 
         /* ==========================================================================
-           02. NAVIGATION BAR
+           03. ADVANCED NAVIGATION & SYSTEM STATUS BAR
            ========================================================================== */
         .navbar {
             position: fixed;
-            top: 0; width: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1.2rem 4%;
-            background: rgba(1, 2, 6, 0.9);
-            backdrop-filter: blur(20px);
+            background: rgba(1, 2, 6, 0.92);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-bottom: 1px solid var(--border-line);
             z-index: 1000;
+            transition: background 0.4s ease, border-color 0.4s ease, padding 0.4s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.8rem 4%;
+            background: rgba(1, 2, 6, 0.98);
+            border-bottom-color: var(--border-cyan);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
         }
 
         .brand-logo {
@@ -102,26 +216,63 @@
             text-transform: uppercase;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: #fff;
+            gap: 14px;
+            color: #ffffff;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .brand-logo::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+            display: inline-block;
+            animation: pulseGlow 2s infinite ease-in-out;
         }
 
         .brand-badge {
             font-family: var(--font-mono);
             font-size: 0.6rem;
+            font-weight: 700;
             color: var(--accent-cyan);
             border: 1px solid var(--accent-cyan);
-            padding: 2px 8px;
+            padding: 3px 9px;
             letter-spacing: 2px;
             background: rgba(0, 240, 255, 0.08);
-            box-shadow: 0 0 10px var(--accent-cyan-glow);
+            box-shadow: 0 0 12px var(--accent-cyan-dim);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-badge::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transform: rotate(30deg);
+            animation: badgeShine 4s infinite linear;
         }
 
         .nav-links {
             display: flex;
-            gap: 1.8rem;
+            gap: 2.2rem;
             list-style: none;
             align-items: center;
+        }
+
+        .nav-links li {
+            position: relative;
         }
 
         .nav-links a {
@@ -129,10 +280,24 @@
             text-decoration: none;
             font-family: var(--font-mono);
             font-size: 0.7rem;
+            font-weight: 500;
             letter-spacing: 2px;
             text-transform: uppercase;
-            transition: all 0.3s;
-            position: relative;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            padding: 0.4rem 0;
+            display: inline-block;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 8px var(--accent-cyan);
+            transition: width 0.3s var(--ease-out-cubic);
         }
 
         .nav-links a:hover {
@@ -140,34 +305,270 @@
             text-shadow: 0 0 10px var(--accent-cyan-glow);
         }
 
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Status Indicator Component in Navbar */
+        .system-status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 10px;
+            border-radius: 2px;
+            letter-spacing: 1px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-emerald);
+            animation: statusBlink 1.5s infinite alternate ease-in-out;
+        }
+
         /* ==========================================================================
-           03. HERO SECTION & PHOTO DISPLAY
+           04. REUSABLE ATOMIC COMPONENTS & CORNER BRACKETS
+           ========================================================================== */
+        .corner-bracket {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-color: var(--accent-cyan);
+            border-style: solid;
+            pointer-events: none;
+            z-index: 3;
+            transition: border-color 0.4s ease, width 0.4s ease, height 0.4s ease;
+        }
+
+        .cb-tl {
+            top: -1px;
+            left: -1px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .cb-tr {
+            top: -1px;
+            right: -1px;
+            border-width: 2px 2px 0 0;
+        }
+
+        .cb-bl {
+            bottom: -1px;
+            left: -1px;
+            border-width: 0 0 2px 2px;
+        }
+
+        .cb-br {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 2px 0 0;
+        }
+
+        /* Corner Bracket Color Variations */
+        .bracket-gold .corner-bracket {
+            border-color: var(--accent-gold);
+        }
+
+        .bracket-purple .corner-bracket {
+            border-color: var(--accent-purple);
+        }
+
+        .bracket-emerald .corner-bracket {
+            border-color: var(--accent-emerald);
+        }
+
+        /* Generic Glass Card Base */
+        .glass-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-line);
+            padding: 3.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            border-radius: 4px;
+            transition: border-color 0.4s var(--ease-out-cubic), 
+                        box-shadow 0.4s var(--ease-out-cubic), 
+                        transform 0.4s var(--ease-out-cubic);
+        }
+
+        .glass-panel:hover {
+            border-color: var(--border-gold);
+            box-shadow: 0 10px 40px rgba(255, 158, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .glass-panel:hover .corner-bracket {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Action Buttons */
+        .inspect-btn {
+            background: rgba(2, 4, 10, 0.8);
+            border: 1px solid var(--border-cyan);
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            letter-spacing: 2px;
+            transition: all 0.3s var(--ease-out-cubic);
+            border-radius: 2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .inspect-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 240, 255, 0.2),
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .inspect-btn:hover::before {
+            left: 100%;
+        }
+
+        .inspect-btn:hover {
+            border-color: var(--accent-cyan);
+            background: var(--accent-cyan);
+            color: #000000;
+            box-shadow: 0 0 20px var(--accent-cyan-glow);
+            font-weight: 700;
+            transform: translateY(-2px);
+        }
+
+        .inspect-btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            border-color: var(--border-gold);
+            color: var(--accent-gold);
+        }
+
+        .btn-gold:hover {
+            border-color: var(--accent-gold);
+            background: var(--accent-gold);
+            color: #000000;
+            box-shadow: 0 0 20px var(--accent-gold-glow);
+        }
+
+        /* Section Title Block */
+        .section-header {
+            margin-bottom: 3.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 120px;
+            height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .section-tag {
+            font-family: var(--font-mono);
+            color: var(--accent-gold);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-tag::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-gold);
+            box-shadow: 0 0 8px var(--accent-gold);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 3.5vw, 3.2rem);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-top: 0.5rem;
+            line-height: 1.1;
+            background: linear-gradient(180deg, #ffffff 40%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ==========================================================================
+           05. HERO SECTION & OPTICAL RECON VIEWER
            ========================================================================== */
         .hero-section {
             min-height: 100vh;
-            padding: 140px 4% 60px 4%;
+            padding: 140px 4% 80px 4%;
             display: grid;
             grid-template-columns: 1fr 1.1fr;
             align-items: center;
-            gap: 3.5rem;
+            gap: 4rem;
             position: relative;
+            background: radial-gradient(
+                circle at 20% 30%, 
+                rgba(0, 240, 255, 0.05) 0%, 
+                transparent 60%
+            );
         }
 
         .hero-tag {
             font-family: var(--font-mono);
             color: var(--accent-gold);
             font-size: 0.75rem;
+            font-weight: 600;
             letter-spacing: 4px;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 12px;
             text-shadow: 0 0 10px var(--accent-gold-glow);
+            text-transform: uppercase;
         }
 
         .hero-tag::before {
             content: '';
-            width: 10px; height: 10px;
+            width: 10px;
+            height: 10px;
             background: var(--accent-gold);
             box-shadow: 0 0 12px var(--accent-gold);
             transform: rotate(45deg);
@@ -184,43 +585,49 @@
             background: linear-gradient(180deg, #ffffff 30%, #64748b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            position: relative;
         }
 
         .hero-desc {
             color: var(--text-muted);
             font-size: 1.02rem;
             font-weight: 300;
-            max-width: 560px;
-            line-height: 1.8;
-            margin-bottom: 2rem;
+            max-width: 580px;
+            line-height: 1.85;
+            margin-bottom: 2.2rem;
+            border-left: 2px solid var(--accent-cyan);
+            padding-left: 1.5rem;
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.03), transparent);
         }
 
+        /* Photo Viewer Main Card */
         .photo-viewer-card {
             width: 100%;
-            height: 580px;
+            height: 600px;
             background: var(--bg-card);
             border: 1px solid var(--border-cyan);
             position: relative;
             backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border-radius: 6px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 1.5rem;
-            box-shadow: 0 0 50px rgba(0, 240, 255, 0.15);
-            transition: border-color 0.4s, box-shadow 0.4s;
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.15), var(--shadow-card-depth);
+            transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
         }
 
         .photo-viewer-card:hover {
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 75px rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 75px rgba(0, 240, 255, 0.3), var(--shadow-card-depth);
         }
 
         .photo-viewport {
             position: relative;
             width: 100%;
-            height: 420px;
+            height: 440px;
             background: #030712;
             border: 1px solid var(--border-line);
             border-radius: 4px;
@@ -230,21 +637,71 @@
             justify-content: center;
         }
 
+        .photo-viewport::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.2) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(0, 0, 0, 0.6) 100%
+            );
+            z-index: 2;
+            pointer-events: none;
+        }
+
         .main-photo-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             filter: contrast(1.15) saturate(1.25) brightness(0.95);
-            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+            transition: transform 0.7s var(--ease-expo-out), opacity 0.4s ease, filter 0.4s ease;
         }
 
         .photo-viewer-card:hover .main-photo-img {
             transform: scale(1.05);
+            filter: contrast(1.2) saturate(1.3) brightness(1);
+        }
+
+        /* Overlay Crosshair Reticle for Optical Recon */
+        .viewport-reticle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 1px dashed rgba(0, 240, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .viewport-reticle::before, .viewport-reticle::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 240, 255, 0.4);
+        }
+
+        .viewport-reticle::before {
+            width: 20px;
+            height: 1px;
+        }
+
+        .viewport-reticle::after {
+            width: 1px;
+            height: 20px;
         }
 
         .photo-nav-controls {
             position: absolute;
-            bottom: 15px; right: 15px;
+            bottom: 15px;
+            right: 15px;
             display: flex;
             gap: 8px;
             z-index: 10;
@@ -258,31 +715,20 @@
             font-size: 0.62rem;
             padding: 7px 14px;
             letter-spacing: 1.5px;
-            transition: all 0.3s;
+            transition: all 0.3s var(--ease-out-cubic);
             border-radius: 2px;
             cursor: pointer;
+            backdrop-filter: blur(10px);
         }
 
         .photo-btn:hover, .photo-btn.active {
             background: var(--accent-cyan);
-            color: #000;
+            color: #000000;
             box-shadow: 0 0 18px var(--accent-cyan-glow);
             font-weight: 700;
         }
 
-        .corner-bracket {
-            position: absolute;
-            width: 18px; height: 18px;
-            border-color: var(--accent-cyan);
-            border-style: solid;
-            pointer-events: none;
-            z-index: 3;
-        }
-        .cb-tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
-        .cb-tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
-        .cb-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
-        .cb-br { bottom: 0; right: 0; border-width: 0 2px 0 0; }
-
+        /* Telemetry Bar Under Hero */
         .telemetry-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -292,14 +738,25 @@
             border-top: 1px solid var(--border-line);
         }
 
-        .telemetry-item { font-family: var(--font-mono); }
+        .telemetry-item {
+            font-family: var(--font-mono);
+            position: relative;
+            padding-left: 12px;
+            border-left: 2px solid var(--border-line);
+            transition: border-left-color 0.3s ease;
+        }
+
+        .telemetry-item:hover {
+            border-left-color: var(--accent-cyan);
+        }
 
         .telemetry-val {
             font-family: var(--font-display);
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: var(--accent-cyan);
             font-weight: 700;
             text-shadow: 0 0 10px var(--accent-cyan-glow);
+            line-height: 1.1;
         }
 
         .telemetry-lbl {
@@ -307,13 +764,14 @@
             color: var(--text-muted);
             letter-spacing: 1.5px;
             text-transform: uppercase;
+            margin-top: 0.3rem;
         }
 
         /* ==========================================================================
-           04. CONTENT SECTIONS & GLASS CARDS
+           06. PROBLEM STATEMENT & MISSION CONSTRAINTS
            ========================================================================== */
         .content-section {
-            padding: 7rem 4%;
+            padding: 8rem 4%;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -321,103 +779,72 @@
             position: relative;
         }
 
-        .section-header {
-            margin-bottom: 3.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 1px solid var(--border-line);
-            padding-bottom: 1.5rem;
-        }
-
-        .section-tag {
-            font-family: var(--font-mono);
-            color: var(--accent-gold);
-            font-size: 0.75rem;
-            letter-spacing: 4px;
-        }
-
-        .section-title {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 3.5vw, 3.2rem);
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-top: 0.5rem;
-        }
-
-        .glass-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-line);
-            padding: 3.5rem;
-            backdrop-filter: blur(20px);
-            position: relative;
-            border-radius: 4px;
-            transition: border-color 0.4s, box-shadow 0.4s;
-        }
-
-        .glass-panel:hover {
-            border-color: var(--border-gold);
-            box-shadow: 0 0 40px rgba(255, 158, 0, 0.15);
-        }
-
         .panel-quote {
             font-family: var(--font-head);
-            font-size: 1.8rem;
+            font-size: 1.85rem;
             font-weight: 700;
             line-height: 1.35;
             letter-spacing: -0.5px;
-            margin-bottom: 1.5rem;
-            color: #fff;
+            margin-bottom: 1.8rem;
+            color: #ffffff;
+            position: relative;
+            padding-left: 1.8rem;
+            border-left: 4px solid var(--accent-gold);
         }
 
         .panel-text {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 1.02rem;
             font-weight: 300;
-            line-height: 1.85;
-            margin-bottom: 1.5rem;
+            line-height: 1.9;
+            margin-bottom: 1.8rem;
         }
 
-        /* Interactive Mission Simulator Grid */
-        .sim-grid {
+        .panel-text strong {
+            color: var(--text-bright);
+            font-weight: 600;
+        }
+
+        /* Spec Checklist Grid */
+        .constraint-spec-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            margin-top: 2.5rem;
         }
 
-        .sim-card {
-            background: rgba(2, 6, 16, 0.9);
-            border: 1px solid var(--border-cyan);
-            padding: 2rem;
-            border-radius: 4px;
-            position: relative;
-        }
-
-        .sim-display {
-            width: 100%;
-            height: 200px;
-            background: #020408;
+        .spec-box-card {
+            background: rgba(2, 6, 16, 0.7);
             border: 1px solid var(--border-line);
-            margin-bottom: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 1.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
-        .sim-shape {
-            width: 100px;
-            height: 100px;
-            border: 2px solid var(--accent-cyan);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            box-shadow: 0 0 20px var(--accent-cyan-glow);
+        .spec-box-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.03);
+            transform: translateY(-3px);
         }
 
-        /* Theory Cards Grid */
+        .spec-box-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .spec-box-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           07. KINEMATICS & ORIGAMI THEORY SECTION
+           ========================================================================== */
         .theory-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -433,10 +860,10 @@
         .theory-image-slot {
             position: relative;
             width: 100%;
-            height: 290px;
+            height: 300px;
             background: #030712;
             border: 1px dashed var(--border-cyan);
-            margin-bottom: 1.8rem;
+            margin-bottom: 2rem;
             overflow: hidden;
             border-radius: 4px;
             display: flex;
@@ -448,33 +875,38 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: transform 0.6s var(--ease-expo-out), filter 0.4s ease;
             filter: saturate(1.2) contrast(1.15);
         }
 
         .theory-card:hover .theory-img {
-            transform: scale(1.06);
+            transform: scale(1.08);
+            filter: saturate(1.35) contrast(1.2);
         }
 
         .img-badge {
             position: absolute;
-            top: 12px; left: 12px;
+            top: 12px;
+            left: 12px;
             background: rgba(2, 4, 10, 0.9);
             border: 1px solid var(--accent-cyan);
             color: var(--accent-cyan);
             font-family: var(--font-mono);
             font-size: 0.6rem;
+            font-weight: 600;
             padding: 4px 10px;
             letter-spacing: 2px;
             box-shadow: 0 0 12px var(--accent-cyan-glow);
+            border-radius: 2px;
+            backdrop-filter: blur(8px);
         }
 
         .theory-title {
             font-family: var(--font-display);
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             margin-bottom: 1rem;
             text-transform: uppercase;
-            color: #fff;
+            color: #ffffff;
             letter-spacing: 1px;
         }
 
@@ -482,13 +914,39 @@
             font-family: var(--font-mono);
             font-size: 0.72rem;
             color: var(--accent-gold);
-            margin-top: 1.2rem;
+            margin-top: 1.5rem;
             border-top: 1px dashed var(--border-line);
-            padding-top: 0.8rem;
+            padding-top: 1rem;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        /* Matrix & Table Styles */
+        /* Formula Overlay Block */
+        .math-formula-card {
+            background: rgba(168, 85, 247, 0.05);
+            border: 1px solid var(--accent-purple);
+            padding: 1.2rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .math-formula-card code {
+            color: var(--accent-purple);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================================================
+           08. ENGINEERING MATRIX & JUSTIFICATION TABLE
+           ========================================================================== */
         .matrix-container {
             display: flex;
             flex-direction: column;
@@ -503,13 +961,24 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 0 30px var(--accent-purple-glow);
+            box-shadow: 0 0 30px var(--accent-purple-dim);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .matrix-intro-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--accent-purple);
+            box-shadow: 0 0 10px var(--accent-purple);
         }
 
         .matrix-table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 1rem;
+            border-spacing: 0 1.2rem;
         }
 
         .matrix-table th {
@@ -527,23 +996,24 @@
             background: var(--bg-card);
             border: 1px solid var(--border-line);
             border-radius: 4px;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         .matrix-row-card:hover {
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 38px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 38px rgba(0, 240, 255, 0.18), var(--shadow-card-depth);
+            transform: scale(1.005);
         }
 
         .matrix-cell {
-            padding: 1.8rem 1.5rem;
+            padding: 2rem 1.8rem;
             vertical-align: top;
         }
 
         .spec-header-title {
             font-family: var(--font-display);
-            font-size: 1.15rem;
-            color: #fff;
+            font-size: 1.18rem;
+            color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 0.4rem;
@@ -554,16 +1024,19 @@
             font-size: 0.65rem;
             color: var(--accent-cyan);
             letter-spacing: 2px;
+            margin-bottom: 0.3rem;
+            display: block;
         }
 
         .reasoning-box {
             background: rgba(2, 4, 10, 0.85);
             border-left: 3px solid var(--accent-gold);
-            padding: 1rem 1.2rem;
+            padding: 1.2rem 1.4rem;
             border-radius: 0 4px 4px 0;
             font-size: 0.88rem;
             color: var(--text-muted);
-            line-height: 1.7;
+            line-height: 1.75;
+            margin-bottom: 1rem;
         }
 
         .reasoning-box strong {
@@ -576,118 +1049,187 @@
             text-transform: uppercase;
         }
 
-        /* Crew Dossier */
+        /* Multi-metric Badge Pills inside Matrix */
+        .matrix-metric-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-line);
+            padding: 3px 8px;
+            border-radius: 2px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .matrix-metric-pill span {
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        /* ==========================================================================
+           09. CREW DOSSIER & FLIGHT TEAM SECTION
+           ========================================================================== */
         .team-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.8rem;
+            gap: 2rem;
         }
 
         .team-card {
             border: 1px solid var(--border-line);
-            padding: 3rem 1.5rem;
+            padding: 3.5rem 1.8rem 2.5rem 1.8rem;
             text-align: center;
             background: var(--bg-card);
             position: relative;
             border-radius: 4px;
-            transition: border-color 0.4s, box-shadow 0.4s;
+            transition: all 0.4s var(--ease-out-cubic);
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: transparent;
+            transition: background 0.4s ease;
+        }
+
+        .team-card:hover::before {
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-cyan));
         }
 
         .team-card:hover {
             border-color: var(--border-gold);
-            box-shadow: 0 0 35px rgba(255, 158, 0, 0.18);
+            box-shadow: 0 10px 40px rgba(255, 158, 0, 0.15);
+            transform: translateY(-5px);
         }
 
         .team-avatar {
-            width: 88px; height: 88px;
+            width: 96px;
+            height: 96px;
             border-radius: 50%;
-            border: 1px solid var(--accent-gold);
-            margin: 0 auto 1.5rem auto;
+            border: 2px solid var(--accent-gold);
+            margin: 0 auto 1.8rem auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             background: rgba(255, 158, 0, 0.06);
-            box-shadow: 0 0 22px rgba(255, 158, 0, 0.18);
+            box-shadow: 0 0 25px rgba(255, 158, 0, 0.2);
+            position: relative;
+            transition: transform 0.4s var(--ease-elastic);
+        }
+
+        .team-card:hover .team-avatar {
+            transform: scale(1.1) rotate(5deg);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 30px var(--accent-cyan-glow);
         }
 
         .team-name {
             font-family: var(--font-display);
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
         }
 
         .team-role {
             font-family: var(--font-mono);
             color: var(--accent-gold);
-            font-size: 0.65rem;
+            font-size: 0.68rem;
+            font-weight: 600;
             letter-spacing: 1.5px;
-            margin-top: 0.5rem;
+            text-transform: uppercase;
         }
 
-        /* Modal Dialog */
+        .team-bio {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 1.2rem;
+            line-height: 1.6;
+            border-top: 1px dashed var(--border-line);
+            padding-top: 1rem;
+        }
+
+        /* ==========================================================================
+           10. MODAL DIALOG ENGINE & OVERLAYS
+           ========================================================================== */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(2, 4, 10, 0.94);
-            backdrop-filter: blur(25px);
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(1, 2, 6, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             z-index: 10000;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.4s;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s var(--ease-out-cubic);
         }
 
         .modal-overlay.active {
-            opacity: 1; pointer-events: auto;
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .modal-container {
-            width: 90%; max-width: 720px;
+            width: 90%;
+            max-width: 760px;
             background: var(--bg-card);
             border: 1px solid var(--accent-cyan);
             padding: 3.5rem;
             position: relative;
-            border-radius: 4px;
-            box-shadow: 0 0 75px rgba(0, 240, 255, 0.28);
+            border-radius: 6px;
+            box-shadow: 0 0 80px rgba(0, 240, 255, 0.3), var(--shadow-card-depth);
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.4s var(--ease-out-cubic);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0) scale(1);
         }
 
         .modal-close {
             position: absolute;
-            top: 24px; right: 24px;
+            top: 24px;
+            right: 24px;
             background: transparent;
-            border: none;
+            border: 1px solid var(--border-line);
             color: var(--text-muted);
             font-family: var(--font-mono);
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .modal-close:hover { color: var(--accent-cyan); }
-
-        .inspect-btn {
-            background: transparent;
-            border: 1px solid var(--border-cyan);
-            color: var(--accent-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            padding: 8px 16px;
-            letter-spacing: 2px;
-            transition: all 0.3s;
+            font-size: 1.2rem;
+            width: 36px;
+            height: 36px;
             border-radius: 2px;
-            margin-top: 0.8rem;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
 
-        .inspect-btn:hover {
-            border-color: var(--accent-cyan);
-            background: var(--accent-cyan);
-            color: #000;
-            box-shadow: 0 0 18px var(--accent-cyan-glow);
+        .modal-close:hover {
+            border-color: var(--accent-rose);
+            color: var(--accent-rose);
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+            transform: rotate(90deg);
         }
 
+        /* ==========================================================================
+           11. FOOTER ARCHITECTURE
+           ========================================================================== */
         footer {
             padding: 5rem 4% 3rem 4%;
             border-top: 1px solid var(--border-line);
@@ -698,40 +1240,139 @@
             font-size: 0.75rem;
             color: var(--text-muted);
             background: #010206;
+            position: relative;
         }
 
-        @media (max-width: 1024px) {
-            .hero-section, .theory-grid, .team-grid, .sim-grid {
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 4%; right: 4%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-brand strong {
+            color: #ffffff;
+            font-family: var(--font-display);
+            letter-spacing: 2px;
+        }
+
+        /* ==========================================================================
+           12. KEYFRAME ANIMATION DEFINITIONS
+           ========================================================================== */
+        @keyframes pulseGlow {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 10px var(--accent-cyan);
+            }
+            50% {
+                opacity: 0.4;
+                box-shadow: 0 0 2px var(--accent-cyan);
+            }
+        }
+
+        @keyframes badgeShine {
+            0% {
+                transform: translateX(-100%) rotate(30deg);
+            }
+            20%, 100% {
+                transform: translateX(100%) rotate(30deg);
+            }
+        }
+
+        @keyframes statusBlink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* ==========================================================================
+           13. MEDIA QUERIES & RESPONSIVE BREAKPOINTS
+           ========================================================================== */
+        @media (max-width: 1200px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+            .theory-grid {
                 grid-template-columns: 1fr;
             }
-            .nav-links { display: none; }
-            .matrix-table, .matrix-table tbody, .matrix-table tr, .matrix-table td {
-                display: block; width: 100%;
+            .constraint-spec-grid {
+                grid-template-columns: 1fr;
             }
-            .matrix-table th { display: none; }
+            .matrix-table, .matrix-table tbody, .matrix-table tr, .matrix-table td {
+                display: block;
+                width: 100%;
+            }
+            .matrix-table th {
+                display: none;
+            }
+            .matrix-cell {
+                padding: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            .telemetry-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            footer {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Background Particle Canvas Engine -->
     <canvas id="particleCanvas"></canvas>
+    
+    <!-- Decorative Grid Background -->
+    <div class="body-grid-overlay"></div>
+
+    <!-- Scroll Progress Indicator Line -->
     <div class="scroll-progress-line" id="progressLine"></div>
 
-    <nav class="navbar">
-        <div class="brand-logo">
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" id="mainNavbar">
+        <a href="#hero" class="brand-logo">
             NASA HUNCH <span class="brand-badge">FLIGHT-READY v4.2</span>
-        </div>
+        </a>
+
         <ul class="nav-links">
             <li><a href="#hero">01 // OVERVIEW</a></li>
             <li><a href="#challenge">02 // BRIEF</a></li>
-            <li><a href="#sim">03 // SIMULATOR</a></li>
-            <li><a href="#theory">04 // KINEMATICS</a></li>
-            <li><a href="#matrix">05 // REASONING</a></li>
-            <li><a href="#crew">06 // CREW</a></li>
+            <li><a href="#theory">03 // KINEMATICS</a></li>
+            <li><a href="#matrix">04 // REASONING</a></li>
+            <li><a href="#crew">05 // CREW</a></li>
         </ul>
+
+        <div class="system-status-indicator">
+            <div class="status-dot"></div>
+            <span>SYSTEMS NOMINAL</span>
+        </div>
     </nav>
 
-    <!-- Section 01: Hero -->
+    <!-- Section 01: Hero Overview -->
     <section id="hero" class="hero-section">
         <div class="hero-content">
             <div class="hero-tag">Elevating Space Logistics</div>
@@ -760,7 +1401,7 @@
             </div>
         </div>
 
-        <div class="photo-viewer-card">
+        <div class="photo-viewer-card bracket-gold">
             <div class="corner-bracket cb-tl"></div>
             <div class="corner-bracket cb-tr"></div>
             <div class="corner-bracket cb-bl"></div>
@@ -772,6 +1413,7 @@
             </div>
 
             <div class="photo-viewport">
+                <div class="viewport-reticle"></div>
                 <img id="heroImage" src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80" alt="Space Flight Hardware Prototype Photo" class="main-photo-img">
 
                 <div class="photo-nav-controls">
@@ -798,66 +1440,49 @@
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-COLUMBUS</div>
         </div>
 
-        <div class="glass-panel">
+        <div class="glass-panel bracket-purple">
             <div class="corner-bracket cb-tl"></div>
+            <div class="corner-bracket cb-tr"></div>
+            <div class="corner-bracket cb-bl"></div>
             <div class="corner-bracket cb-br"></div>
+            
             <div class="panel-quote">"In microgravity, standard static packaging becomes space waste. Kinetic origami transforms structural dead weight into functional payload."</div>
             <p class="panel-text">
                 Space logistics are severely constrained by launch fairing volume and payload envelope boundaries. Traditional cargo storage utilizes rigid metallic containers that offer zero volume adaptability post-unpacking, consuming critical habitable volume aboard the International Space Station. Our solution introduces a dynamic origami-inspired system that collapses down to 15.8% of its original size.
             </p>
-            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan); letter-spacing: 1px;">
-                &gt; PRIMARY OBJECTIVE: STRUCTURAL INTEGRITY + ZERO PINCH POINTS + ZERO OFF-GASSING
-            </div>
-        </div>
-    </section>
 
-    <!-- Section 03: Deployment Simulator -->
-    <section id="sim" class="content-section">
-        <div class="section-header">
-            <div>
-                <div class="section-tag">02 // HARDWARE SIMULATION</div>
-                <h2 class="section-title">DEPLOYMENT DYNAMICS</h2>
-            </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">KINEMATIC STATES</div>
-        </div>
-
-        <div class="sim-grid">
-            <div class="sim-card">
-                <div class="sim-display">
-                    <div id="simShape" class="sim-shape"></div>
+            <div class="constraint-spec-grid">
+                <div class="spec-box-card">
+                    <div class="spec-box-title">01 // ZERO PINCH HAZARD</div>
+                    <div class="spec-box-desc">Fully continuous elastomeric joints prevent astronaut glove snags during EVA and intra-vehicular maneuvers.</div>
                 </div>
-                <div style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
-                    <button class="inspect-btn" onclick="setSimState('stowed')">STOWED STATE</button>
-                    <button class="inspect-btn" onclick="setSimState('deploying')">TRANSITIONING</button>
-                    <button class="inspect-btn" onclick="setSimState('expanded')">FULLY EXPANDED</button>
+                <div class="spec-box-card">
+                    <div class="spec-box-title">02 // VOLUMETRIC OPTIMIZATION</div>
+                    <div class="spec-box-desc">Engineered for maximum packing efficiency inside the standard ISS Express Rack configuration.</div>
                 </div>
-            </div>
-
-            <div class="glass-panel">
-                <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: #fff; margin-bottom: 1rem;">KINEMATIC STATE ANALYSIS</h3>
-                <p class="panel-text" id="simStatusText">
-                    Select a configuration state on the left to simulate real-time facet articulation and compliant hinge strain distribution.
-                </p>
-                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-gold);" id="simTelemetry">
-                    STATE: STOWED // COMPRESSION: 84.2% // HINGE ANGLE: 12°
+                <div class="spec-box-card">
+                    <div class="spec-box-title">03 // COMPLIANT MECHANICS</div>
+                    <div class="spec-box-desc">Eliminates high-friction mechanical hinges, preventing cold-welding risks in space vacuum conditions.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 04: Kinematics & Origami Theory -->
+    <!-- Section 03: Kinematics & Origami Theory -->
     <section id="theory" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">03 // KINEMATICS & MATHEMATICS</div>
+                <div class="section-tag">02 // KINEMATICS & MATHEMATICS</div>
                 <h2 class="section-title">PROTOTYPE & ORIGAMI THEORY</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-cyan);">THEORETICAL FRAMEWORK</div>
         </div>
 
         <div class="theory-grid">
-            <div class="theory-card glass-panel">
+            <div class="theory-card glass-panel bracket-emerald">
                 <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
                 
                 <div class="theory-image-slot">
@@ -870,13 +1495,24 @@
                     <p class="panel-text">
                         The mathematical model utilizes modified Miura-ori tessellations. By holding planar angles constant and optimizing boundary crease parameters, rigid panel surfaces rotate smoothly around compliant elastomer joints without introducing secondary bending stresses.
                     </p>
-                    <div class="theory-spec-tag">&gt; VOLUMETRIC REDUCTION: HIGH-DENSITY COMPRESSION</div>
+                    
+                    <div class="math-formula-card">
+                        <span>Miura-Ori Volume Ratio:</span>
+                        <code>V_ratio = (cos(α) * sin(β)) / (1 - cos^2(θ))</code>
+                    </div>
+
+                    <div class="theory-spec-tag">
+                        <span>&gt; VOLUMETRIC REDUCTION</span>
+                        <span style="color: #fff;">HIGH-DENSITY COMPRESSION</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="theory-card glass-panel">
+            <div class="theory-card glass-panel bracket-gold">
+                <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-tr"></div>
                 <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
                 
                 <div class="theory-image-slot">
                     <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80" alt="Physical Prototype Testing Photo" class="theory-img">
@@ -888,17 +1524,26 @@
                     <p class="panel-text">
                         Once deployed, the geometric over-center latch mechanism transforms flexible crease lines into rigid load paths. Force vectors from payload shift during maneuvers are dissipated across all 24 connected facet edges simultaneously.
                     </p>
-                    <div class="theory-spec-tag">&gt; DEPLOYED INTEGRITY: EXPANDED MOMENT OF INERTIA</div>
+
+                    <div class="math-formula-card">
+                        <span>Stress Distribution Vector:</span>
+                        <code>σ_edge = ∑(F_load * cos(ϕ_i)) / A_flexure</code>
+                    </div>
+
+                    <div class="theory-spec-tag">
+                        <span>&gt; DEPLOYED INTEGRITY</span>
+                        <span style="color: #fff;">EXPANDED MOMENT OF INERTIA</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 05: Engineering Matrix -->
+    <!-- Section 04: Engineering Matrix -->
     <section id="matrix" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">04 // PROTOTYPE EVALUATION</div>
+                <div class="section-tag">03 // PROTOTYPE EVALUATION</div>
                 <h2 class="section-title">ENGINEERING MATRIX & REASONING</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">VERIFIED BY NASA HUNCH</div>
@@ -908,7 +1553,7 @@
             <div class="matrix-intro-card">
                 <div>
                     <span style="font-family: var(--font-mono); color: var(--accent-purple); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;">DESIGN JUSTIFICATION FRAMEWORK</span>
-                    <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: #fff; margin-top: 0.2rem;">Engineering Trade-Offs & Prototype Decisions</h3>
+                    <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: #ffffff; margin-top: 0.2rem;">Engineering Trade-Offs & Prototype Decisions</h3>
                 </div>
                 <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">DOCUMENT ID: HUNCH-ENG-2026-R4</div>
             </div>
@@ -924,9 +1569,11 @@
                 <tbody>
                     <tr class="matrix-row-card">
                         <td class="matrix-cell">
-                            <div class="spec-tag-code">// SPEC_01 - VOLUMETRICS</div>
+                            <span class="spec-tag-code">// SPEC_01 - VOLUMETRICS</span>
                             <div class="spec-header-title">Compact Stowing Ratio</div>
                             <p style="font-size: 0.8rem; color: var(--text-muted);">Target: &gt;80% volume reduction during launch transit.</p>
+                            <div class="matrix-metric-pill">VAL: <span>84.2%</span></div>
+                            <div class="matrix-metric-pill">STATUS: <span>PASSED</span></div>
                         </td>
                         <td class="matrix-cell">
                             <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-cyan); font-size: 1rem; margin-bottom: 0.4rem;">Modified Miura-Ori Pattern</div>
@@ -943,9 +1590,11 @@
 
                     <tr class="matrix-row-card">
                         <td class="matrix-cell">
-                            <div class="spec-tag-code">// SPEC_02 - HUMAN FACTORS</div>
+                            <span class="spec-tag-code">// SPEC_02 - HUMAN FACTORS</span>
                             <div class="spec-header-title">Zero-G EVA Operability</div>
                             <p style="font-size: 0.8rem; color: var(--text-muted);">Must be operable using bulky Extravehicular Mobility Unit (EMU) gloves.</p>
+                            <div class="matrix-metric-pill">TORQUE: <span>1.2 Nm</span></div>
+                            <div class="matrix-metric-pill">TIME: <span>3.8s</span></div>
                         </td>
                         <td class="matrix-cell">
                             <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-gold); font-size: 1rem; margin-bottom: 0.4rem;">Tactile Oversized Quick-Tabs</div>
@@ -956,15 +1605,17 @@
                                 <strong>Engineering Rationale:</strong>
                                 Pressurized gloves restrict dexterity and eliminate fine tactile feel. Standard latches cause crew fatigue. Our magnetic quick-tabs auto-align upon approach and require only 1.2 Nm of force to actuate, eliminating pinch hazards completely.
                             </div>
-                            <button class="inspect-btn" onclick="openModal('Zero-G EVA Operability Rationale', 'Human Factors Testing: Evaluated with simulated EMU glove pressurized at 4.3 psi. Actuation time was reduced from 42 seconds (standard buckle) to 3.8 seconds using our magnetic self-indexing tabs, with zero glove snagging incidents over 100 trials.')">READ FULL ANALYSIS</button>
+                            <button class="inspect-btn btn-gold" onclick="openModal('Zero-G EVA Operability Rationale', 'Human Factors Testing: Evaluated with simulated EMU glove pressurized at 4.3 psi. Actuation time was reduced from 42 seconds (standard buckle) to 3.8 seconds using our magnetic self-indexing tabs, with zero glove snagging incidents over 100 trials.')">READ FULL ANALYSIS</button>
                         </td>
                     </tr>
 
                     <tr class="matrix-row-card">
                         <td class="matrix-cell">
-                            <div class="spec-tag-code">// SPEC_03 - MATERIAL SCIENCE</div>
+                            <span class="spec-tag-code">// SPEC_03 - MATERIAL SCIENCE</span>
                             <div class="spec-header-title">Thermal & Off-Gassing Integrity</div>
                             <p style="font-size: 0.8rem; color: var(--text-muted);">NASA MSFC-SPEC-522 compliance for cabin toxic off-gassing.</p>
+                            <div class="matrix-metric-pill">TML: <span>&lt;0.01%</span></div>
+                            <div class="matrix-metric-pill">TEMP: <span>-120°C to +150°C</span></div>
                         </td>
                         <td class="matrix-cell">
                             <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-purple); font-size: 1rem; margin-bottom: 0.4rem;">PEEK Substructure + Fluoropolymer Joints</div>
@@ -983,61 +1634,75 @@
         </div>
     </section>
 
-    <!-- Section 06: Crew Dossier -->
+    <!-- Section 05: Crew Dossier -->
     <section id="crew" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">05 // FLIGHT CREW</div>
+                <div class="section-tag">04 // FLIGHT CREW</div>
                 <h2 class="section-title">PROJECT ENGINEERS</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">4-MEMBER DESIGN TEAM</div>
         </div>
 
         <div class="team-grid">
-            <div class="team-card">
+            <div class="team-card bracket-gold">
                 <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍🚀</div>
                 <div class="team-name">[ Engineer 1 ]</div>
                 <div class="team-role">LEAD ORIGAMI ARCHITECT</div>
+                <div class="team-bio">Specializing in Miura-ori tessellation kinematics and microgravity surface folding algorithms.</div>
             </div>
 
-            <div class="team-card">
+            <div class="team-card bracket-cyan">
                 <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👩‍🚀</div>
                 <div class="team-name">[ Engineer 2 ]</div>
                 <div class="team-role">MATERIALS & MANUFACTURING</div>
+                <div class="team-bio">Focused on PEEK thermomechanical stability and fluoropolymer flexure fatigue resistance.</div>
             </div>
 
-            <div class="team-card">
+            <div class="team-card bracket-purple">
                 <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">🧑‍🚀</div>
                 <div class="team-name">[ Engineer 3 ]</div>
                 <div class="team-role">FLIGHT SPECS & TESTING</div>
+                <div class="team-bio">Managing MSFC-SPEC-522 toxicity compliance and EMU glove ergonomic testing.</div>
             </div>
 
-            <div class="team-card">
+            <div class="team-card bracket-emerald">
                 <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍💻</div>
                 <div class="team-name">[ Engineer 4 ]</div>
                 <div class="team-role">SYSTEMS & ARCHITECTURE</div>
+                <div class="team-bio">Developing CAD parametric models and finite element stress dissipation simulations.</div>
             </div>
         </div>
     </section>
 
+    <!-- Footer Architecture -->
     <footer>
-        <div>
-            <strong>NASA HUNCH PROGRAM</strong> // HIGH SCHOOL STUDENTS UNITED WITH NASA TO CREATE HARDWARE
+        <div class="footer-brand">
+            <strong>NASA HUNCH PROGRAM</strong>
+            <span>HIGH SCHOOL STUDENTS UNITED WITH NASA TO CREATE HARDWARE</span>
         </div>
         <div>
             SYSTEM READY FOR ISS DEPLOYMENT // 2026
         </div>
     </footer>
 
-    <!-- Spec Inspection Modal -->
+    <!-- Spec Inspection Modal Overlay -->
     <div class="modal-overlay" id="specModal">
         <div class="modal-container">
             <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1049,27 +1714,37 @@
 
     <!-- Scripting Engine -->
     <script>
-        /* 01. HERO PHOTO SWITCHER ENGINE */
+        /* ==========================================================================
+           01. HERO PHOTO SWITCHER ENGINE
+           ========================================================================== */
         function switchHeroImage(src, btn) {
             const img = document.getElementById('heroImage');
             const caption = document.getElementById('imgCaptionText');
             
             img.style.opacity = '0.15';
+            img.style.transform = 'scale(0.98)';
 
             setTimeout(() => {
                 img.src = src;
                 img.style.opacity = '1';
+                img.style.transform = 'scale(1)';
                 
                 document.querySelectorAll('.photo-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                if(btn.innerText.includes('FOLDED')) caption.innerText = 'Folded Storage Geometry for ISS Columbus Rack Payload Transit';
-                else if(btn.innerText.includes('DEPLOYED')) caption.innerText = 'Fully Expanded Dynamic Frame Structure in Simulated Microgravity';
-                else caption.innerText = 'Pressurized Glove Ergonomic Evaluation in Thermal Vacuum Facility';
-            }, 220);
+                if (btn.innerText.includes('FOLDED')) {
+                    caption.innerText = 'Folded Storage Geometry for ISS Columbus Rack Payload Transit';
+                } else if (btn.innerText.includes('DEPLOYED')) {
+                    caption.innerText = 'Fully Expanded Dynamic Frame Structure in Simulated Microgravity';
+                } else {
+                    caption.innerText = 'Pressurized Glove Ergonomic Evaluation in Thermal Vacuum Facility';
+                }
+            }, 250);
         }
 
-        /* 02. DYNAMIC STARFIELD CANVAS */
+        /* ==========================================================================
+           02. INTERACTIVE STARFIELD & CONNECTIVE PARTICLE CANVAS
+           ========================================================================== */
         const pCanvas = document.getElementById('particleCanvas');
         const pCtx = pCanvas.getContext('2d');
         let particles = [];
@@ -1081,87 +1756,115 @@
 
         class Particle {
             constructor() {
+                this.reset();
+            }
+
+            reset() {
                 this.x = Math.random() * pCanvas.width;
                 this.y = Math.random() * pCanvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
                 this.radius = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.5 + 0.2;
             }
+
             update() {
-                this.x += this.vx; this.y += this.vy;
+                this.x += this.vx;
+                this.y += this.vy;
+
                 if (this.x < 0 || this.x > pCanvas.width) this.vx *= -1;
                 if (this.y < 0 || this.y > pCanvas.height) this.vy *= -1;
             }
+
             draw() {
                 pCtx.beginPath();
                 pCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                pCtx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+                pCtx.fillStyle = `rgba(0, 240, 255, ${this.alpha})`;
                 pCtx.fill();
             }
         }
 
-        for (let i = 0; i < 90; i++) particles.push(new Particle());
+        function initParticles() {
+            particles = [];
+            const count = Math.min(Math.floor(window.innerWidth / 15), 100);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
 
         function animateParticles() {
             pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            
             particles.forEach((p, idx) => {
                 p.update();
                 p.draw();
+
                 for (let j = idx + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if (dist < 100) {
+                    
+                    if (dist < 120) {
                         pCtx.beginPath();
                         pCtx.moveTo(p.x, p.y);
                         pCtx.lineTo(p2.x, p2.y);
-                        pCtx.strokeStyle = `rgba(0, 240, 255, ${0.1 - dist / 1000})`;
+                        pCtx.strokeStyle = `rgba(0, 240, 255, ${0.12 - dist / 1000})`;
+                        pCtx.lineWidth = 0.8;
                         pCtx.stroke();
                     }
                 }
             });
+
             requestAnimationFrame(animateParticles);
         }
 
-        window.addEventListener('resize', resizeParticles);
-        resizeParticles(); animateParticles();
+        window.addEventListener('resize', () => {
+            resizeParticles();
+            initParticles();
+        });
 
-        /* 03. INTERACTIVE SIMULATOR FUNCTIONALITY */
-        function setSimState(state) {
-            const shape = document.getElementById('simShape');
-            const text = document.getElementById('simStatusText');
-            const telemetry = document.getElementById('simTelemetry');
+        resizeParticles();
+        initParticles();
+        animateParticles();
 
-            if (state === 'stowed') {
-                shape.style.transform = 'scale(0.3) rotate(45deg)';
-                shape.style.borderColor = 'var(--accent-gold)';
-                text.innerText = 'Stowed state: Package is fully collapsed into launch configuration. Facets tightly packed for minimal fairing envelope consumption.';
-                telemetry.innerText = 'STATE: STOWED // COMPRESSION: 84.2% // HINGE ANGLE: 12°';
-            } else if (state === 'deploying') {
-                shape.style.transform = 'scale(0.7) rotate(20deg)';
-                shape.style.borderColor = 'var(--accent-purple)';
-                text.innerText = 'Transition state: Compliant living hinges articulate along pre-calculated crease lines. Single-degree-of-freedom deployment active.';
-                telemetry.innerText = 'STATE: TRANSITIONING // COMPRESSION: 45.0% // HINGE ANGLE: 95°';
-            } else {
-                shape.style.transform = 'scale(1.1) rotate(0deg)';
-                shape.style.borderColor = 'var(--accent-cyan)';
-                text.innerText = 'Fully expanded state: Magnetic self-indexing locks engaged. Structure provides full volumetric capacity for space station payload.';
-                telemetry.innerText = 'STATE: EXPANDED // COMPRESSION: 0.0% // HINGE ANGLE: 180°';
-            }
-        }
-
-        /* 04. MODALS & SCROLL PROGRESS */
+        /* ==========================================================================
+           03. MODAL DIALOG CONTROLLER
+           ========================================================================== */
         function openModal(title, text) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerText = text;
             document.getElementById('specModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        function closeModal() { document.getElementById('specModal').classList.remove('active'); }
 
+        function closeModal() {
+            document.getElementById('specModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('specModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('specModal')) {
+                closeModal();
+            }
+        });
+
+        /* ==========================================================================
+           04. NAVBAR & SCROLL PROGRESS MONITOR
+           ========================================================================== */
         const progressLine = document.getElementById('progressLine');
+        const navbar = document.getElementById('mainNavbar');
+
         window.addEventListener('scroll', () => {
-            let winScroll = document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            progressLine.style.width = `${(winScroll / height) * 100}%`;
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            progressLine.style.width = `${scrolled}%`;
+
+            if (winScroll > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
     </script>
 </body>
