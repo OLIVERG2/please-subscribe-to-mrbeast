@@ -1570,7 +1570,7 @@
                     <tr class="matrix-row-card">
                         <td class="matrix-cell">
                             <span class="spec-tag-code">// SPEC_01 - VOLUMETRICS</span>
-                            <div class="spec-header-title">Compact Stowing Ratio</div>
+                            <div class="spec-header-title">Least Volume for hinges</div>
                             <p style="font-size: 0.8rem; color: var(--text-muted);">Target: &gt;80% volume reduction during launch transit.</p>
                             <div class="matrix-metric-pill">VAL: <span>84.2%</span></div>
                             <div class="matrix-metric-pill">STATUS: <span>PASSED</span></div>
@@ -1611,22 +1611,20 @@
 
                     <tr class="matrix-row-card">
                         <td class="matrix-cell">
-                            <span class="spec-tag-code">// SPEC_03 - MATERIAL SCIENCE</span>
-                            <div class="spec-header-title">Thermal & Off-Gassing Integrity</div>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">NASA MSFC-SPEC-522 compliance for cabin toxic off-gassing.</p>
-                            <div class="matrix-metric-pill">TML: <span>&lt;0.01%</span></div>
-                            <div class="matrix-metric-pill">TEMP: <span>-120°C to +150°C</span></div>
+                            <span class="spec-tag-code">// SPEC_03 - MATERIAL Choice</span>
+                            <div class="spec-header-title">3D Printed Panels</div>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">3d Printer Panels that interlock to help with structural intergrity</p>
+                        
                         </td>
                         <td class="matrix-cell">
-                            <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-purple); font-size: 1rem; margin-bottom: 0.4rem;">PEEK Substructure + Fluoropolymer Joints</div>
-                            <p style="font-size: 0.82rem; color: var(--text-muted);">Polyether ether ketone panels with UV-stabilized fluoropolymer hinge layers.</p>
+                            <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-purple); font-size: 1rem; margin-bottom: 0.4rem;">Interlocking joints</div>
+                            <p style="font-size: 0.82rem; color: var(--text-muted);">Interlocking joints for better structural intergyity.</p>
                         </td>
                         <td class="matrix-cell">
                             <div class="reasoning-box">
                                 <strong>Engineering Rationale:</strong>
-                                Silicone hinges degraded under vacuum thermal cycling in early prototypes. PEEK provides extreme stiffness-to-weight ratio, while aerospace fluoropolymer living hinges survive -120°C to +150°C without embrittlement or toxic off-gassing.
+                                Insert Paragraph written by sawyer...
                             </div>
-                            <button class="inspect-btn" onclick="openModal('Thermal & Off-Gassing Rationale', 'Material Science Rationale: Standard 3D printing filaments (PLA/ABS) off-gas harmful VOCs in closed ISS environmental control loops. Thermal vacuum chamber testing confirmed zero volatile mass loss (<0.01% TML) across 500 thermal expansion cycles.')">READ FULL ANALYSIS</button>
                         </td>
                     </tr>
                 </tbody>
@@ -1638,10 +1636,10 @@
     <section id="crew" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">04 // FLIGHT CREW</div>
+                <div class="section-tag">04 Deseign Crew</div>
                 <h2 class="section-title">PROJECT ENGINEERS</h2>
             </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-gold);">4-MEMBER DESIGN TEAM</div>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold);">4-MEMBER TEAM</div>
         </div>
 
         <div class="team-grid">
@@ -1651,9 +1649,9 @@
                 <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍🚀</div>
-                <div class="team-name">[ Engineer 1 ]</div>
-                <div class="team-role">LEAD ORIGAMI ARCHITECT</div>
-                <div class="team-bio">Specializing in Miura-ori tessellation kinematics and microgravity surface folding algorithms.</div>
+                <div class="team-name">Hayden Flynn</div>
+                <div class="team-role">Main Prototype Developer</div>
+                <div class="team-bio">Cad Designer and Printer. Also made the final prototype idea.</div>
             </div>
 
             <div class="team-card bracket-cyan">
@@ -1661,41 +1659,13 @@
                 <div class="corner-bracket cb-tr"></div>
                 <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
-                <div class="team-avatar">👩‍🚀</div>
-                <div class="team-name">[ Engineer 2 ]</div>
-                <div class="team-role">MATERIALS & MANUFACTURING</div>
-                <div class="team-bio">Focused on PEEK thermomechanical stability and fluoropolymer flexure fatigue resistance.</div>
-            </div>
-
-            <div class="team-card bracket-purple">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div class="corner-bracket cb-br"></div>
-                <div class="team-avatar">🧑‍🚀</div>
-                <div class="team-name">[ Engineer 3 ]</div>
-                <div class="team-role">FLIGHT SPECS & TESTING</div>
-                <div class="team-bio">Managing MSFC-SPEC-522 toxicity compliance and EMU glove ergonomic testing.</div>
-            </div>
-
-            <div class="team-card bracket-emerald">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍💻</div>
-                <div class="team-name">[ Engineer 4 ]</div>
-                <div class="team-role">SYSTEMS & ARCHITECTURE</div>
-                <div class="team-bio">Developing CAD parametric models and finite element stress dissipation simulations.</div>
+                <div class="team-name">Oliver Garcia</div>
+                <div class="team-role">Website Designer</div>
+                <div class="team-bio">Focused on Developing website and brochure.</div>
             </div>
-        </div>
-    </section>
 
-    <!-- Footer Architecture -->
-    <footer>
-        <div class="footer-brand">
-            <strong>NASA HUNCH PROGRAM</strong>
-            <span>HIGH SCHOOL STUDENTS UNITED WITH NASA TO CREATE HARDWARE</span>
+            <div class="team-card bracket-purple"> 
         </div>
         <div>
             SYSTEM READY FOR ISS DEPLOYMENT // 2026
