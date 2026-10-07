@@ -486,7 +486,7 @@
         }
 
         /* ==========================================================================
-           06. CONTENT SECTIONS & CONSTRAINTS
+           06. CONTENT SECTIONS & PROBLEM STATEMENT
            ========================================================================== */
         .content-section {
             padding: 7rem 4%;
@@ -497,43 +497,20 @@
             position: relative;
         }
 
-        .constraint-spec-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.8rem;
+        .problem-statement-box {
+            font-size: 1.15rem;
+            color: var(--text-main);
+            line-height: 1.95;
+            font-weight: 300;
         }
 
-        .spec-box-card {
-            background: rgba(2, 6, 16, 0.7);
-            border: 1px solid var(--border-line);
-            padding: 1.8rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .spec-box-card:hover {
-            border-color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.03);
-            transform: translateY(-3px);
-        }
-
-        .spec-box-title {
-            font-family: var(--font-display);
-            font-size: 0.9rem;
-            color: var(--accent-cyan);
-            letter-spacing: 1px;
-            margin-bottom: 0.6rem;
-            text-transform: uppercase;
-        }
-
-        .spec-box-desc {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            line-height: 1.6;
+        .problem-highlight {
+            color: var(--accent-gold);
+            font-weight: 600;
         }
 
         /* ==========================================================================
-           07. PROTOTYPE GALLERY GRID
+           07. PROTOTYPE GALLERY GRID (2 PHOTOS)
            ========================================================================== */
         .photo-gallery-grid {
             display: grid;
@@ -559,7 +536,7 @@
 
         .gallery-img-container {
             width: 100%;
-            height: 320px;
+            height: 360px;
             background: #030712;
             border: 1px dashed var(--border-cyan);
             border-radius: 4px;
@@ -613,50 +590,45 @@
         }
 
         /* ==========================================================================
-           08. PROTOTYPE REASON SECTION
+           08. PROTOTYPE REASON SECTION (1 BOX)
            ========================================================================== */
-        .reason-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .reason-card {
+        .single-reason-card {
             background: var(--bg-card);
             border: 1px solid var(--border-line);
-            padding: 2.2rem;
+            padding: 3rem;
             border-radius: 4px;
             position: relative;
             transition: all 0.4s ease;
         }
 
-        .reason-card:hover {
+        .single-reason-card:hover {
             border-color: var(--accent-gold);
             box-shadow: 0 10px 35px rgba(255, 158, 0, 0.15);
-            transform: translateY(-4px);
         }
 
         .reason-num {
             font-family: var(--font-display);
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 900;
             color: var(--accent-gold);
-            opacity: 0.8;
-            margin-bottom: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0.8rem;
         }
 
         .reason-title {
             font-family: var(--font-display);
-            font-size: 1.15rem;
+            font-size: 1.4rem;
             color: #ffffff;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .reason-text {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            line-height: 1.8;
+            line-height: 1.95;
+            font-weight: 300;
         }
 
         /* ==========================================================================
@@ -752,14 +724,12 @@
 
         @media (max-width: 1100px) {
             .hero-section { grid-template-columns: 1fr; }
-            .reason-grid { grid-template-columns: 1fr; }
             .photo-gallery-grid { grid-template-columns: 1fr; }
             .team-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 700px) {
             .nav-links { display: none; }
-            .constraint-spec-grid { grid-template-columns: 1fr; }
             .team-grid { grid-template-columns: 1fr; }
             .telemetry-bar { grid-template-columns: repeat(2, 1fr); }
         }
@@ -780,7 +750,7 @@
 
         <ul class="nav-links">
             <li><a href="#hero">01 // OVERVIEW</a></li>
-            <li><a href="#constraints">02 // CONSTRAINTS</a></li>
+            <li><a href="#problem">02 // THE PROBLEM</a></li>
             <li><a href="#gallery">03 // PROTOTYPE PHOTOS</a></li>
             <li><a href="#reason">04 // PROTOTYPE REASON</a></li>
             <li><a href="#crew">05 // CREW</a></li>
@@ -843,14 +813,14 @@
         </div>
     </section>
 
-    <!-- Section 02: Constraints -->
-    <section id="constraints" class="content-section">
+    <!-- Section 02: The Problem -->
+    <section id="problem" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">01 // MISSION SPECIFICATIONS</div>
-                <h2 class="section-title">SYSTEM CONSTRAINTS</h2>
+                <div class="section-tag">01 // MISSION CHALLENGE</div>
+                <h2 class="section-title">THE PROBLEM</h2>
             </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-COLUMBUS</div>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-LOGISTICS</div>
         </div>
 
         <div class="glass-panel bracket-purple">
@@ -859,24 +829,13 @@
             <div class="corner-bracket cb-bl"></div>
             <div class="corner-bracket cb-br"></div>
 
-            <div class="constraint-spec-grid">
-                <div class="spec-box-card">
-                    <div class="spec-box-title">01 // ZERO PINCH HAZARD</div>
-                    <div class="spec-box-desc">Continuous compliant flexure joints prevent astronaut glove snags during EVA and intra-vehicular operations.</div>
-                </div>
-                <div class="spec-box-card">
-                    <div class="spec-box-title">02 // VOLUMETRIC OPTIMIZATION</div>
-                    <div class="spec-box-desc">Engineered for maximum packing efficiency inside the standard ISS Express Rack configuration.</div>
-                </div>
-                <div class="spec-box-card">
-                    <div class="spec-box-title">03 // COMPLIANT MECHANICS</div>
-                    <div class="spec-box-desc">Eliminates traditional mechanical hinges to avoid cold-welding risks in orbital vacuum conditions.</div>
-                </div>
+            <div class="problem-statement-box">
+                Traditional space cargo packaging relies heavily on rigid, single-use structures that consume excessive payload volume during launch and transition into unusable orbital waste. Standard mechanical hinges create severe <span class="problem-highlight">pinch hazards</span> for crew members in microgravity and pose significant risks of cold-welding in orbital vacuum conditions. Without adaptable, collapsible designs, space missions sacrifice valuable volume, efficiency, and operational safety.
             </div>
         </div>
     </section>
 
-    <!-- Section 03: Prototype Photos -->
+    <!-- Section 03: Prototype Photos (2 Photos) -->
     <section id="gallery" class="content-section">
         <div class="section-header">
             <div>
@@ -924,48 +883,10 @@
                     <span class="gallery-badge">MECHANISM</span>
                 </div>
             </div>
-
-            <div class="gallery-card bracket-purple">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div class="corner-bracket cb-br"></div>
-
-                <div class="gallery-img-container">
-                    <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80" alt="Prototype Photo 3" class="gallery-img">
-                </div>
-
-                <div class="gallery-meta">
-                    <div>
-                        <div class="gallery-title">PROTOTYPE PHOTO 03</div>
-                        <div class="gallery-caption">Folded Stowing State Configuration Test</div>
-                    </div>
-                    <span class="gallery-badge">STOWED STATE</span>
-                </div>
-            </div>
-
-            <div class="gallery-card bracket-emerald">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div class="corner-bracket cb-br"></div>
-
-                <div class="gallery-img-container">
-                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Prototype Photo 4" class="gallery-img">
-                </div>
-
-                <div class="gallery-meta">
-                    <div>
-                        <div class="gallery-title">PROTOTYPE PHOTO 04</div>
-                        <div class="gallery-caption">Deployed Envelope Expansion & Load Testing</div>
-                    </div>
-                    <span class="gallery-badge">TESTED</span>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- Section 04: Prototype Reason -->
+    <!-- Section 04: Prototype Reason (1 Box) -->
     <section id="reason" class="content-section">
         <div class="section-header">
             <div>
@@ -975,45 +896,17 @@
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">BUILD PURPOSE & OBJECTIVES</div>
         </div>
 
-        <div class="reason-grid">
-            <div class="reason-card bracket-gold">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div class="corner-bracket cb-br"></div>
-                
-                <div class="reason-num">01</div>
-                <h3 class="reason-title">Physical Proof of Concept</h3>
-                <p class="reason-text">
-                    The prototype was created to physically demonstrate how interlocking 3D-printed panel joints and compliant folding mechanics operate in real space, moving beyond theoretical CAD models to tangible flight hardware verification.
-                </p>
-            </div>
-
-            <div class="reason-card bracket-cyan">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div class="corner-bracket cb-br"></div>
-
-                <div class="reason-num">02</div>
-                <h3 class="reason-title">Volumetric Efficiency Testing</h3>
-                <p class="reason-text">
-                    Building a physical prototype allowed our team to measure actual compression ratios firsthand, confirming that the structure achieves maximum stowage compression when folded for cargo transit.
-                </p>
-            </div>
-
-            <div class="reason-card bracket-purple">
-                <div class="corner-bracket cb-tl"></div>
-                <div class="corner-bracket cb-tr"></div>
-                <div class="corner-bracket cb-bl"></div>
-                <div class="corner-bracket cb-br"></div>
-
-                <div class="reason-num">03</div>
-                <h3 class="reason-title">Ergonomics & Operability</h3>
-                <p class="reason-text">
-                    Constructing this physical unit provided hands-on evaluation of deployment forces and latching mechanisms, ensuring safe, zero-pinch manipulation for crew members wearing pressurized space gloves.
-                </p>
-            </div>
+        <div class="single-reason-card bracket-gold">
+            <div class="corner-bracket cb-tl"></div>
+            <div class="corner-bracket cb-tr"></div>
+            <div class="corner-bracket cb-bl"></div>
+            <div class="corner-bracket cb-br"></div>
+            
+            <div class="reason-num">01</div>
+            <h3 class="reason-title">PRIMARY PROTOTYPE OBJECTIVE</h3>
+            <p class="reason-text">
+                The physical prototype was constructed as a tangible proof of concept to validate kinetic origami flexure mechanics beyond digital CAD simulations. Building a 1:1 scale physical model allowed our engineering team to directly measure maximum volumetric stowage compression during transit, evaluate deployment latch forces, and verify zero-pinch hinge operation for safe astronaut manipulation during spaceflight missions.
+            </p>
         </div>
     </section>
 
