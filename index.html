@@ -21,43 +21,32 @@
             --bg-card: rgba(6, 11, 24, 0.85);
             --bg-card-rgb: 6, 11, 24;
             --bg-card-hover: rgba(12, 22, 45, 0.95);
-            --bg-card-hover-rgb: 12, 22, 45;
             
             /* Accent Palettes */
             --accent-gold: #ff9e00;
-            --accent-gold-rgb: 255, 158, 0;
             --accent-gold-glow: rgba(255, 158, 0, 0.6);
             --accent-gold-dim: rgba(255, 158, 0, 0.15);
             
             --accent-cyan: #00f0ff;
-            --accent-cyan-rgb: 0, 240, 255;
             --accent-cyan-glow: rgba(0, 240, 255, 0.55);
             --accent-cyan-dim: rgba(0, 240, 255, 0.12);
             
             --accent-purple: #a855f7;
-            --accent-purple-rgb: 168, 85, 247;
             --accent-purple-glow: rgba(168, 85, 247, 0.5);
             --accent-purple-dim: rgba(168, 85, 247, 0.12);
             
             --accent-emerald: #10b981;
-            --accent-emerald-rgb: 16, 185, 129;
             --accent-emerald-glow: rgba(16, 185, 129, 0.5);
-            
             --accent-rose: #f43f5e;
-            --accent-rose-rgb: 244, 63, 94;
             
             /* Structural Text & Line Elements */
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --text-dim: #475569;
             --text-bright: #ffffff;
             
             --border-line: rgba(255, 255, 255, 0.1);
-            --border-line-heavy: rgba(255, 255, 255, 0.25);
             --border-cyan: rgba(0, 240, 255, 0.45);
-            --border-cyan-strong: rgba(0, 240, 255, 0.85);
             --border-gold: rgba(255, 158, 0, 0.5);
-            --border-gold-strong: rgba(255, 158, 0, 0.9);
             --border-purple: rgba(168, 85, 247, 0.45);
             
             /* Typography Variables */
@@ -67,14 +56,9 @@
             
             /* Animation Curve Definitions */
             --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
-            --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
             --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
             
-            /* Universal Box Shadows */
-            --shadow-glow-cyan: 0 0 25px rgba(0, 240, 255, 0.25);
-            --shadow-glow-gold: 0 0 25px rgba(255, 158, 0, 0.25);
-            --shadow-glow-purple: 0 0 25px rgba(168, 85, 247, 0.25);
             --shadow-card-depth: 0 20px 50px rgba(0, 0, 0, 0.8);
         }
 
@@ -87,7 +71,6 @@
             box-sizing: border-box;
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         html {
@@ -95,12 +78,6 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             overflow-x: hidden;
-        }
-
-        ::selection {
-            background: var(--accent-cyan);
-            color: #000000;
-            text-shadow: none;
         }
 
         ::-webkit-scrollbar {
@@ -116,7 +93,6 @@
         ::-webkit-scrollbar-thumb {
             background: rgba(0, 240, 255, 0.3);
             border-radius: 0px;
-            transition: background 0.3s ease;
         }
 
         ::-webkit-scrollbar-thumb:hover {
@@ -135,7 +111,6 @@
             min-height: 100vh;
         }
 
-        /* Background Particle System Layer */
         #particleCanvas {
             position: fixed;
             top: 0;
@@ -147,7 +122,6 @@
             opacity: 0.85;
         }
 
-        /* Decorative Grid Overlay */
         .body-grid-overlay {
             position: fixed;
             top: 0;
@@ -162,7 +136,6 @@
             z-index: -1;
         }
 
-        /* Top Progress Line Indicator */
         .scroll-progress-line {
             position: fixed;
             top: 0;
@@ -182,7 +155,7 @@
         }
 
         /* ==========================================================================
-           03. ADVANCED NAVIGATION & SYSTEM STATUS BAR
+           03. NAVIGATION BAR
            ========================================================================== */
         .navbar {
             position: fixed;
@@ -194,11 +167,11 @@
             align-items: center;
             padding: 1.2rem 4%;
             background: rgba(1, 2, 6, 0.92);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border-bottom: 1px solid var(--border-line);
             z-index: 1000;
-            transition: background 0.4s ease, border-color 0.4s ease, padding 0.4s ease;
+            transition: all 0.4s ease;
         }
 
         .navbar.scrolled {
@@ -219,7 +192,6 @@
             gap: 14px;
             color: #ffffff;
             text-decoration: none;
-            position: relative;
         }
 
         .brand-logo::before {
@@ -241,27 +213,7 @@
             padding: 3px 9px;
             letter-spacing: 2px;
             background: rgba(0, 240, 255, 0.08);
-            box-shadow: 0 0 12px var(--accent-cyan-dim);
             border-radius: 2px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .brand-badge::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                60deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
-            transform: rotate(30deg);
-            animation: badgeShine 4s infinite linear;
         }
 
         .nav-links {
@@ -269,10 +221,6 @@
             gap: 2.2rem;
             list-style: none;
             align-items: center;
-        }
-
-        .nav-links li {
-            position: relative;
         }
 
         .nav-links a {
@@ -283,21 +231,9 @@
             font-weight: 500;
             letter-spacing: 2px;
             text-transform: uppercase;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
+            transition: color 0.3s ease;
             padding: 0.4rem 0;
-            display: inline-block;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0%;
-            height: 2px;
-            background: var(--accent-cyan);
-            box-shadow: 0 0 8px var(--accent-cyan);
-            transition: width 0.3s var(--ease-out-cubic);
+            position: relative;
         }
 
         .nav-links a:hover {
@@ -305,11 +241,6 @@
             text-shadow: 0 0 10px var(--accent-cyan-glow);
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Status Indicator Component in Navbar */
         .system-status-indicator {
             display: flex;
             align-items: center;
@@ -334,7 +265,7 @@
         }
 
         /* ==========================================================================
-           04. REUSABLE ATOMIC COMPONENTS & CORNER BRACKETS
+           04. ATOMIC COMPONENTS & GLASS PANELS
            ========================================================================== */
         .corner-bracket {
             position: absolute;
@@ -344,58 +275,27 @@
             border-style: solid;
             pointer-events: none;
             z-index: 3;
-            transition: border-color 0.4s ease, width 0.4s ease, height 0.4s ease;
+            transition: all 0.4s ease;
         }
 
-        .cb-tl {
-            top: -1px;
-            left: -1px;
-            border-width: 2px 0 0 2px;
-        }
+        .cb-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+        .cb-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+        .cb-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+        .cb-br { bottom: -1px; right: -1px; border-width: 0 2px 0 0; }
 
-        .cb-tr {
-            top: -1px;
-            right: -1px;
-            border-width: 2px 2px 0 0;
-        }
+        .bracket-gold .corner-bracket { border-color: var(--accent-gold); }
+        .bracket-purple .corner-bracket { border-color: var(--accent-purple); }
+        .bracket-emerald .corner-bracket { border-color: var(--accent-emerald); }
 
-        .cb-bl {
-            bottom: -1px;
-            left: -1px;
-            border-width: 0 0 2px 2px;
-        }
-
-        .cb-br {
-            bottom: -1px;
-            right: -1px;
-            border-width: 0 2px 0 0;
-        }
-
-        /* Corner Bracket Color Variations */
-        .bracket-gold .corner-bracket {
-            border-color: var(--accent-gold);
-        }
-
-        .bracket-purple .corner-bracket {
-            border-color: var(--accent-purple);
-        }
-
-        .bracket-emerald .corner-bracket {
-            border-color: var(--accent-emerald);
-        }
-
-        /* Generic Glass Card Base */
         .glass-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-line);
-            padding: 3.5rem;
+            padding: 3rem;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             position: relative;
             border-radius: 4px;
-            transition: border-color 0.4s var(--ease-out-cubic), 
-                        box-shadow 0.4s var(--ease-out-cubic), 
-                        transform 0.4s var(--ease-out-cubic);
+            transition: all 0.4s var(--ease-out-cubic);
         }
 
         .glass-panel:hover {
@@ -404,82 +304,8 @@
             transform: translateY(-2px);
         }
 
-        .glass-panel:hover .corner-bracket {
-            width: 22px;
-            height: 22px;
-        }
-
-        /* Action Buttons */
-        .inspect-btn {
-            background: rgba(2, 4, 10, 0.8);
-            border: 1px solid var(--border-cyan);
-            color: var(--accent-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            font-weight: 600;
-            padding: 10px 20px;
-            letter-spacing: 2px;
-            transition: all 0.3s var(--ease-out-cubic);
-            border-radius: 2px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            text-decoration: none;
-        }
-
-        .inspect-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(0, 240, 255, 0.2),
-                transparent
-            );
-            transition: left 0.5s ease;
-        }
-
-        .inspect-btn:hover::before {
-            left: 100%;
-        }
-
-        .inspect-btn:hover {
-            border-color: var(--accent-cyan);
-            background: var(--accent-cyan);
-            color: #000000;
-            box-shadow: 0 0 20px var(--accent-cyan-glow);
-            font-weight: 700;
-            transform: translateY(-2px);
-        }
-
-        .inspect-btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-gold {
-            border-color: var(--border-gold);
-            color: var(--accent-gold);
-        }
-
-        .btn-gold:hover {
-            border-color: var(--accent-gold);
-            background: var(--accent-gold);
-            color: #000000;
-            box-shadow: 0 0 20px var(--accent-gold-glow);
-        }
-
-        /* Section Title Block */
         .section-header {
-            margin-bottom: 3.5rem;
+            margin-bottom: 3rem;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -534,7 +360,7 @@
         }
 
         /* ==========================================================================
-           05. HERO SECTION & OPTICAL RECON VIEWER
+           05. HERO SECTION
            ========================================================================== */
         .hero-section {
             min-height: 100vh;
@@ -544,11 +370,6 @@
             align-items: center;
             gap: 4rem;
             position: relative;
-            background: radial-gradient(
-                circle at 20% 30%, 
-                rgba(0, 240, 255, 0.05) 0%, 
-                transparent 60%
-            );
         }
 
         .hero-tag {
@@ -561,7 +382,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            text-shadow: 0 0 10px var(--accent-gold-glow);
             text-transform: uppercase;
         }
 
@@ -570,7 +390,6 @@
             width: 10px;
             height: 10px;
             background: var(--accent-gold);
-            box-shadow: 0 0 12px var(--accent-gold);
             transform: rotate(45deg);
         }
 
@@ -580,12 +399,10 @@
             font-weight: 900;
             text-transform: uppercase;
             line-height: 1.02;
-            letter-spacing: -1px;
             margin-bottom: 1.8rem;
             background: linear-gradient(180deg, #ffffff 30%, #64748b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            position: relative;
         }
 
         .hero-desc {
@@ -597,18 +414,16 @@
             margin-bottom: 2.2rem;
             border-left: 2px solid var(--accent-cyan);
             padding-left: 1.5rem;
-            background: linear-gradient(90deg, rgba(0, 240, 255, 0.03), transparent);
         }
 
-        /* Photo Viewer Main Card */
+        /* Single Photo Card Component */
         .photo-viewer-card {
             width: 100%;
-            height: 600px;
+            height: 560px;
             background: var(--bg-card);
             border: 1px solid var(--border-cyan);
             position: relative;
             backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             border-radius: 6px;
             overflow: hidden;
             display: flex;
@@ -616,12 +431,6 @@
             justify-content: space-between;
             padding: 1.5rem;
             box-shadow: 0 0 50px rgba(0, 240, 255, 0.15), var(--shadow-card-depth);
-            transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
-        }
-
-        .photo-viewer-card:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 75px rgba(0, 240, 255, 0.3), var(--shadow-card-depth);
         }
 
         .photo-viewport {
@@ -632,103 +441,20 @@
             border: 1px solid var(--border-line);
             border-radius: 4px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .photo-viewport::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(
-                180deg,
-                rgba(0, 0, 0, 0.2) 0%,
-                transparent 40%,
-                transparent 60%,
-                rgba(0, 0, 0, 0.6) 100%
-            );
-            z-index: 2;
-            pointer-events: none;
         }
 
         .main-photo-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: contrast(1.15) saturate(1.25) brightness(0.95);
-            transition: transform 0.7s var(--ease-expo-out), opacity 0.4s ease, filter 0.4s ease;
+            filter: contrast(1.15) saturate(1.25);
+            transition: transform 0.7s var(--ease-expo-out);
         }
 
         .photo-viewer-card:hover .main-photo-img {
-            transform: scale(1.05);
-            filter: contrast(1.2) saturate(1.3) brightness(1);
+            transform: scale(1.03);
         }
 
-        /* Overlay Crosshair Reticle for Optical Recon */
-        .viewport-reticle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border: 1px dashed rgba(0, 240, 255, 0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .viewport-reticle::before, .viewport-reticle::after {
-            content: '';
-            position: absolute;
-            background: rgba(0, 240, 255, 0.4);
-        }
-
-        .viewport-reticle::before {
-            width: 20px;
-            height: 1px;
-        }
-
-        .viewport-reticle::after {
-            width: 1px;
-            height: 20px;
-        }
-
-        .photo-nav-controls {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-        }
-
-        .photo-btn {
-            background: rgba(2, 4, 10, 0.9);
-            border: 1px solid var(--accent-cyan);
-            color: var(--accent-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            padding: 7px 14px;
-            letter-spacing: 1.5px;
-            transition: all 0.3s var(--ease-out-cubic);
-            border-radius: 2px;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
-
-        .photo-btn:hover, .photo-btn.active {
-            background: var(--accent-cyan);
-            color: #000000;
-            box-shadow: 0 0 18px var(--accent-cyan-glow);
-            font-weight: 700;
-        }
-
-        /* Telemetry Bar Under Hero */
         .telemetry-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -740,14 +466,8 @@
 
         .telemetry-item {
             font-family: var(--font-mono);
-            position: relative;
             padding-left: 12px;
             border-left: 2px solid var(--border-line);
-            transition: border-left-color 0.3s ease;
-        }
-
-        .telemetry-item:hover {
-            border-left-color: var(--accent-cyan);
         }
 
         .telemetry-val {
@@ -755,8 +475,6 @@
             font-size: 1.4rem;
             color: var(--accent-cyan);
             font-weight: 700;
-            text-shadow: 0 0 10px var(--accent-cyan-glow);
-            line-height: 1.1;
         }
 
         .telemetry-lbl {
@@ -768,55 +486,27 @@
         }
 
         /* ==========================================================================
-           06. PROBLEM STATEMENT & MISSION CONSTRAINTS
+           06. CONTENT SECTIONS & CONSTRAINTS
            ========================================================================== */
         .content-section {
-            padding: 8rem 4%;
-            min-height: 100vh;
+            padding: 7rem 4%;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             position: relative;
         }
 
-        .panel-quote {
-            font-family: var(--font-head);
-            font-size: 1.85rem;
-            font-weight: 700;
-            line-height: 1.35;
-            letter-spacing: -0.5px;
-            margin-bottom: 1.8rem;
-            color: #ffffff;
-            position: relative;
-            padding-left: 1.8rem;
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        .panel-text {
-            color: var(--text-muted);
-            font-size: 1.02rem;
-            font-weight: 300;
-            line-height: 1.9;
-            margin-bottom: 1.8rem;
-        }
-
-        .panel-text strong {
-            color: var(--text-bright);
-            font-weight: 600;
-        }
-
-        /* Spec Checklist Grid */
         .constraint-spec-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1.8rem;
-            margin-top: 2.5rem;
         }
 
         .spec-box-card {
             background: rgba(2, 6, 16, 0.7);
             border: 1px solid var(--border-line);
-            padding: 1.5rem;
+            padding: 1.8rem;
             border-radius: 4px;
             transition: all 0.3s ease;
         }
@@ -829,249 +519,148 @@
 
         .spec-box-title {
             font-family: var(--font-display);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--accent-cyan);
             letter-spacing: 1px;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
             text-transform: uppercase;
         }
 
         .spec-box-desc {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             line-height: 1.6;
         }
 
         /* ==========================================================================
-           07. KINEMATICS & ORIGAMI THEORY SECTION
+           07. PROTOTYPE GALLERY GRID
            ========================================================================== */
-        .theory-grid {
+        .photo-gallery-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
 
-        .theory-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .theory-image-slot {
+        .gallery-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-line);
+            border-radius: 4px;
+            overflow: hidden;
             position: relative;
+            transition: all 0.4s var(--ease-out-cubic);
+            padding: 1.2rem;
+        }
+
+        .gallery-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .gallery-img-container {
             width: 100%;
-            height: 300px;
+            height: 320px;
             background: #030712;
             border: 1px dashed var(--border-cyan);
-            margin-bottom: 2rem;
-            overflow: hidden;
             border-radius: 4px;
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .theory-img {
+        .gallery-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s var(--ease-expo-out), filter 0.4s ease;
-            filter: saturate(1.2) contrast(1.15);
+            transition: transform 0.5s ease;
         }
 
-        .theory-card:hover .theory-img {
-            transform: scale(1.08);
-            filter: saturate(1.35) contrast(1.2);
+        .gallery-card:hover .gallery-img {
+            transform: scale(1.05);
         }
 
-        .img-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(2, 4, 10, 0.9);
+        .gallery-meta {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gallery-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .gallery-caption {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+        }
+
+        .gallery-badge {
+            background: rgba(0, 240, 255, 0.1);
             border: 1px solid var(--accent-cyan);
             color: var(--accent-cyan);
-            font-family: var(--font-mono);
             font-size: 0.6rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            letter-spacing: 2px;
-            box-shadow: 0 0 12px var(--accent-cyan-glow);
+            padding: 3px 8px;
             border-radius: 2px;
-            backdrop-filter: blur(8px);
-        }
-
-        .theory-title {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-
-        .theory-spec-tag {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--accent-gold);
-            margin-top: 1.5rem;
-            border-top: 1px dashed var(--border-line);
-            padding-top: 1rem;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* Formula Overlay Block */
-        .math-formula-card {
-            background: rgba(168, 85, 247, 0.05);
-            border: 1px solid var(--accent-purple);
-            padding: 1.2rem;
-            margin-top: 1rem;
-            border-radius: 4px;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .math-formula-card code {
-            color: var(--accent-purple);
-            font-weight: 700;
-            font-size: 0.9rem;
         }
 
         /* ==========================================================================
-           08. ENGINEERING MATRIX & JUSTIFICATION TABLE
+           08. PROTOTYPE REASON SECTION
            ========================================================================== */
-        .matrix-container {
-            display: flex;
-            flex-direction: column;
+        .reason-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
         }
 
-        .matrix-intro-card {
-            background: rgba(168, 85, 247, 0.06);
-            border: 1px solid var(--accent-purple);
-            padding: 1.8rem 2.2rem;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 0 30px var(--accent-purple-dim);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .matrix-intro-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 4px; height: 100%;
-            background: var(--accent-purple);
-            box-shadow: 0 0 10px var(--accent-purple);
-        }
-
-        .matrix-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 1.2rem;
-        }
-
-        .matrix-table th {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--accent-gold);
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            text-align: left;
-            padding: 0 1.5rem 0.8rem 1.5rem;
-            border-bottom: 1px solid var(--border-line);
-        }
-
-        .matrix-row-card {
+        .reason-card {
             background: var(--bg-card);
             border: 1px solid var(--border-line);
+            padding: 2.2rem;
             border-radius: 4px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            position: relative;
+            transition: all 0.4s ease;
         }
 
-        .matrix-row-card:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 38px rgba(0, 240, 255, 0.18), var(--shadow-card-depth);
-            transform: scale(1.005);
+        .reason-card:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 35px rgba(255, 158, 0, 0.15);
+            transform: translateY(-4px);
         }
 
-        .matrix-cell {
-            padding: 2rem 1.8rem;
-            vertical-align: top;
-        }
-
-        .spec-header-title {
+        .reason-num {
             font-family: var(--font-display);
-            font-size: 1.18rem;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.4rem;
-        }
-
-        .spec-tag-code {
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--accent-cyan);
-            letter-spacing: 2px;
-            margin-bottom: 0.3rem;
-            display: block;
-        }
-
-        .reasoning-box {
-            background: rgba(2, 4, 10, 0.85);
-            border-left: 3px solid var(--accent-gold);
-            padding: 1.2rem 1.4rem;
-            border-radius: 0 4px 4px 0;
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            line-height: 1.75;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            opacity: 0.8;
             margin-bottom: 1rem;
         }
 
-        .reasoning-box strong {
-            color: var(--accent-gold);
-            font-size: 0.72rem;
-            font-family: var(--font-mono);
-            letter-spacing: 1.5px;
-            display: block;
-            margin-bottom: 0.4rem;
+        .reason-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            color: #ffffff;
+            margin-bottom: 0.8rem;
             text-transform: uppercase;
         }
 
-        /* Multi-metric Badge Pills inside Matrix */
-        .matrix-metric-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-line);
-            padding: 3px 8px;
-            border-radius: 2px;
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
+        .reason-text {
+            font-size: 0.85rem;
             color: var(--text-muted);
-            margin-top: 0.5rem;
-            margin-right: 0.5rem;
-        }
-
-        .matrix-metric-pill span {
-            color: var(--accent-cyan);
-            font-weight: 700;
+            line-height: 1.8;
         }
 
         /* ==========================================================================
-           09. CREW DOSSIER & FLIGHT TEAM SECTION
+           09. CREW SECTION
            ========================================================================== */
         .team-grid {
             display: grid;
@@ -1081,61 +670,36 @@
 
         .team-card {
             border: 1px solid var(--border-line);
-            padding: 3.5rem 1.8rem 2.5rem 1.8rem;
+            padding: 3rem 1.5rem 2rem 1.5rem;
             text-align: center;
             background: var(--bg-card);
             position: relative;
             border-radius: 4px;
             transition: all 0.4s var(--ease-out-cubic);
-            overflow: hidden;
-        }
-
-        .team-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 3px;
-            background: transparent;
-            transition: background 0.4s ease;
-        }
-
-        .team-card:hover::before {
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-cyan));
         }
 
         .team-card:hover {
             border-color: var(--border-gold);
-            box-shadow: 0 10px 40px rgba(255, 158, 0, 0.15);
             transform: translateY(-5px);
         }
 
         .team-avatar {
-            width: 96px;
-            height: 96px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             border: 2px solid var(--accent-gold);
-            margin: 0 auto 1.8rem auto;
+            margin: 0 auto 1.5rem auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             background: rgba(255, 158, 0, 0.06);
-            box-shadow: 0 0 25px rgba(255, 158, 0, 0.2);
-            position: relative;
-            transition: transform 0.4s var(--ease-elastic);
-        }
-
-        .team-card:hover .team-avatar {
-            transform: scale(1.1) rotate(5deg);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 30px var(--accent-cyan-glow);
         }
 
         .team-name {
             font-family: var(--font-display);
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
             color: #ffffff;
             margin-bottom: 0.3rem;
         }
@@ -1143,95 +707,26 @@
         .team-role {
             font-family: var(--font-mono);
             color: var(--accent-gold);
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             font-weight: 600;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         .team-bio {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-top: 1.2rem;
+            margin-top: 1rem;
             line-height: 1.6;
             border-top: 1px dashed var(--border-line);
-            padding-top: 1rem;
+            padding-top: 0.8rem;
         }
 
         /* ==========================================================================
-           10. MODAL DIALOG ENGINE & OVERLAYS
-           ========================================================================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(1, 2, 6, 0.95);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s var(--ease-out-cubic);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-container {
-            width: 90%;
-            max-width: 760px;
-            background: var(--bg-card);
-            border: 1px solid var(--accent-cyan);
-            padding: 3.5rem;
-            position: relative;
-            border-radius: 6px;
-            box-shadow: 0 0 80px rgba(0, 240, 255, 0.3), var(--shadow-card-depth);
-            transform: translateY(20px) scale(0.95);
-            transition: transform 0.4s var(--ease-out-cubic);
-        }
-
-        .modal-overlay.active .modal-container {
-            transform: translateY(0) scale(1);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: transparent;
-            border: 1px solid var(--border-line);
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 1.2rem;
-            width: 36px;
-            height: 36px;
-            border-radius: 2px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            border-color: var(--accent-rose);
-            color: var(--accent-rose);
-            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
-            transform: rotate(90deg);
-        }
-
-        /* ==========================================================================
-           11. FOOTER ARCHITECTURE
+           10. FOOTER
            ========================================================================== */
         footer {
-            padding: 5rem 4% 3rem 4%;
+            padding: 4rem 4% 3rem 4%;
             border-top: 1px solid var(--border-line);
             display: flex;
             justify-content: space-between;
@@ -1240,50 +735,14 @@
             font-size: 0.75rem;
             color: var(--text-muted);
             background: #010206;
-            position: relative;
-        }
-
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 4%; right: 4%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-        }
-
-        .footer-brand {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .footer-brand strong {
-            color: #ffffff;
-            font-family: var(--font-display);
-            letter-spacing: 2px;
         }
 
         /* ==========================================================================
-           12. KEYFRAME ANIMATION DEFINITIONS
+           11. KEYFRAME ANIMATIONS & RESPONSIVE
            ========================================================================== */
         @keyframes pulseGlow {
-            0%, 100% {
-                opacity: 1;
-                box-shadow: 0 0 10px var(--accent-cyan);
-            }
-            50% {
-                opacity: 0.4;
-                box-shadow: 0 0 2px var(--accent-cyan);
-            }
-        }
-
-        @keyframes badgeShine {
-            0% {
-                transform: translateX(-100%) rotate(30deg);
-            }
-            20%, 100% {
-                transform: translateX(100%) rotate(30deg);
-            }
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent-cyan); }
+            50% { opacity: 0.4; box-shadow: 0 0 2px var(--accent-cyan); }
         }
 
         @keyframes statusBlink {
@@ -1291,68 +750,29 @@
             100% { opacity: 1; }
         }
 
-        /* ==========================================================================
-           13. MEDIA QUERIES & RESPONSIVE BREAKPOINTS
-           ========================================================================== */
-        @media (max-width: 1200px) {
-            .hero-section {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-            .team-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        @media (max-width: 1100px) {
+            .hero-section { grid-template-columns: 1fr; }
+            .reason-grid { grid-template-columns: 1fr; }
+            .photo-gallery-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        @media (max-width: 900px) {
-            .nav-links {
-                display: none;
-            }
-            .theory-grid {
-                grid-template-columns: 1fr;
-            }
-            .constraint-spec-grid {
-                grid-template-columns: 1fr;
-            }
-            .matrix-table, .matrix-table tbody, .matrix-table tr, .matrix-table td {
-                display: block;
-                width: 100%;
-            }
-            .matrix-table th {
-                display: none;
-            }
-            .matrix-cell {
-                padding: 1.2rem;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .team-grid {
-                grid-template-columns: 1fr;
-            }
-            .telemetry-bar {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            footer {
-                flex-direction: column;
-                gap: 1.5rem;
-                text-align: center;
-            }
+        @media (max-width: 700px) {
+            .nav-links { display: none; }
+            .constraint-spec-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: 1fr; }
+            .telemetry-bar { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Particle Canvas Engine -->
+    <!-- Canvas Engine & Grid Overlay -->
     <canvas id="particleCanvas"></canvas>
-    
-    <!-- Decorative Grid Background -->
     <div class="body-grid-overlay"></div>
-
-    <!-- Scroll Progress Indicator Line -->
     <div class="scroll-progress-line" id="progressLine"></div>
 
-    <!-- Top Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav class="navbar" id="mainNavbar">
         <a href="#hero" class="brand-logo">
             NASA HUNCH <span class="brand-badge">FLIGHT-READY v4.2</span>
@@ -1360,9 +780,9 @@
 
         <ul class="nav-links">
             <li><a href="#hero">01 // OVERVIEW</a></li>
-            <li><a href="#challenge">02 // BRIEF</a></li>
-            <li><a href="#theory">03 // KINEMATICS</a></li>
-            <li><a href="#matrix">04 // REASONING</a></li>
+            <li><a href="#constraints">02 // CONSTRAINTS</a></li>
+            <li><a href="#gallery">03 // PROTOTYPE PHOTOS</a></li>
+            <li><a href="#reason">04 // PROTOTYPE REASON</a></li>
             <li><a href="#crew">05 // CREW</a></li>
         </ul>
 
@@ -1408,34 +828,27 @@
             <div class="corner-bracket cb-br"></div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-line); padding-bottom: 0.8rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent-cyan); letter-spacing: 2px;">
-                <div>OPTICAL FLIGHT RECON // HIGH-RES PHOTOGRAPHY</div>
-                <div style="color: var(--accent-gold);">STATUS: LIVE RECON</div>
+                <div>OPTICAL FLIGHT RECON // PROTOTYPE HARDWARE</div>
+                <div style="color: var(--accent-gold);">STATUS: ACTIVE MODEL</div>
             </div>
 
             <div class="photo-viewport">
-                <div class="viewport-reticle"></div>
                 <img id="heroImage" src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80" alt="Space Flight Hardware Prototype Photo" class="main-photo-img">
-
-                <div class="photo-nav-controls">
-                    <button class="photo-btn active" onclick="switchHeroImage('https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 01: FOLDED</button>
-                    <button class="photo-btn" onclick="switchHeroImage('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 02: DEPLOYED</button>
-                    <button class="photo-btn" onclick="switchHeroImage('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80', this)">PHOTO 03: TESTING</button>
-                </div>
             </div>
 
             <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); border-top: 1px solid var(--border-line); padding-top: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
-                <span><strong>CAPTION:</strong> <span id="imgCaptionText">Folded Storage Geometry for ISS Columbus Rack Payload Transit</span></span>
-                <span style="color: var(--accent-cyan);">OPTICAL RECON 4K</span>
+                <span><strong>CAPTION:</strong> Kinetic Origami Flight Prototype Model</span>
+                <span style="color: var(--accent-cyan);">HIGH-RES VIEW</span>
             </div>
         </div>
     </section>
 
-    <!-- Section 02: Challenge Brief -->
-    <section id="challenge" class="content-section">
+    <!-- Section 02: Constraints -->
+    <section id="constraints" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">01 // MISSION CONSTRAINTS</div>
-                <h2 class="section-title">THE PROBLEM STATEMENT</h2>
+                <div class="section-tag">01 // MISSION SPECIFICATIONS</div>
+                <h2 class="section-title">SYSTEM CONSTRAINTS</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">SYS_REF: ISS-COLUMBUS</div>
         </div>
@@ -1445,16 +858,11 @@
             <div class="corner-bracket cb-tr"></div>
             <div class="corner-bracket cb-bl"></div>
             <div class="corner-bracket cb-br"></div>
-            
-            <div class="panel-quote">"In microgravity, standard static packaging becomes space waste. Kinetic origami transforms structural dead weight into functional payload."</div>
-            <p class="panel-text">
-                Space logistics are severely constrained by launch fairing volume and payload envelope boundaries. Traditional cargo storage utilizes rigid metallic containers that offer zero volume adaptability post-unpacking, consuming critical habitable volume aboard the International Space Station. Our solution introduces a dynamic origami-inspired system that collapses down to 15.8% of its original size.
-            </p>
 
             <div class="constraint-spec-grid">
                 <div class="spec-box-card">
                     <div class="spec-box-title">01 // ZERO PINCH HAZARD</div>
-                    <div class="spec-box-desc">Fully continuous elastomeric joints prevent astronaut glove snags during EVA and intra-vehicular maneuvers.</div>
+                    <div class="spec-box-desc">Continuous compliant flexure joints prevent astronaut glove snags during EVA and intra-vehicular operations.</div>
                 </div>
                 <div class="spec-box-card">
                     <div class="spec-box-title">02 // VOLUMETRIC OPTIMIZATION</div>
@@ -1462,173 +870,150 @@
                 </div>
                 <div class="spec-box-card">
                     <div class="spec-box-title">03 // COMPLIANT MECHANICS</div>
-                    <div class="spec-box-desc">Eliminates high-friction mechanical hinges, preventing cold-welding risks in space vacuum conditions.</div>
+                    <div class="spec-box-desc">Eliminates traditional mechanical hinges to avoid cold-welding risks in orbital vacuum conditions.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 03: Kinematics & Origami Theory -->
-    <section id="theory" class="content-section">
+    <!-- Section 03: Prototype Photos -->
+    <section id="gallery" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">02 // KINEMATICS & MATHEMATICS</div>
-                <h2 class="section-title">PROTOTYPE & ORIGAMI THEORY</h2>
+                <div class="section-tag">02 // HARDWARE GALLERY</div>
+                <h2 class="section-title">PROTOTYPE PHOTOS</h2>
             </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">THEORETICAL FRAMEWORK</div>
+            <div style="font-family: var(--font-mono); color: var(--accent-cyan);">PHYSICAL BUILD UNITS</div>
         </div>
 
-        <div class="theory-grid">
-            <div class="theory-card glass-panel bracket-emerald">
+        <div class="photo-gallery-grid">
+            <div class="gallery-card bracket-cyan">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-tr"></div>
                 <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
-                
-                <div class="theory-image-slot">
-                    <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=800&q=80" alt="Crease Pattern Folding Geometry" class="theory-img">
-                    <span class="img-badge">FIG 2.1 - FOLD PATTERN GEOMETRY</span>
+
+                <div class="gallery-img-container">
+                    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" alt="Prototype Photo 1" class="gallery-img">
                 </div>
 
-                <div>
-                    <h3 class="theory-title">01 // Origami Tessellation Kinematics</h3>
-                    <p class="panel-text">
-                        The mathematical model utilizes modified Miura-ori tessellations. By holding planar angles constant and optimizing boundary crease parameters, rigid panel surfaces rotate smoothly around compliant elastomer joints without introducing secondary bending stresses.
-                    </p>
-                    
-                    <div class="math-formula-card">
-                        <span>Miura-Ori Volume Ratio:</span>
-                        <code>V_ratio = (cos(α) * sin(β)) / (1 - cos^2(θ))</code>
+                <div class="gallery-meta">
+                    <div>
+                        <div class="gallery-title">PROTOTYPE PHOTO 01</div>
+                        <div class="gallery-caption">Fully Assembled Physical Model — Front Isometric View</div>
                     </div>
-
-                    <div class="theory-spec-tag">
-                        <span>&gt; VOLUMETRIC REDUCTION</span>
-                        <span style="color: #fff;">HIGH-DENSITY COMPRESSION</span>
-                    </div>
+                    <span class="gallery-badge">3D PRINTED</span>
                 </div>
             </div>
 
-            <div class="theory-card glass-panel bracket-gold">
+            <div class="gallery-card bracket-gold">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-tr"></div>
                 <div class="corner-bracket cb-bl"></div>
                 <div class="corner-bracket cb-br"></div>
-                
-                <div class="theory-image-slot">
-                    <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80" alt="Physical Prototype Testing Photo" class="theory-img">
-                    <span class="img-badge">FIG 2.2 - PROTOTYPE BUILD & TESTING</span>
+
+                <div class="gallery-img-container">
+                    <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=800&q=80" alt="Prototype Photo 2" class="gallery-img">
                 </div>
 
-                <div>
-                    <h3 class="theory-title">02 // Load Distribution & Rigidity</h3>
-                    <p class="panel-text">
-                        Once deployed, the geometric over-center latch mechanism transforms flexible crease lines into rigid load paths. Force vectors from payload shift during maneuvers are dissipated across all 24 connected facet edges simultaneously.
-                    </p>
-
-                    <div class="math-formula-card">
-                        <span>Stress Distribution Vector:</span>
-                        <code>σ_edge = ∑(F_load * cos(ϕ_i)) / A_flexure</code>
+                <div class="gallery-meta">
+                    <div>
+                        <div class="gallery-title">PROTOTYPE PHOTO 02</div>
+                        <div class="gallery-caption">Interlocking Joint & Crease Detail Demonstration</div>
                     </div>
+                    <span class="gallery-badge">MECHANISM</span>
+                </div>
+            </div>
 
-                    <div class="theory-spec-tag">
-                        <span>&gt; DEPLOYED INTEGRITY</span>
-                        <span style="color: #fff;">EXPANDED MOMENT OF INERTIA</span>
+            <div class="gallery-card bracket-purple">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
+
+                <div class="gallery-img-container">
+                    <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80" alt="Prototype Photo 3" class="gallery-img">
+                </div>
+
+                <div class="gallery-meta">
+                    <div>
+                        <div class="gallery-title">PROTOTYPE PHOTO 03</div>
+                        <div class="gallery-caption">Folded Stowing State Configuration Test</div>
                     </div>
+                    <span class="gallery-badge">STOWED STATE</span>
+                </div>
+            </div>
+
+            <div class="gallery-card bracket-emerald">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
+
+                <div class="gallery-img-container">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Prototype Photo 4" class="gallery-img">
+                </div>
+
+                <div class="gallery-meta">
+                    <div>
+                        <div class="gallery-title">PROTOTYPE PHOTO 04</div>
+                        <div class="gallery-caption">Deployed Envelope Expansion & Load Testing</div>
+                    </div>
+                    <span class="gallery-badge">TESTED</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 04: Engineering Matrix -->
-    <section id="matrix" class="content-section">
+    <!-- Section 04: Prototype Reason -->
+    <section id="reason" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">03 // PROTOTYPE EVALUATION</div>
-                <h2 class="section-title">ENGINEERING MATRIX & REASONING</h2>
+                <div class="section-tag">03 // DESIGN RATIONALE</div>
+                <h2 class="section-title">PROTOTYPE REASON</h2>
             </div>
-            <div style="font-family: var(--font-mono); color: var(--accent-gold);">VERIFIED BY NASA HUNCH</div>
+            <div style="font-family: var(--font-mono); color: var(--accent-gold);">BUILD PURPOSE & OBJECTIVES</div>
         </div>
 
-        <div class="matrix-container">
-            <div class="matrix-intro-card">
-                <div>
-                    <span style="font-family: var(--font-mono); color: var(--accent-purple); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;">DESIGN JUSTIFICATION FRAMEWORK</span>
-                    <h3 style="font-family: var(--font-display); font-size: 1.2rem; color: #ffffff; margin-top: 0.2rem;">Engineering Trade-Offs & Prototype Decisions</h3>
-                </div>
-                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">DOCUMENT ID: HUNCH-ENG-2026-R4</div>
+        <div class="reason-grid">
+            <div class="reason-card bracket-gold">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
+                
+                <div class="reason-num">01</div>
+                <h3 class="reason-title">Physical Proof of Concept</h3>
+                <p class="reason-text">
+                    The prototype was created to physically demonstrate how interlocking 3D-printed panel joints and compliant folding mechanics operate in real space, moving beyond theoretical CAD models to tangible flight hardware verification.
+                </p>
             </div>
 
-            <table class="matrix-table">
-                <thead>
-                    <tr>
-                        <th style="width: 25%;">REQUIREMENT & SPEC</th>
-                        <th style="width: 30%;">PROTOTYPE SOLUTION</th>
-                        <th style="width: 45%;">ENGINEERING REASONING & JUSTIFICATION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="matrix-row-card">
-                        <td class="matrix-cell">
-                            <span class="spec-tag-code">// SPEC_01 - VOLUMETRICS</span>
-                            <div class="spec-header-title">Least Volume for hinges</div>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">Target: &gt;80% volume reduction during launch transit.</p>
-                            <div class="matrix-metric-pill">VAL: <span>84.2%</span></div>
-                            <div class="matrix-metric-pill">STATUS: <span>PASSED</span></div>
-                        </td>
-                        <td class="matrix-cell">
-                            <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-cyan); font-size: 1rem; margin-bottom: 0.4rem;">Modified Miura-Ori Pattern</div>
-                            <p style="font-size: 0.82rem; color: var(--text-muted);">Rigid facet panels connected by elastomeric compliant flexures.</p>
-                        </td>
-                        <td class="matrix-cell">
-                            <div class="reasoning-box">
-                                <strong>Engineering Rationale:</strong>
-                                Traditional hinges add mechanical point-failures and weight. By utilizing a continuous compliant origami tessellation, we achieved an 84.2% volume reduction while ensuring single-degree-of-freedom deployment, preventing binding in microgravity.
-                            </div>
-                            <button class="inspect-btn" onclick="openModal('Compact Stowing Ratio Rationale', 'Detailed Trade Study: Traditional box containers waste up to 75% of launch fairing volume when returning empty cargo. Our Miura-Ori pattern distributes stress uniformly across 24 interconnected facets, avoiding concentrated stress risers and ensuring total collapse down to a 32mm flat profile.')">READ FULL ANALYSIS</button>
-                        </td>
-                    </tr>
+            <div class="reason-card bracket-cyan">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
 
-                    <tr class="matrix-row-card">
-                        <td class="matrix-cell">
-                            <span class="spec-tag-code">// SPEC_02 - HUMAN FACTORS</span>
-                            <div class="spec-header-title">Zero-G EVA Operability</div>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">Must be operable using bulky Extravehicular Mobility Unit (EMU) gloves.</p>
-                            <div class="matrix-metric-pill">TORQUE: <span>1.2 Nm</span></div>
-                            <div class="matrix-metric-pill">TIME: <span>3.8s</span></div>
-                        </td>
-                        <td class="matrix-cell">
-                            <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-gold); font-size: 1rem; margin-bottom: 0.4rem;">Tactile Oversized Quick-Tabs</div>
-                            <p style="font-size: 0.82rem; color: var(--text-muted);">High-contrast yellow pull-rings with magnetic self-indexing locks.</p>
-                        </td>
-                        <td class="matrix-cell">
-                            <div class="reasoning-box">
-                                <strong>Engineering Rationale:</strong>
-                                Pressurized gloves restrict dexterity and eliminate fine tactile feel. Standard latches cause crew fatigue. Our magnetic quick-tabs auto-align upon approach and require only 1.2 Nm of force to actuate, eliminating pinch hazards completely.
-                            </div>
-                            <button class="inspect-btn btn-gold" onclick="openModal('Zero-G EVA Operability Rationale', 'Human Factors Testing: Evaluated with simulated EMU glove pressurized at 4.3 psi. Actuation time was reduced from 42 seconds (standard buckle) to 3.8 seconds using our magnetic self-indexing tabs, with zero glove snagging incidents over 100 trials.')">READ FULL ANALYSIS</button>
-                        </td>
-                    </tr>
+                <div class="reason-num">02</div>
+                <h3 class="reason-title">Volumetric Efficiency Testing</h3>
+                <p class="reason-text">
+                    Building a physical prototype allowed our team to measure actual compression ratios firsthand, confirming that the structure achieves maximum stowage compression when folded for cargo transit.
+                </p>
+            </div>
 
-                    <tr class="matrix-row-card">
-                        <td class="matrix-cell">
-                            <span class="spec-tag-code">// SPEC_03 - MATERIAL Choice</span>
-                            <div class="spec-header-title">3D Printed Panels</div>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">3d Printer Panels that interlock to help with structural intergrity</p>
-                        
-                        </td>
-                        <td class="matrix-cell">
-                            <div style="font-family: var(--font-head); font-weight: 700; color: var(--accent-purple); font-size: 1rem; margin-bottom: 0.4rem;">Interlocking joints</div>
-                            <p style="font-size: 0.82rem; color: var(--text-muted);">Interlocking joints for better structural intergyity.</p>
-                        </td>
-                        <td class="matrix-cell">
-                            <div class="reasoning-box">
-                                <strong>Engineering Rationale:</strong>
-                                Insert Paragraph written by sawyer...
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="reason-card bracket-purple">
+                <div class="corner-bracket cb-tl"></div>
+                <div class="corner-bracket cb-tr"></div>
+                <div class="corner-bracket cb-bl"></div>
+                <div class="corner-bracket cb-br"></div>
+
+                <div class="reason-num">03</div>
+                <h3 class="reason-title">Ergonomics & Operability</h3>
+                <p class="reason-text">
+                    Constructing this physical unit provided hands-on evaluation of deployment forces and latching mechanisms, ensuring safe, zero-pinch manipulation for crew members wearing pressurized space gloves.
+                </p>
+            </div>
         </div>
     </section>
 
@@ -1636,7 +1021,7 @@
     <section id="crew" class="content-section">
         <div class="section-header">
             <div>
-                <div class="section-tag">04 Deseign Crew</div>
+                <div class="section-tag">04 // DESIGN CREW</div>
                 <h2 class="section-title">PROJECT ENGINEERS</h2>
             </div>
             <div style="font-family: var(--font-mono); color: var(--accent-gold);">4-MEMBER TEAM</div>
@@ -1651,7 +1036,7 @@
                 <div class="team-avatar">👨‍🚀</div>
                 <div class="team-name">Hayden Flynn</div>
                 <div class="team-role">Main Prototype Developer</div>
-                <div class="team-bio">Cad Designer and Printer. Also made the final prototype idea.</div>
+                <div class="team-bio">CAD Designer and Printer. Designed the primary prototype build.</div>
             </div>
 
             <div class="team-card bracket-cyan">
@@ -1662,9 +1047,9 @@
                 <div class="team-avatar">👨‍💻</div>
                 <div class="team-name">Oliver Garcia</div>
                 <div class="team-role">Website Designer</div>
-                <div class="team-bio">Focused on Developing website and brochure.</div>
+                <div class="team-bio">Focused on developing the website and brochure interface.</div>
             </div>
- 
+
             <div class="team-card bracket-cyan">
                 <div class="corner-bracket cb-tl"></div>
                 <div class="corner-bracket cb-tr"></div>
@@ -1672,8 +1057,8 @@
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍🚀</div>
                 <div class="team-name">Barron Maiman</div>
-                <div class="team-role">Cad and brochure desinger.</div>
-                <div class="team-bio">Focused on the cad and brochure.</div>
+                <div class="team-role">CAD & Brochure Designer</div>
+                <div class="team-bio">Focused on CAD modeling and project brochure creation.</div>
             </div>
 
             <div class="team-card bracket-cyan">
@@ -1683,59 +1068,24 @@
                 <div class="corner-bracket cb-br"></div>
                 <div class="team-avatar">👨‍🚀</div>
                 <div class="team-name">Sawyer Barret</div>
-                <div class="team-role">3d printing and </div>
-                <div class="team-bio">Focused on the cad and brochure.</div>
+                <div class="team-role">3D Printing Specialist</div>
+                <div class="team-bio">Focused on 3D print manufacturing and material assembly.</div>
             </div>
-            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            <strong>NASA HUNCH PROJECT</strong> — KINETIC ORIGAMI FLIGHT SYSTEMS
         </div>
         <div>
             SYSTEM READY FOR ISS DEPLOYMENT // 2026
         </div>
     </footer>
 
-    <!-- Spec Inspection Modal Overlay -->
-    <div class="modal-overlay" id="specModal">
-        <div class="modal-container">
-            <button class="modal-close" onclick="closeModal()">✕</button>
-            <div style="font-family: var(--font-mono); color: var(--accent-gold); font-size: 0.75rem; margin-bottom: 0.5rem;" id="modalTag">// SYSTEM DEEP INSPECTION</div>
-            <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1.5rem;" id="modalTitle">SPEC TITLE</h2>
-            <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.85;" id="modalBody">Spec detail content goes here.</p>
-        </div>
-    </div>
-
-    <!-- Scripting Engine -->
+    <!-- Interactive Background Particles Script -->
     <script>
-        /* ==========================================================================
-           01. HERO PHOTO SWITCHER ENGINE
-           ========================================================================== */
-        function switchHeroImage(src, btn) {
-            const img = document.getElementById('heroImage');
-            const caption = document.getElementById('imgCaptionText');
-            
-            img.style.opacity = '0.15';
-            img.style.transform = 'scale(0.98)';
-
-            setTimeout(() => {
-                img.src = src;
-                img.style.opacity = '1';
-                img.style.transform = 'scale(1)';
-                
-                document.querySelectorAll('.photo-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                if (btn.innerText.includes('FOLDED')) {
-                    caption.innerText = 'Folded Storage Geometry for ISS Columbus Rack Payload Transit';
-                } else if (btn.innerText.includes('DEPLOYED')) {
-                    caption.innerText = 'Fully Expanded Dynamic Frame Structure in Simulated Microgravity';
-                } else {
-                    caption.innerText = 'Pressurized Glove Ergonomic Evaluation in Thermal Vacuum Facility';
-                }
-            }, 250);
-        }
-
-        /* ==========================================================================
-           02. INTERACTIVE STARFIELD & CONNECTIVE PARTICLE CANVAS
-           ========================================================================== */
         const pCanvas = document.getElementById('particleCanvas');
         const pCtx = pCanvas.getContext('2d');
         let particles = [];
@@ -1817,30 +1167,7 @@
         initParticles();
         animateParticles();
 
-        /* ==========================================================================
-           03. MODAL DIALOG CONTROLLER
-           ========================================================================== */
-        function openModal(title, text) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalBody').innerText = text;
-            document.getElementById('specModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('specModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        document.getElementById('specModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('specModal')) {
-                closeModal();
-            }
-        });
-
-        /* ==========================================================================
-           04. NAVBAR & SCROLL PROGRESS MONITOR
-           ========================================================================== */
+        /* Scroll Progress Line & Navbar Scroll Listener */
         const progressLine = document.getElementById('progressLine');
         const navbar = document.getElementById('mainNavbar');
 
